@@ -1,0 +1,12 @@
+{
+    "name": "terms4fairskills/annotator",
+    "description": "Tool for annotating materials with terms4FAIRskills ontology.",
+    "type": "project",
+    "license": "GPL-3.0",
+    "autoload": {
+        "psr-4": {
+            "Terms4fairskills\\Annotator\\": "src/"
+        }
+    },
+    "require": {}
+}
