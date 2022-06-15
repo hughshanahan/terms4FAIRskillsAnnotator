@@ -3,6 +3,6 @@ controllers:
     type: attribute
 
 
-app_lucky_number:
+readme:
     path: /readme
     controller: App\Controller\BaseController::readme
