@@ -5,4 +5,4 @@ controllers:
 
 readme:
     path: /readme
-    controller: App\Controller\BaseController::readme
+    controller: App\Controller\MiscController::readme
