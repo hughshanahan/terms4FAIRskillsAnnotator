@@ -9,6 +9,7 @@
     class Ontology {
 
         private $raw;
+        private $xml;
 
         /**
          * Constructs an Ontology object.
@@ -17,6 +18,8 @@
         public function __construct() {
             // read the raw ontology into a string
             $this->raw = file_get_contents("https://raw.githubusercontent.com/terms4fairskills/FAIRterminology/master/development/t4fs.owl");
+            // create a xml object from the string
+            $this->xml = simplexml_load_string($this->raw);
         }
 
         /**
@@ -28,6 +31,15 @@
             return $this->raw;
         }
 
+
+        /**
+         * Returns an XML object that contains the ontology.
+         *
+         * @return \SimpleXMLElement the ontology as an XML object
+         */
+        public function getXML() : \SimpleXMLElement {
+            return $this->xml;
+        }
 
     }
 

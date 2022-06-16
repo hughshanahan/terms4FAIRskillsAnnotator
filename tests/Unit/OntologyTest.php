@@ -26,13 +26,29 @@
          *
          * @return void
          */
-        public function testRawString(): void {
+        public function testRawString() : void {
             $this->assertEquals(
                 $this->ontology->getRaw(),
                 file_get_contents("https://raw.githubusercontent.com/terms4fairskills/FAIRterminology/master/development/t4fs.owl"),
                 "The raw contents of the ontology was not the expected contents"
             );
         }
+
+        /**
+         * Tests that the XML object can be returned correctly.
+         *
+         * @return void
+         */
+        public function testXML() : void {
+            $expectedXML = simplexml_load_string(file_get_contents("https://raw.githubusercontent.com/terms4fairskills/FAIRterminology/master/development/t4fs.owl"));
+            $this->assertEquals(
+                $this->ontology->getXML(),
+                $expectedXML,
+                "The XML object for the ontology was not the exected object"
+            );
+        }
+
+
     }
 
 ?>
