@@ -3,6 +3,14 @@ controllers:
     type: attribute
 
 
+root:
+    path: /
+    controller: App\Controller\AnnotatorController::main
+
+annotator:
+    path: /annotator
+    controller: App\Controller\AnnotatorController::main
+
 readme:
     path: /readme
     controller: App\Controller\BaseController::readme
