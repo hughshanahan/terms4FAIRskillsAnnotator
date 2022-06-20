@@ -90,6 +90,15 @@
         }
 
 
+        public function testParentClasses() : void {
+            $this->assertEquals(
+                array("https://github.com/terms4fairskills/FAIRterminology/T4FS_0000372"),
+                $this->class->getParentClasses(),
+                "The list of the class' parent classes was not the expected list"
+            );
+        }
+
+
     }
 
 ?>
