@@ -1,6 +1,6 @@
 <?php
 
-    namespace App\Entity;
+    namespace App\Entity\Ontology;
 
     /**
      * Stores the data from the ontology file.

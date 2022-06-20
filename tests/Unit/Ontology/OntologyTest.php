@@ -2,7 +2,7 @@
 
     namespace App\Tests\Unit;
     use PHPUnit\Framework\TestCase;
-    use App\Entity\Ontology;
+    use App\Entity\Ontology\Ontology;
 
     /**
      * Tests the Ontology Class.
