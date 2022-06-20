@@ -76,6 +76,20 @@
         }
 
 
+        /**
+         * Tests that the object has correctly read the URI from the owl:Class element's rdf:about attribute.
+         *
+         * @return void
+         */
+        public function testAboutProperty() : void {
+            $this->assertEquals(
+                "https://github.com/terms4fairskills/FAIRterminology/T4FS_0000552",
+                $this->class->getAbout(),
+                "The OWLClass object has not correctly read what the class is about"
+            );
+        }
+
+
     }
 
 ?>

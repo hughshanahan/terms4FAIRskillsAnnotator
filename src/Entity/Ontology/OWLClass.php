@@ -7,6 +7,8 @@
      */
     class OWLClass {
 
+        private $about; // stores the URI for the class
+
         /**
          * Constructs a class object from an owl:class element.
          *
@@ -20,6 +22,19 @@
                 );
             }
 
+            // get the element attributes and store what the class is about
+            $attributes = $this->getAttributes($element);
+            $this->about = $attributes["rdf:about"];
+        }
+
+
+        /**
+         * Returns the URI that the class represents.
+         *
+         * @return String
+         */
+        public function getAbout() : String {
+            return $this->about;
         }
 
 
@@ -39,6 +54,23 @@
             }
             // the element has a namespace - return the fully qualifed name
             return $nsID . ":" . $element->getName();
+        }
+
+
+        /**
+         * Returns an dictionary containing all the attributes of the element.
+         *
+         * @param \SimpleXMLElement $element the element to get the attributes for
+         * @return array the array of attributes in key-value pairs
+         */
+        private function getAttributes(\SimpleXMLElement $element) : array {
+            $attributes = array();
+            foreach ($element->getDocNamespaces() as $ns => $url) {
+                foreach ($element->attributes($url) as $key => $value) {
+                    $attributes[$ns . ":" . $key] = $value;
+                }
+            }
+            return $attributes;
         }
 
     }
