@@ -14,9 +14,9 @@
          */
         public function __construct(\SimpleXMLElement $element) {
             // check that the element is an owl:class element
-            if (!($this->getFullyQualifiedName($element) == "owl:class")) {
+            if (!($this->getFullyQualifiedName($element) == "owl:Class")) {
                 throw new \Exception(
-                    "Attempted to create OntologyClass object from an element that was not an owl:class element"
+                    "Attempted to create OntologyClass object from an element that was not an owl:Class element"
                 );
             }
 
@@ -30,13 +30,15 @@
          * @return String the given element's fully qualified name
          */
         private function getFullyQualifiedName(\SimpleXMLElement $element) : String {
-            $namespaces = $element->getNamespaces();
-            if (count($namespaces) == 0) {
-                // there are no namespaces defined - return just the name
+            // get the namespace identifier via DOMNode object
+            $node = dom_import_simplexml($element);
+            $nsID = $node->prefix;
+            if ($nsID == "") {
+                // the element doesn't have a namespace, return the element name
                 return $element->getName();
             }
-            // else return the namespace followed by the name
-            return $element->getNamespaces()[0] . ":" . $element->getName();
+            // the element has a namespace - return the fully qualifed name
+            return $nsID . ":" . $element->getName();
         }
 
     }
