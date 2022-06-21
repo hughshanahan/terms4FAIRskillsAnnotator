@@ -17,33 +17,7 @@
          * @return void
          */
         protected function setUp() : void {
-
-            /*
-                XML String explaination:
-                The XML string has been written to provide all the combinations of namespaces, children and attributes.
-                 - There are elements that dont have a namespace identifier (root and element3) 
-                   and elements that do (a:element1 and b:element2)
-                 - There are elements that have no children (element3), elements with one child (a:element1) 
-                   and elements with multiple children (b:element2)
-                 - There are elements that have no attributes (a:element1), elements with one attribute (element3) 
-                   and elements with multiple attributes (b:element2)
-                 - There are elements that have attributes without namespaces (attribute2 in b:element2) 
-                   and elements that have namespaced attributes (a:attribute1 in b:element2 and b:attrbiute3 in element3)
-            */
-            $xmlString = '
-                <root xmlns:a="http://www.example.com/a"
-                        xmlns:b="https://www.example.com/b">
-                    <a:element1>
-                        <b:element2 a:attribute1="attribute1 value" attribute2="attribute2 value">
-                            <element3 b:attribute2="value" />
-                            <element3 b:attribute2="value" />
-                            <element3 b:attribute2="value" />
-                            <element3 b:attribute2="value" />
-                        </b:element2>
-                    </a:element1>
-                </root>
-            ';
-            $this->xml = simplexml_load_string($xmlString);
+            $this->xml = simplexml_load_string(file_get_contents("tests/Resources/OWLReaderTest.owl"));
         }
 
 

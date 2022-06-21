@@ -1,0 +1,32 @@
+<rdf:RDF xmlns="https://github.com/terms4fairskills/FAIRterminology#"
+     xml:base="https://github.com/terms4fairskills/FAIRterminology"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:obo="http://purl.obolibrary.org/obo/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:terms="http://purl.org/dc/terms/"
+     xmlns:oboInOwl="http://www.geneontology.org/formats/oboInOwl#"
+     xmlns:FAIRterminology="https://github.com/terms4fairskills/FAIRterminology/">
+
+     <!-- This is the class element that is used for the majority of the tests -->
+    <owl:Class rdf:about="Resource_1">
+        <rdfs:subClassOf rdf:resource="Resource_2"/>
+        <obo:IAO_0000115>Resource 1 Description</obo:IAO_0000115>
+        <obo:IAO_0000117>Resource 1 Editor</obo:IAO_0000117>
+        <rdfs:comment>Resource 1 Comment</rdfs:comment>
+        <rdfs:label>Resource 1 Label</rdfs:label>
+    </owl:Class>
+
+    <!-- This class provides the parent class for the first -->
+    <owl:Class rdf:about="Resource_2">
+        <obo:IAO_0000115>Resource 2 Description</obo:IAO_0000115>
+        <obo:IAO_0000117>Resource 2 Editor</obo:IAO_0000117>
+        <rdfs:comment>Resource 2 Comment</rdfs:comment>
+        <rdfs:label>Resource 2 Label</rdfs:label>
+    </owl:Class>
+
+</rdf:RDF>
