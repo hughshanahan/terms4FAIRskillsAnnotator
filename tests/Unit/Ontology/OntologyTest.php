@@ -19,7 +19,7 @@
          * @return void
          */
         protected function setUp() : void {
-            $this->ontology = new Ontology("tests/Resources/t4fs.owl");
+            $this->ontology = new Ontology("tests/Resources/OntologyTest.owl");
         }
 
         /**
@@ -29,6 +29,20 @@
          */
         public function testCorrectlyInstantiated() : void {
             $this->assertInstanceOf(Ontology::class, $this->ontology);
+        }
+
+
+        /**
+         * Tests that the correct list of contributors is returned.
+         *
+         * @return void
+         */
+        public function testGetContributors() : void {
+            $this->assertEquals(
+                array("Contributor 1", "Contributor 2"),
+                $this->ontology->getContributors(),
+                "The returned contributors array was not the expected array for the getContributors method"
+            );
         }
 
     }
