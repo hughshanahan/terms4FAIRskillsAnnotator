@@ -10,7 +10,8 @@
     class Ontology {
 
         private $about; // String storing what the ontology is about
-        private $contributors; // array of the contributors name
+        private $contributors; // array of the contributors names
+        private $creators; // array of the creators names
 
         /**
          * Constructs an Ontology object.
@@ -23,6 +24,7 @@
             // intialise the variables that are going to store the ontology
             $this->about = "";
             $this->contributors = array();
+            $this->creators = array();
 
             // for each direct child of the root element in the ontology
             foreach (OWLReader::getChildren($xml) as $element) {
@@ -59,6 +61,9 @@
                 if ($childName == "dc:contributor") {
                     // add the contributor to the array of contributors
                     array_push($this->contributors, strval($child));
+                } else if ($childName == "dc:creator") {
+                    // add the creator to the array of creators
+                    array_push($this->creators, strval($child));
                 }
 
             }
@@ -82,6 +87,15 @@
          */
         public function getContributors() : array {
             return $this->contributors;
+        }
+
+        /**
+         * Returns an array of the creators names.
+         *
+         * @return array an array of the creators
+         */
+        public function getCreators() : array {
+            return $this->creators;
         }
 
     }

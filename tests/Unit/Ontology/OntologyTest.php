@@ -59,6 +59,19 @@
             );
         }
 
+        /**
+         * Tests that the correct list of creators is returned.
+         *
+         * @return void
+         */
+        public function testGetCreators() : void {
+            $this->assertEquals(
+                array("Creator 1", "Creator 2"),
+                $this->ontology->getCreators(),
+                "The returned creators array was not the expected array for the getCreators method"
+            );
+        }
+
     }
 
 ?>
