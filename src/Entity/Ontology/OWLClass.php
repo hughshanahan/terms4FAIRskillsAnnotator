@@ -10,6 +10,7 @@
     class OWLClass {
 
         private $about; // stores the URI for the class
+        private $label; // stores the class' label
         private $parentClasses; // stores an array of the URIs for the classes that this class is a sub class of
         private $comments; // array of comments about the class
 
@@ -31,6 +32,7 @@
             $this->about = $attributes["rdf:about"];
 
             // initialise properties that are going to have values set from the child elements
+            $this->label = "";
             $this->parentClasses = array();
             $this->comments = array();
 
@@ -53,7 +55,9 @@
                 $childAttributes = OWLReader::getAttributes($child);
 
                 // process the child element based on the kind of element that it is
-                if ($childName == "rdfs:subClassOf") {
+                if ($childName == "rdfs:label") {
+                    $this->label = strval($child);
+                } else if ($childName == "rdfs:subClassOf") {
                     // the child element stores a URI of another class that this class is a sub class of
                     // add the rdf:resource value to the parent classes array
                     array_push($this->parentClasses, $childAttributes["rdf:resource"]);
@@ -72,6 +76,17 @@
         public function getAbout() : String {
             return $this->about;
         }
+
+
+        /**
+         * Returns the class' label.
+         *
+         * @return String the class' label
+         */
+        public function getLabel() : String {
+            return $this->label;
+        }
+
 
         /**
          * Returns the list of URIs that represent the class' parent classes.

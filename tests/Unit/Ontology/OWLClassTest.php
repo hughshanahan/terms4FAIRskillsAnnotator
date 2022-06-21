@@ -66,6 +66,20 @@
 
 
         /**
+         * Tests that the label is the expected label.
+         *
+         * @return void
+         */
+        public function testGetLabel() : void {
+            $this->assertEquals(
+                "Resource 1 Label",
+                $this->class->getLabel(),
+                "The label returned was not the expected label"
+            );
+        }
+
+
+        /**
          * Tests that the class' parent classes is the expected list.
          *
          * @return void
