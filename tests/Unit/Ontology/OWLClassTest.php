@@ -13,7 +13,7 @@
         private $class;
 
         /**
-         * Set Up method to create an instance of the Ontology class before each test.
+         * Set Up method to create an instance of the OWLClass class before each test.
          *
          * @return void
          */
@@ -28,14 +28,14 @@
 
 
         /**
-         * Tests that an expection is thrown if a Ontology\Class object is attempted to be created from an XML element that isn't an owl:class element.
+         * Tests that an expection is thrown if an OWLClass object is attempted to be created from an XML element that isn't an owl:Class element.
          *
          * @return void
          */
         public function testInvalidElementType() : void {
             // tell the test case that the exception is going to be thrown
             $this->expectException(\Exception::class);
-            // attempt to create the OntologyClass object
+            // attempt to create the OWLClass object
             $xmlElement = simplexml_load_string("<invalidelement></invalidelement>");
             $object = new OWLClass($xmlElement);
         }

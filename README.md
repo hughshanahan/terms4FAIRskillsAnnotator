@@ -19,6 +19,10 @@ This ontology is used to test the Ontology class and contains a fully written ow
 This ontology is used to test the OWLClass class and contains a fully written owl:Class element and other minimal owl:Class elements to ensure that the subclass properties are maintained.
 
 
+- OWLAnnotationPropertyTest.owl *([link](tests/Resources/OWLAnnotationPropertyTest.owl))*
+
+This ontology is used to test the OWLAnnotation class and contains a fully written owl:AnnotationProperty element and other minimal elements to ensure that relationships are maintained.
+
 - OWLReaderTest.owl *([link](tests/Resources/OWLReaderTest.owl))*
 
 This XML file has been written like the ontology files but is written so that all the XML properties that the ontology files could exhibit are testable. More information is provided in a comment at the top of the [file](tests/Resources/OWLReaderTest.owl).
