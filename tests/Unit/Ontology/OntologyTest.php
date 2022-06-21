@@ -33,6 +33,20 @@
 
 
         /**
+         * Tests that the Ontology class can return what the ontology is about.
+         *
+         * @return void
+         */
+        public function testGetAbout() : void {
+            $this->assertEquals(
+                "Ontology",
+                $this->ontology->getAbout(),
+                "The getAbout method did not return the expected value for what the ontology is about"
+            );
+        }
+
+
+        /**
          * Tests that the correct list of contributors is returned.
          *
          * @return void

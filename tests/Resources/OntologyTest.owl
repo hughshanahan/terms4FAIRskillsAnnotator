@@ -7,7 +7,7 @@
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:terms="http://purl.org/dc/terms/">
 
-    <owl:Ontology rdf:about="https://github.com/terms4fairskills/FAIRterminology">
+    <owl:Ontology rdf:about="Ontology">
         <dc:contributor>Contributor 1</dc:contributor>
         <dc:contributor>Contributor 2</dc:contributor>
         <dc:creator>Creator 1</dc:creator>

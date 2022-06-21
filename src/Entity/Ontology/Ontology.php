@@ -2,12 +2,15 @@
 
     namespace App\Entity\Ontology;
 
+    use App\Entity\Ontology\OWLReader;
+
     /**
      * Stores the ontology file and allows it to be queried.
      */
     class Ontology {
 
-        private $contributors;
+        private $about; // String storing what the ontology is about
+        private $contributors; // array of the contributors name
 
         /**
          * Constructs an Ontology object.
@@ -17,10 +20,9 @@
         public function __construct(String $filepath) {
             $xml = simplexml_load_string(file_get_contents($filepath));
 
-
             // intialise the variables that are going to store the ontology
+            $this->about = "";
             $this->contributors = array();
-
 
             // for each direct child of the root element in the ontology
             foreach (OWLReader::getChildren($xml) as $element) {
@@ -43,6 +45,11 @@
          * @return void
          */
         private function processOntologyElement(\SimpleXMLElement $element) : void {
+             // retrive what the ontology is about from the elements attributes
+             $attributes = OWLReader::getAttributes($element);
+             $this->about = $attributes["rdf:about"];
+
+
             // for each of the child elements of the owl:Ontology element
             foreach (OWLReader::getChildren($element) as $child) {
 
@@ -57,6 +64,15 @@
             }
         }
 
+
+        /**
+         * Returns a string containing what the ontology is about.
+         *
+         * @return String what the ontology is about
+         */
+        public function getAbout() : String {
+            return $this->about;
+        }
 
 
         /**
