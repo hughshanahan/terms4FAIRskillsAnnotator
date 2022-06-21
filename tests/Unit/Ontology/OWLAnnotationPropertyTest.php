@@ -38,6 +38,15 @@
             $object = new OWLAnnotationProperty($xmlElement);
         }
 
+        /**
+         * Tests that the object instantiated in the set up method is an OWLClass object.
+         *
+         * @return void
+         */
+        public function testCorrectlyInstantiated() : void {
+            $this->assertInstanceOf(OWLAnnotationProperty::class, $this->property);
+        }
+
     }
 
 ?>
