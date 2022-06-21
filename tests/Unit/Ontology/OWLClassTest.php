@@ -1,6 +1,6 @@
 <?php
 
-    namespace App\Tests\Unit;
+    namespace App\Tests\Unit\Ontology;
     use PHPUnit\Framework\TestCase;
     use App\Entity\Ontology\OWLClass;
 

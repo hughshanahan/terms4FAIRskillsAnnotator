@@ -19,7 +19,7 @@
             // check that the element is an owl:class element
             if (!($this->getFullyQualifiedName($element) == "owl:Class")) {
                 throw new \Exception(
-                    "Attempted to create OntologyClass object from an element that was not an owl:Class element"
+                    "Attempted to create OWLClass object from an element that was not an owl:Class element"
                 );
             }
 
