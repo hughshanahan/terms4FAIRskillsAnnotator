@@ -95,6 +95,20 @@
             );
         }
 
+
+        /**
+         * Tests that the correct array of comments is returned.
+         *
+         * @return void
+         */
+        public function testGetComments() : void {
+            $this->assertEquals(
+                array("Comment 1", "Comment 2"),
+                $this->ontology->getComments(),
+                "The returned array of comments was not the expected array of comments from the ontology"
+            );
+        }
+
     }
 
 ?>

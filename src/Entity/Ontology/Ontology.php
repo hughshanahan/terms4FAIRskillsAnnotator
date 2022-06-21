@@ -14,6 +14,7 @@
         private $license; // string storing the license of the ontology
         private $contributors; // array of the contributors names
         private $creators; // array of the creators names
+        private $comments;
 
         /**
          * Constructs an Ontology object.
@@ -29,6 +30,7 @@
             $this->license = "";
             $this->contributors = array();
             $this->creators = array();
+            $this->comments = array();
 
             // for each direct child of the root element in the ontology
             foreach (OWLReader::getChildren($xml) as $element) {
@@ -62,18 +64,21 @@
                 // get the child element's fully qualifed name and process it accordingly
                 $childName = OWLReader::getFullyQualifiedName($child);
 
-                if ($childName == "dc:contributor") {
-                    // add the contributor to the array of contributors
-                    array_push($this->contributors, strval($child));
-                } else if ($childName == "dc:creator") {
-                    // add the creator to the array of creators
-                    array_push($this->creators, strval($child));
-                } else if ($childName == "terms:description") {
+                if ($childName == "terms:description") {
                     // set the description
                     $this->description = strval($child);
                 } else if ($childName == "terms:license") {
                     // set the license
                     $this->license = strval($child);
+                } else if ($childName == "dc:contributor") {
+                    // add the contributor to the array of contributors
+                    array_push($this->contributors, strval($child));
+                } else if ($childName == "dc:creator") {
+                    // add the creator to the array of creators
+                    array_push($this->creators, strval($child));
+                } else if ($childName == "rdfs:comment") {
+                    // add the comment to the comments array
+                    array_push($this->comments, strval($child));
                 }
 
             }
@@ -125,6 +130,15 @@
          */
         public function getCreators() : array {
             return $this->creators;
+        }
+
+        /**
+         * Returns an array of the comments in the ontology.
+         *
+         * @return array the array of comments
+         */
+        public function getComments() : array {
+            return $this->comments;
         }
 
     }
