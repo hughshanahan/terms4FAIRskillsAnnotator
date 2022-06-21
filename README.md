@@ -9,11 +9,11 @@ These are located in /tessts/Resources/ and have been named to match the Unit te
 The absolute path for them in the Docker container is /var/www/tests/Resources/.
 A copy of the full t4fs.owl file has also been included in this directory.
 
-- OntologyTest.owl
+- OntologyTest.owl *[link](tests/Resources/OntologyTest.owl)*
 This ontology is used to test the Ontology class and contains a fully written owl:Ontology element and the minimun viable for each of the owl:AnnotationProperty, owl:ObjectProperty, owl:DatatypeProperty and owl:Class elements.
 
-- OWLClass.owl
+- OWLClassTest.owl *[link](tests/Resources/OWLClassTest.owl)*
 This ontology is used to test the OWLClass class and contains a fully written owl:Class element and other minimal owl:Class elements to ensure that the subclass properties are maintained.
 
-- OWLReader.owl
+- OWLReaderTest.owl *[link](tests/Resources/OWLReaderTest.owl)*
 This XML file has been written like the ontology files but is written so that all the XML properties that the ontology files could exhibit are testable. More information is provided in a comment at the top of the [file](tests/Resources/OWLReaderTest.owl).
