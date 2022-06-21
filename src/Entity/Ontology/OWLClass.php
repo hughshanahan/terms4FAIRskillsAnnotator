@@ -11,6 +11,7 @@
 
         private $about; // stores the URI for the class
         private $parentClasses; // stores an array of the URIs for the classes that this class is a sub class of
+        private $comments; // array of comments about the class
 
         /**
          * Constructs a class object from an owl:class element.
@@ -31,6 +32,7 @@
 
             // initialise properties that are going to have values set from the child elements
             $this->parentClasses = array();
+            $this->comments = array();
 
             $this->processChildElements($element);
         }
@@ -43,16 +45,20 @@
          * @return void
          */
         private function processChildElements(\SimpleXMLElement $element) : void {
-            // get an array of the child elements and process them
-            $children = OWLReader::getChildren($element);
-            foreach ($children as $childElement) {
-                // get the attributes of the child element
-                $childElementAttributes = OWLReader::getAttributes($childElement);
+            // process each of the child elements
+            foreach (OWLReader::getChildren($element) as $child) {
+
+                // get the name and attributes of the child element
+                $childName = OWLReader::getFullyQualifiedName($child);
+                $childAttributes = OWLReader::getAttributes($child);
+
                 // process the child element based on the kind of element that it is
-                if (OWLReader::getFullyQualifiedName($childElement) == "rdfs:subClassOf") {
+                if ($childName == "rdfs:subClassOf") {
                     // the child element stores a URI of another class that this class is a sub class of
                     // add the rdf:resource value to the parent classes array
-                    array_push($this->parentClasses, $childElementAttributes["rdf:resource"]);
+                    array_push($this->parentClasses, $childAttributes["rdf:resource"]);
+                } else if ($childName == "rdfs:comment") {
+                    array_push($this->comments, strval($child));
                 }
             }
         }
@@ -74,6 +80,15 @@
          */
         public function getParentClasses() : array {
             return $this->parentClasses;
+        }
+
+        /**
+         * Returns an array of the comments about the class.
+         *
+         * @return array the array of comments
+         */
+        public function getComments() : array {
+            return $this->comments;
         }
 
     }

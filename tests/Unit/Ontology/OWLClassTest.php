@@ -20,7 +20,7 @@
         protected function setUp() : void {
 
             $root = simplexml_load_string(file_get_contents("tests/Resources/OWLClassTest.owl"));
-            $classElement = $root->xpath("//owl:Class")[0];
+            $classElement = $root->xpath("//owl:Class")[0]; // get the first owl:Class element from the file
             $this->class = new OWLClass($classElement);
         }
 
@@ -65,11 +65,30 @@
         }
 
 
-        public function testParentClasses() : void {
+        /**
+         * Tests that the class' parent classes is the expected list.
+         *
+         * @return void
+         */
+        public function testGetParentClasses() : void {
             $this->assertEquals(
                 array("Resource_2"),
                 $this->class->getParentClasses(),
                 "The list of the class' parent classes was not the expected list"
+            );
+        }
+
+
+        /**
+         * Tests that the class' comments can be correctly returned.
+         *
+         * @return void
+         */
+        public function testGetComments() : void {
+            $this->assertEquals(
+                array("Resource 1 Comment"),
+                $this->class->getComments(),
+                "The list of comments was not the expected list"
             );
         }
 
