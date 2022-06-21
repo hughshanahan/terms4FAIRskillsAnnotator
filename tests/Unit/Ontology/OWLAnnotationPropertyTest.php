@@ -47,6 +47,21 @@
             $this->assertInstanceOf(OWLAnnotationProperty::class, $this->property);
         }
 
+
+        /**
+         * Tests that the object has correctly read the URI from the 
+         * owl:AnnotationProperty element's rdf:about attribute.
+         *
+         * @return void
+         */
+        public function testAboutProperty() : void {
+            $this->assertEquals(
+                "Property_1",
+                $this->property->getAbout(),
+                "The OWLAnnotationProperty object has not correctly read what the property is about"
+            );
+        }
+
     }
 
 ?>
