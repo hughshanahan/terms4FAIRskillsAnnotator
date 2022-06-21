@@ -60,6 +60,15 @@
         }
 
 
+        public function testGetLicense() : void {
+            $this->assertEquals(
+                "License URL",
+                $this->ontology->getLicense(),
+                "The returned license was not the expected license"
+            );
+        }
+
+
         /**
          * Tests that the correct list of contributors is returned.
          *

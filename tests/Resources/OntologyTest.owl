@@ -13,7 +13,7 @@
         <dc:creator>Creator 1</dc:creator>
         <dc:creator>Creator 2</dc:creator>
         <terms:description>Ontology description</terms:description>
-        <terms:license>license url</terms:license>
+        <terms:license>License URL</terms:license>
         <rdfs:comment>Comment 1</rdfs:comment>
         <rdfs:comment>Comment 2</rdfs:comment>
     </owl:Ontology>

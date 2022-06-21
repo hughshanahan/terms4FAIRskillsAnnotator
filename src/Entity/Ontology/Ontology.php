@@ -11,6 +11,7 @@
 
         private $about; // String storing what the ontology is about
         private $description; // string storing the description of the ontology
+        private $license; // string storing the license of the ontology
         private $contributors; // array of the contributors names
         private $creators; // array of the creators names
 
@@ -25,6 +26,7 @@
             // intialise the variables that are going to store the ontology
             $this->about = "";
             $this->description = "";
+            $this->license = "";
             $this->contributors = array();
             $this->creators = array();
 
@@ -69,6 +71,9 @@
                 } else if ($childName == "terms:description") {
                     // set the description
                     $this->description = strval($child);
+                } else if ($childName == "terms:license") {
+                    // set the license
+                    $this->license = strval($child);
                 }
 
             }
@@ -91,6 +96,16 @@
          */
         public function getDescription() : String {
             return $this->description;
+        }
+
+
+        /**
+         * Returns a string containing the ontology license.
+         *
+         * @return String the ontology license
+         */
+        public function getLicense() : String {
+            return $this->license;
         }
 
 
