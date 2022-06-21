@@ -10,6 +10,7 @@
     class Ontology {
 
         private $about; // String storing what the ontology is about
+        private $description; // string storing the description of the ontology
         private $contributors; // array of the contributors names
         private $creators; // array of the creators names
 
@@ -23,6 +24,7 @@
 
             // intialise the variables that are going to store the ontology
             $this->about = "";
+            $this->description = "";
             $this->contributors = array();
             $this->creators = array();
 
@@ -64,6 +66,9 @@
                 } else if ($childName == "dc:creator") {
                     // add the creator to the array of creators
                     array_push($this->creators, strval($child));
+                } else if ($childName == "terms:description") {
+                    // set the description
+                    $this->description = strval($child);
                 }
 
             }
@@ -77,6 +82,15 @@
          */
         public function getAbout() : String {
             return $this->about;
+        }
+
+        /**
+         * Returns a string containing the ontology description.
+         *
+         * @return String the ontology description
+         */
+        public function getDescription() : String {
+            return $this->description;
         }
 
 

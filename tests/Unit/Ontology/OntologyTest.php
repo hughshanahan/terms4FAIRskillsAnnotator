@@ -47,6 +47,20 @@
 
 
         /**
+         * Tests that the Ontology class can return the description of the ontology.
+         *
+         * @return void
+         */
+        public function testGetDescription() : void {
+            $this->assertEquals(
+                "Ontology description",
+                $this->ontology->getDescription(),
+                "The ontology description was not the expected value"
+            );
+        }
+
+
+        /**
          * Tests that the correct list of contributors is returned.
          *
          * @return void
