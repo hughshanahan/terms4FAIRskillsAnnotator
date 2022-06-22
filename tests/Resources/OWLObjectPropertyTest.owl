@@ -6,16 +6,27 @@
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:oboInOwl="http://www.geneontology.org/formats/oboInOwl#">
 
+    <!-- This is the object property element that is used for the majority of the tests -->
+    <owl:ObjectProperty rdf:about="Property_1">
+        <rdfs:subPropertyOf rdf:resource="Property_2"/>
+        <rdfs:domain rdf:resource="Property 1 Domain"/>
+        <rdfs:range rdf:resource="Property 1 Range"/>
+        <obo:IAO_0000117>Property 1 Editor 1</obo:IAO_0000117>
+        <obo:IAO_0000117>Property 1 Editor 1</obo:IAO_0000117>
+        <oboInOwl:created_by>Property 1 Creator</oboInOwl:created_by>
+        <oboInOwl:creation_date>2022-01-01T00:00:00.000000Z</oboInOwl:creation_date>
+        <rdfs:label xml:lang="en">Property 1 Label</rdfs:label>
+    </owl:ObjectProperty>
 
-    <owl:ObjectProperty rdf:about="https://github.com/terms4fairskills/FAIRterminology/T4FS_0000563">
-        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="https://github.com/terms4fairskills/FAIRterminology/T4FS_0000372"/>
-        <rdfs:range rdf:resource="https://github.com/terms4fairskills/FAIRterminology/T4FS_0000446"/>
-        <obo:IAO_0000117>Allyson Lister</obo:IAO_0000117>
-        <obo:IAO_0000117>Peter McQuilton</obo:IAO_0000117>
-        <oboInOwl:created_by>Peter McQuilton</oboInOwl:created_by>
-        <oboInOwl:creation_date>2021-03-22T15:25:13.443153Z</oboInOwl:creation_date>
-        <rdfs:label xml:lang="en">contributes to the implementation of</rdfs:label>
+
+    <!-- This class provides the parent class for the first -->
+    <owl:ObjectProperty rdf:about="Property_2">
+        <rdfs:domain rdf:resource="Property 2 Domain"/>
+        <rdfs:range rdf:resource="Property 2 Range"/>
+        <obo:IAO_0000117>Property 2 Editor 1</obo:IAO_0000117>
+        <oboInOwl:created_by>Property 2 Creator</oboInOwl:created_by>
+        <oboInOwl:creation_date>2022-01-01T00:00:00.000000Z</oboInOwl:creation_date>
+        <rdfs:label xml:lang="en">Property 2 Label</rdfs:label>
     </owl:ObjectProperty>
 
 
