@@ -1,0 +1,22 @@
+<rdf:RDF xmlns="https://github.com/terms4fairskills/FAIRterminology#"
+     xml:base="https://github.com/terms4fairskills/FAIRterminology"
+     xmlns:obo="http://purl.obolibrary.org/obo/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:oboInOwl="http://www.geneontology.org/formats/oboInOwl#">
+
+
+    <owl:ObjectProperty rdf:about="https://github.com/terms4fairskills/FAIRterminology/T4FS_0000563">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="https://github.com/terms4fairskills/FAIRterminology/T4FS_0000372"/>
+        <rdfs:range rdf:resource="https://github.com/terms4fairskills/FAIRterminology/T4FS_0000446"/>
+        <obo:IAO_0000117>Allyson Lister</obo:IAO_0000117>
+        <obo:IAO_0000117>Peter McQuilton</obo:IAO_0000117>
+        <oboInOwl:created_by>Peter McQuilton</oboInOwl:created_by>
+        <oboInOwl:creation_date>2021-03-22T15:25:13.443153Z</oboInOwl:creation_date>
+        <rdfs:label xml:lang="en">contributes to the implementation of</rdfs:label>
+    </owl:ObjectProperty>
+
+
+</rdf:RDF>
