@@ -14,7 +14,7 @@
         private $license; // string storing the license of the ontology
         private $contributors; // array of the contributors names
         private $creators; // array of the creators names
-        private $comments;
+        private $comments; // array of comments about the ontology
 
         /**
          * Constructs an Ontology object.

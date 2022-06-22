@@ -62,6 +62,20 @@
             );
         }
 
+
+        /**
+         * Tests that the label read from the owl:AnnotationProperty element is the returned label.
+         *
+         * @return void
+         */
+        public function testGetLabel() : void {
+            $this->assertEquals(
+                "Property 1 Label",
+                $this->property->getLabel(),
+                "The label returned was not the label defined in the ontology"
+            );
+        }
+
     }
 
 ?>
