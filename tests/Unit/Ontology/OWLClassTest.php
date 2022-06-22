@@ -47,7 +47,11 @@
          * @return void
          */
         public function testCorrectlyInstantiated() : void {
-            $this->assertInstanceOf(OWLClass::class, $this->class);
+            $this->assertInstanceOf(
+                OWLClass::class, 
+                $this->class,
+                "The class was not an instance of OWLClass"
+            );
         }
 
 

@@ -10,7 +10,11 @@
         private $about; // String storing what the property is about
         private $label; // String storing the property's label
 
-
+        /**
+         * Constructs a OWLAnnotationProperty object from an owl:AnnotationProperty element.
+         *
+         * @param \SimpleXMLElement $element an owl:AnnotationProperty element
+         */
         public function __construct(\SimpleXMLElement $element) {
 
             // check that the element is an owl:class element

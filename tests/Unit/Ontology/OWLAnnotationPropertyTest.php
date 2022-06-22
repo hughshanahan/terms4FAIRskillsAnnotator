@@ -5,7 +5,7 @@
     use App\Entity\Ontology\OWLAnnotationProperty;
 
     /**
-     * Tests the OWLClass Class.
+     * Tests the OWLAnnotationProperty Class.
      */
     class OWLAnnotationPropertyTest extends TestCase {
 
@@ -39,12 +39,16 @@
         }
 
         /**
-         * Tests that the object instantiated in the set up method is an OWLClass object.
+         * Tests that the object instantiated in the set up method is an OWLAnnotationProperty object.
          *
          * @return void
          */
         public function testCorrectlyInstantiated() : void {
-            $this->assertInstanceOf(OWLAnnotationProperty::class, $this->property);
+            $this->assertInstanceOf(
+                OWLAnnotationProperty::class, 
+                $this->property,
+                "The property was not an instance of OWLAnnotationProperty"
+            );
         }
 
 
