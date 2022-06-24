@@ -16,6 +16,9 @@
         private $creators; // array of the creators names
         private $comments; // array of comments about the ontology
 
+        private $classes; // stores a dictionary of strings to OWLClass objects 
+        private $classesIndexed; // stores a dictionary of the class labels to class about properties
+
         /**
          * Constructs an Ontology object.
          * 
@@ -32,6 +35,9 @@
             $this->creators = array();
             $this->comments = array();
 
+            $this->classes = array();
+            $this->classesIndexed = array();
+
             // for each direct child of the root element in the ontology
             foreach (OWLReader::getChildren($xml) as $element) {
                 // get the fully qualifed name and handle the element depending on the name
@@ -39,10 +45,19 @@
 
                 if ($elementName == "owl:Ontology") {
                     $this->processOntologyElement($element);
+                } else if ($elementName == "owl:Class") {
+                    $classElement = new OWLClass($element);
+                    $this->classes[$classElement->getAbout()] = $classElement;
                 }
 
-
             }
+
+
+            // create a secondary index of the class labels to the about
+            foreach ($this->classes as $classAbout => $classElement) {
+                $this->classesIndexed[$classElement->getLabel()] = $classAbout;
+            }
+
         }
 
         /**
@@ -140,6 +155,26 @@
         public function getComments() : array {
             return $this->comments;
         }
+
+
+        /**
+         * Get the array of OWLClass objects that have a label matching the given regex.
+         *
+         * @param String $regex Regex to match
+         * @return array array of OWLClass objects with labels matching the regex
+         */
+        public function queryClasses(String $regex) : array {
+            // get the keys that match the regex from the classIndexed dictionary
+            $keys = array_keys($this->classesIndexed);
+            $matchingKeys = preg_grep($pattern, $keys);
+            // create an array of OWLClass objects from the matching keys
+            $results = array();
+            foreach ($matchingKeys as $matchingKey) {
+                array_push($results, $this->classes[$this->classesIndexed[$matchingKey]]);
+            }
+            return $results;
+        }
+
 
     }
 

@@ -109,6 +109,36 @@
             );
         }
 
+
+        /**
+         * Tests that the correct classes are returned when querying the ontology classes.
+         * The test should return the classes that have the Resource in the label, this should therefore
+         * not return the classes that don't have the word resource in the label, such as the Alternative classes.
+         *
+         * @return void
+         */
+        public function getQueryClasses() : void {
+            // get the classes
+            $classes = $this->ontology->queryClasses("Resource");
+            $labels = array();
+            foreach ($classes as $class) {
+                array_push($labels, $class->getLabel());
+            }
+
+            // assert the labels array is the correct array
+            $this->assertEquals(
+                array("Resource 1 Label", "Resource 2 Label"),
+                $labels,
+                "The selected labels were not the correct labels"
+            );
+        }
+
+
+
+
+
+
+
     }
 
 ?>

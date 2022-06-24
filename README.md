@@ -13,6 +13,8 @@ A copy of the full t4fs.owl file has also been included in this directory.
 
 This ontology is used to test the Ontology class and contains a fully written owl:Ontology element and the minimun viable for each of the owl:AnnotationProperty, owl:ObjectProperty, owl:DatatypeProperty and owl:Class elements.
 
+The classes that are defined have two categories, Resource and Alternative. This means that when the classees are queried, there are keywords that are in some classes' labels but not others.
+
 
 - OWLClassTest.owl *([link](tests/Resources/OWLClassTest.owl))*
 
