@@ -90,7 +90,16 @@
          */
         public function testGetParentClasses() : void {
             $this->assertEquals(
-                array("Resource_2"),
+                array(
+                    array("parent"=>"Resource_2"),
+                    array(
+                        "parent"=>"Resource_3", 
+                        "restriction"=>array(
+                            "property"=>"Property_1", 
+                            "relationship"=>"someValues"
+                        )
+                    )
+                ),
                 $this->class->getParentClasses(),
                 "The list of the class' parent classes was not the expected list"
             );

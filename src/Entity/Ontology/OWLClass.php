@@ -58,12 +58,67 @@
                 if ($childName == "rdfs:label") {
                     $this->label = strval($child);
                 } else if ($childName == "rdfs:subClassOf") {
-                    // the child element stores a URI of another class that this class is a sub class of
-                    // add the rdf:resource value to the parent classes array
-                    array_push($this->parentClasses, $childAttributes["rdf:resource"]);
+                    $this->getParentClassDetails($child, $childAttributes);
                 } else if ($childName == "rdfs:comment") {
                     array_push($this->comments, strval($child));
                 }
+            }
+        }
+
+
+        /**
+         * Process the rdfs:SubClassOf element to get the details of the parent class 
+         * and the relationship between the classes.
+         *
+         * @param \SimpleXMLElement $subclassElement the rdfs:SubClassOf element
+         * @return void
+         */
+        private function getParentClassDetails(\SimpleXMLElement $subclassElement) : void {
+            $attributes = OWLReader::getAttributes($subclassElement);
+
+
+
+            // if attributes contains the rdf:resource
+            if (array_key_exists("rdf:resource", $attributes)) {
+                // add to the parent classes array with no restriction
+                array_push($this->parentClasses, array("parent"=>$attributes["rdf:resource"]));
+            } else {
+                // there is a restriction on the relation to the parent class
+
+                // get the children of the restriction element 
+                // that is the first child of the SubClassElement
+                $restrictionProperties = OWLReader::getChildren(
+                    OWLReader::getChildren($subclassElement)[0]
+                );
+                
+                // read the data from the XML element
+                $restrictionData = array();
+                $parentClass = "";
+                foreach ($restrictionProperties as $property) {
+                    // get the property details
+                    $propertyName = OWLReader::getFullyQualifiedName($property);
+                    $propertyAttributes = OWLReader::getAttributes($property);
+
+                    // process the property and add the value to the restriction data array
+                    if ($propertyName == "owl:onProperty") {
+                        $restrictionData["property"] = $propertyAttributes["rdf:resource"];
+                    } else if ($propertyName == "owl:someValuesFrom") {
+                        $restrictionData["relationship"] = "someValues";
+                        $parentClass = $propertyAttributes["rdf:resource"];
+                    } else if ($propertyName == "owl:allValuesFrom") {
+                        $restrictionData["relationship"] = "allValues";
+                        $parentClass = $propertyAttributes["rdf:resource"];
+                    }
+                }
+
+                // add the parent class to the parent classes array with the restriction data
+                array_push(
+                    $this->parentClasses, 
+                    array(
+                        "parent"=>$parentClass,
+                        "restriction"=>$restrictionData
+                    )
+                );
             }
         }
 
