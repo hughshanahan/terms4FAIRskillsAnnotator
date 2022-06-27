@@ -36,15 +36,20 @@
             $classes = $ontology->queryClasses($searchQuery);
 
             // process the classes into the data array
+            $results = array();
             foreach ($classes as $class) {
                 array_push(
-                    $data, 
+                    $results, 
                     array(
                         "label"=>$class->getLabel(),
                         "about"=>$class->getAbout()
                     )
                 );
             }
+
+            //set the data properties
+            $data["search"] = $searchQuery;
+            $data["results"] = $results;
 
             // return the response
             return new Response(

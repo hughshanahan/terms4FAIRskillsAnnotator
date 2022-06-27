@@ -34,11 +34,21 @@ class TermsSearch {
         const jsonData = JSON.parse(jsonString);
         var html = "";
 
-        html += '<div class="container d-flex flex-column justify-content-center gap-3" id="results">';
+        // container to hold the search and result details
+        html += '<div class="container d-flex flex-column justify-content-left p-0 m-0" id="results-details">';
+
+        html += '<p class="text-secondary p-0 m-0">Searched for: "' + jsonData.search + '"</p>';        
+        html += '<p class="text-secondary p-0 m-0">Results returned: ' + jsonData.results.length + '</p>';
+
+        html += '</div>';
+        
+        // container to hold the results
+        html += '<div class="container d-flex flex-column justify-content-center gap-3 p-0 m-0" id="results">';
 
         // for each object in the JSON array
-        for (let i = 0; i < jsonData.length; ++i) {
-            const term = jsonData[i];
+        const results = jsonData.results;
+        for (let i = 0; i < results.length; ++i) {
+            const term = results[i];
 
             // create the container with the term's details
             html += TermsSearch.createTermContainer(term)
@@ -59,7 +69,7 @@ class TermsSearch {
     static createTermContainer(term) {
         var html = "";
 
-        html += '<div class="container border border-secondary rounded p-3 d-flex flex-row justify-content-between">';
+        html += '<div class="container border border-secondary rounded p-3 m-0 d-flex flex-row justify-content-between">';
 
         html += '<p class="text-primary p-0 m-0"><b>' + term.label + '</b></p>';
         html += '<p class="text-secondary p-0 m-0"><i>(' + term.about + ')</i></p>';
