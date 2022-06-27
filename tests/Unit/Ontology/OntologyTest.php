@@ -117,7 +117,7 @@
          *
          * @return void
          */
-        public function getQueryClasses() : void {
+        public function testQueryClasses() : void {
             // get the classes
             $classes = $this->ontology->queryClasses("Resource");
             $labels = array();

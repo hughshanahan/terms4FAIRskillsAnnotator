@@ -166,7 +166,7 @@
         public function queryClasses(String $regex) : array {
             // get the keys that match the regex from the classIndexed dictionary
             $keys = array_keys($this->classesIndexed);
-            $matchingKeys = preg_grep($pattern, $keys);
+            $matchingKeys = preg_grep("/" . $regex . "/", $keys);
             // create an array of OWLClass objects from the matching keys
             $results = array();
             foreach ($matchingKeys as $matchingKey) {
