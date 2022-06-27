@@ -10,15 +10,13 @@
 
 {% block content %}
 
-    <div class="d-flex flex-column justify-content-center gap-3" id="termssearch-container">
+    <div class="d-flex flex-column justify-content-center gap-5" id="termssearch-container">
 
         <div class="container d-flex justify-content-center" id="search-container">
             <input type="text" class="w-50 lead text-center" id="search-box" name="search-box" onkeyup="TermsSearch.search(this.value)">
         </div>
             
-        <div class="container d-flex justify-content-center" id="results-container">
-            
-        </div>
+        <div class="container d-flex flex-column justify-content-center gap-3" id="results-container"></div>
 
     </div>
 

@@ -15,12 +15,12 @@
     class APIController {
 
         /**
-         * Returns the front end for testing the searching of classes and the search classes API.
+         * Returns the JSON for the terms matching the search term from the ontology.
          *
          * @param Request $request the HTTP request
-         * @return Response the 
+         * @return Response the JSON string of the terms and their metadata
          */
-        public function searchClasses(Request $request) : Response {
+        public function searchTerms(Request $request) : Response {
 
             // get the search string
             $searchQuery = $request->query->get("search");

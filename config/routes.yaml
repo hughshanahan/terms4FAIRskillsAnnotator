@@ -7,8 +7,8 @@ controllers:
 # These are any routes that use the /api path
 
 apiSearchClasses:
-    path: /api/searchClasses
-    controller: App\Controller\APIController::searchClasses
+    path: /api/searchTerms
+    controller: App\Controller\APIController::searchTerms
 
 
 
