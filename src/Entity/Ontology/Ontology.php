@@ -158,15 +158,16 @@
 
 
         /**
-         * Get the array of OWLClass objects that have a label matching the given regex.
+         * Get the array of OWLClass objects that have a label matching the given query.
+         * This is a case insensitive search.
          *
-         * @param String $regex Regex to match
-         * @return array array of OWLClass objects with labels matching the regex
+         * @param String $query the query to match
+         * @return array array of OWLClass objects with labels matching the query
          */
-        public function queryClasses(String $regex) : array {
-            // get the keys that match the regex from the classIndexed dictionary
+        public function queryClasses(String $query) : array {
+            // get the keys that match the query from the classIndexed dictionary
             $keys = array_keys($this->classesIndexed);
-            $matchingKeys = preg_grep("/" . $regex . "/", $keys);
+            $matchingKeys = preg_grep("/" . $query . "/i", $keys); // the query needs to be converted to regex
             // create an array of OWLClass objects from the matching keys
             $results = array();
             foreach ($matchingKeys as $matchingKey) {
