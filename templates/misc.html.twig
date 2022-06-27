@@ -1,0 +1,13 @@
+{# 
+    The misc template can be used by anything that does not need a template of its own.
+    Any content that is passed into the content argument is displayed as raw text - this means that this template can be used to view the base template.
+ #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    {{ content|raw }}
+
+{% endblock %}
