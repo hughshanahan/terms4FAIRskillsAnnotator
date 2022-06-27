@@ -16,7 +16,7 @@
          * @return Response the HTTP response containing the terms search
          */
         public function termsSearch() : Response {
-            return $this->render('termssearch.html.twig');
+            return $this->render('annotator/termsSearch.html.twig');
         }
 
     }
