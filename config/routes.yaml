@@ -3,6 +3,27 @@ controllers:
     type: attribute
 
 
+# === BACK END ROUTES ===
+# These are any routes that use the /api path
+
+apiSearchClasses:
+    path: /api/searchClasses
+    controller: App\Controller\APIController::searchClasses
+
+
+
+
+
+
+
+# === FRONT END ROUTES ===
+
+# Routes for annotator and directly related pages
+
+
+
+# Routes for other pages
+
 readme:
     path: /readme
     controller: App\Controller\MiscController::readme

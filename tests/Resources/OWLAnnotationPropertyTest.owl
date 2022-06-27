@@ -1,0 +1,18 @@
+<rdf:RDF xmlns="https://github.com/terms4fairskills/FAIRterminology#"
+     xml:base="https://github.com/terms4fairskills/FAIRterminology"
+     xmlns:obo="http://purl.obolibrary.org/obo/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:oboInOwl="http://www.geneontology.org/formats/oboInOwl#">
+
+
+    <owl:AnnotationProperty rdf:about="Property_1">
+        <obo:IAO_0000115>Property 1 Definition</obo:IAO_0000115>
+        <oboInOwl:created_by>Property 1 Creator</oboInOwl:created_by>
+        <rdfs:comment>Property 1 Comment</rdfs:comment>
+        <rdfs:label>Property 1 Label</rdfs:label>
+    </owl:AnnotationProperty>
+
+
+</rdf:RDF>
