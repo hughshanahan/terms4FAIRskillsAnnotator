@@ -20,6 +20,10 @@ apiSearchClasses:
 
 # Routes for annotator and directly related pages
 
+termsSearch:
+    path: terms-search
+    controller: App\Controller\AnnotatorController::termsSearch
+
 
 
 # Routes for other pages
