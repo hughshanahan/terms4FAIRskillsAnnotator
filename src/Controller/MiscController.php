@@ -16,9 +16,13 @@
          * @return Response the HTTP response containing the outline of the README.
          */
         public function readme() : Response {
+
+            $parsedown = new \Parsedown();
+            $content = $parsedown->text(file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/../README.md"));
+
             return $this->render('misc.html.twig', [
                 "title" => "README",
-                "content" => "<h1>terms4FAIRskillsAnnotator</h1><p>Tool for annotating materials with terms4FAIRskills ontology.</p>",
+                "content" => $content,
             ]);
         }
     }
