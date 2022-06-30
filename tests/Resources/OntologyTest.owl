@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://github.com/terms4fairskills/FAIRterminology#"
+     xml:base="https://github.com/terms4fairskills/FAIRterminology"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:obo="http://purl.obolibrary.org/obo/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:terms="http://purl.org/dc/terms/">
+
+    <owl:Ontology rdf:about="Ontology">
+        <dc:contributor>Contributor 1</dc:contributor>
+        <dc:contributor>Contributor 2</dc:contributor>
+        <dc:creator>Creator 1</dc:creator>
+        <dc:creator>Creator 2</dc:creator>
+        <terms:description>Ontology description</terms:description>
+        <terms:license>License URL</terms:license>
+        <rdfs:comment>Comment 1</rdfs:comment>
+        <rdfs:comment>Comment 2</rdfs:comment>
+    </owl:Ontology>
+
+
+    <!-- Classes -->
+
+     <owl:Class rdf:about="Resource_1">
+        <rdfs:subClassOf rdf:resource="Resource_2"/>
+        <obo:IAO_0000115>Resource 1 Description</obo:IAO_0000115>
+        <obo:IAO_0000117>Resource 1 Editor</obo:IAO_0000117>
+        <rdfs:comment>Resource 1 Comment</rdfs:comment>
+        <rdfs:label>Resource 1 Label</rdfs:label>
+    </owl:Class>
+
+    <owl:Class rdf:about="Resource_2">
+        <obo:IAO_0000115>Resource 2 Description</obo:IAO_0000115>
+        <obo:IAO_0000117>Resource 2 Editor</obo:IAO_0000117>
+        <rdfs:comment>Resource 2 Comment</rdfs:comment>
+        <rdfs:label>Resource 2 Label</rdfs:label>
+    </owl:Class>
+
+    <owl:Class rdf:about="Alternative_1">
+        <obo:IAO_0000115>Alternative 1 Description</obo:IAO_0000115>
+        <obo:IAO_0000117>Alternative 1 Editor</obo:IAO_0000117>
+        <rdfs:comment>Alternative 1 Comment</rdfs:comment>
+        <rdfs:label>Alternative 1 Label</rdfs:label>
+    </owl:Class>
+
+
+</rdf:RDF>

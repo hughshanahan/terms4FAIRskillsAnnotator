@@ -1,0 +1,59 @@
+<rdf:RDF xmlns="https://github.com/terms4fairskills/FAIRterminology#"
+     xml:base="https://github.com/terms4fairskills/FAIRterminology"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:obo="http://purl.obolibrary.org/obo/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:terms="http://purl.org/dc/terms/"
+     xmlns:oboInOwl="http://www.geneontology.org/formats/oboInOwl#"
+     xmlns:FAIRterminology="https://github.com/terms4fairskills/FAIRterminology/">
+
+     <!-- This is the class element that is used for the majority of the tests -->
+    <owl:Class rdf:about="Resource_1">
+        <rdfs:subClassOf rdf:resource="Resource_2"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="Property_1"/>
+                <owl:someValuesFrom rdf:resource="Resource_3"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <obo:IAO_0000115>Resource 1 Description</obo:IAO_0000115>
+        <obo:IAO_0000117>Resource 1 Editor</obo:IAO_0000117>
+        <rdfs:comment>Resource 1 Comment</rdfs:comment>
+        <rdfs:label>Resource 1 Label</rdfs:label>
+    </owl:Class>
+
+    <!-- This classes provide the parent classes for the first -->
+    <owl:Class rdf:about="Resource_2">
+        <rdfs:label>Resource 2 Label</rdfs:label>
+    </owl:Class>
+
+    <owl:Class rdf:about="Resource_3">
+        <rdfs:label>Resource 3 Label</rdfs:label>
+    </owl:Class>
+
+    <owl:Class rdf:about="Resource_4">
+        <rdfs:label>Resource 4 Label</rdfs:label>
+    </owl:Class>
+
+    <owl:Class rdf:about="Resource_5">
+        <rdfs:label>Resource 5 Label</rdfs:label>
+    </owl:Class>
+
+
+
+
+
+    <!-- Object Properties -->
+    <owl:ObjectProperty rdf:about="Property_1">
+        <rdfs:domain rdf:resource="Resource_4"/>
+        <rdfs:range rdf:resource="Resource_5"/>
+        <rdfs:label xml:lang="en">Property 1 Label</rdfs:label>
+    </owl:ObjectProperty>
+
+
+</rdf:RDF>

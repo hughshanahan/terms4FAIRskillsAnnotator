@@ -12,13 +12,24 @@
     class AnnotatorController extends AbstractController {
 
         /**
-         * Renders the HTML template for the annotator.
+         * Returns the page response for the annotator.
          *
-         * @return Response The HTTP response that contains the annotator HTML
+         * @return Response The HTTP response that contains the annotator
          */
         public function main() : Response {
             return $this->render('annotator/annotator.html.twig');
         }
+
+
+        /**
+         * Returns the page response for the terms search.
+         *
+         * @return Response the HTTP response containing the terms search
+         */
+        public function termsSearch() : Response {
+            return $this->render('annotator/termsSearch.html.twig');
+        }
+
     }
 
 ?>

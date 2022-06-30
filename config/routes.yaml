@@ -3,6 +3,24 @@ controllers:
     type: attribute
 
 
+
+# === BACK END ROUTES ===
+# These are any routes that use the /api path
+
+apiSearchClasses:
+    path: /api/searchTerms
+    controller: App\Controller\APIController::searchTerms
+
+
+
+
+
+
+
+# === FRONT END ROUTES ===
+
+# Routes for annotator and directly related pages
+
 root:
     path: /
     controller: App\Controller\AnnotatorController::main
@@ -11,6 +29,14 @@ annotator:
     path: /annotator
     controller: App\Controller\AnnotatorController::main
 
+termsSearch:
+    path: terms-search
+    controller: App\Controller\AnnotatorController::termsSearch
+
+
+
+# Routes for other pages
+
 readme:
     path: /readme
-    controller: App\Controller\BaseController::readme
+    controller: App\Controller\MiscController::readme
