@@ -7,8 +7,8 @@ controllers:
 # These are any routes that use the /api path
 
 apiSearchClasses:
-    path: /api/searchClasses
-    controller: App\Controller\APIController::searchClasses
+    path: /api/searchTerms
+    controller: App\Controller\APIController::searchTerms
 
 
 
@@ -19,6 +19,10 @@ apiSearchClasses:
 # === FRONT END ROUTES ===
 
 # Routes for annotator and directly related pages
+
+termsSearch:
+    path: terms-search
+    controller: App\Controller\AnnotatorController::termsSearch
 
 
 
