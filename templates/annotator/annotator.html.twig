@@ -1,9 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Terms4FAIRSkills Annotator{% endblock %}
+{% block title %}Annotator{% endblock %}
+
+{% block header %}
+
+    <script src="/scripts/annotator/termsSearch.js"></script>
+
+{% endblock %}
 
 {% block content %}
 
-    <h1>Terms4FAIRSkills Annotator</h1>
+
+    <!-- Terms Search Container -->
+    <div class="container" id="termssearch-container">
+        <div class="row">
+            <!-- Search box -->
+            <div class="col d-flex flex-column justify-content-center gap-5" id="termssearch-container">
+                <div class="container d-flex justify-content-center" id="search-container">
+                    <input type="text" class="w-75 lead text-center" id="search-box" name="search-box" onkeyup="TermsSearch.search(this.value)">
+                </div>   
+                
+            </div>
+
+            <!-- Empty cell to maintain 2x2 grid -->
+            <div class="col"></div>
+        </div>
+        <div class="row">
+            <!-- Search results -->
+            <div class="col d-flex flex-column justify-content-center gap-3" id="results-container"></div>
+
+            <!-- Selected terms list -->
+            <div class="col d-flex flex-column justify-content-center gap-5" id="termssearch-container">
+                <p class="text-center">Selected Terms Appear Here...</p>
+            </div>
+        </div>
+    </div>
+
+    
+    
 
 {% endblock %}
