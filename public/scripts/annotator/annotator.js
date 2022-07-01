@@ -23,7 +23,7 @@ class Annotator extends TermsSearch {
         }
 
         
-        Annotator.refreshSelectedUI();
+        Annotator.refreshDynamicUI();
     }
 
 
@@ -44,6 +44,15 @@ class Annotator extends TermsSearch {
 
 
     // === Selected Terms UI Methods ===
+
+    /**
+     * Aggregates all the refresh dynamic UI calls into one call.
+     * This ensures that all the dynamic UI elements are updated together.
+     */
+    static refreshDynamicUI() {
+        Annotator.refreshSelectedUI();
+    }
+
 
 
     /**
@@ -71,6 +80,7 @@ class Annotator extends TermsSearch {
 
 
     /**
+     * Creates the container for selected term from the URI. 
      * 
      * @param {String} termURI The URI for the term
      * @returns {String} the HTML string for the term container
@@ -86,10 +96,6 @@ class Annotator extends TermsSearch {
         html += '</div>';
         return html;
     }
-
-
-
-
 
 
 
@@ -127,8 +133,15 @@ class Annotator extends TermsSearch {
         html += '</div>';
 
         // right column - this contains the button to add the term to the annotation
+        var disabledAttribute = "";
+        if (document.getElementById("selected-terms").value.split(",").includes(term.about)) {
+            disabledAttribute = " disabled";
+        }
+
+
         html += '<div class="col-3">';
-        html += '<input id="addToSelectedButton" type="button" value="Add Term" onclick="Annotator.addToSelectedTerms(\'' + term.about + '\');" />';
+        html += '<input id="addToSelectedButton" type="button" value="Add Term" '
+            + 'onclick="Annotator.addToSelectedTerms(\'' + term.about + '\');" ' + disabledAttribute + '/>';
         html += '</div>';
 
         //close the grid
