@@ -16,8 +16,26 @@ class Annotator extends TermsSearch {
      */
     static addToSelectedTerms(termLabel) {
         var selectedContainer = document.getElementById("selected-terms-container");
+        var selectedInput = document.getElementById("selected-terms");
 
         selectedContainer.innerHTML += "<p>" + termLabel + "</p>";
+
+        selectedInput.value += termLabel + ",";
+    }
+
+
+    /**
+     * Submits the form to create the output file.
+     */
+    static submit() {
+        var form = document.getElementById("annotator-form");
+
+        // for testing - print the terms that have been selected to the console
+        var terms = document.getElementById("selected-terms").value.split(',');
+        terms.forEach(term => {
+            console.log(term);
+        });
+
     }
 
 

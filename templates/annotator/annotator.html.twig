@@ -11,6 +11,19 @@
 
 {% block content %}
 
+    <!-- Form container -->
+    <form id="annotator-form">
+        <div class="container">
+
+            <!-- Stores a comma seperated list of terms that have been selected -->
+            <input type="hidden" id="selected-terms" name="selected-terms">
+
+
+        </div>
+    </form>
+
+
+
 
     <!-- Terms Search Container -->
     <div class="container" id="termssearch-container">
@@ -35,6 +48,11 @@
         </div>
     </div>
 
+
+    <!-- Submit Button Container -->
+    <div class="container" id="submit-button-container">
+        <input id="submit-button" type="button" value="Submit" onclick="Annotator.submit()" />
+    </div>
     
     
 
