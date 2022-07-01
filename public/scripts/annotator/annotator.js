@@ -16,7 +16,13 @@ class Annotator extends TermsSearch {
      */
     static addToSelectedTerms(termLabel) {
         var selectedInput = document.getElementById("selected-terms");
-        selectedInput.value += termLabel + ",";
+        if (selectedInput.value == "") {
+            selectedInput.value += termLabel;
+        } else {
+            selectedInput.value += "," + termLabel;
+        }
+
+        
         Annotator.refreshSelectedUI();
     }
 
@@ -54,13 +60,31 @@ class Annotator extends TermsSearch {
 
         // for each term
         terms.forEach(term => {
-            html += '<p>' + term + '</p>';
+            html += Annotator.createSelectedTermContainer(term);
         });
 
         // update the inner HTML of the selected terms container
         var selectedContainer = document.getElementById("selected-terms-container");
         selectedContainer.innerHTML = html;
 
+    }
+
+
+    /**
+     * 
+     * @param {String} termURI The URI for the term
+     * @returns {String} the HTML string for the term container
+     */
+    static createSelectedTermContainer(termURI) {
+        var html = "";
+        html += '<div class="container border border-secondary rounded p-3 m-0">';
+
+
+        html += '<p>' + termURI + '</p>';
+
+
+        html += '</div>';
+        return html;
     }
 
 
