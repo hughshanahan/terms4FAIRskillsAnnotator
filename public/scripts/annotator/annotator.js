@@ -1,7 +1,28 @@
 
-
-class AnnotatorSearch extends TermsSearch {
+/**
+ * Class to contain the methods required for the annotator.
+ * 
+ * This class extends TermsSearch to allow it to use the same methods to call the API to search the terms.
+ */
+class Annotator extends TermsSearch {
     
+
+    // === Annotator Form Methods ===
+
+    /**
+     * Adds a term to the list of selected terms.
+     * 
+     * @param {String} termLabel The label of the term to add to the selected terms list
+     */
+    static addToSelectedTerms(termLabel) {
+        var selectedContainer = document.getElementById("selected-terms-container");
+
+        selectedContainer.innerHTML += "<p>" + termLabel + "</p>";
+    }
+
+
+
+    // === Annotator Search Methods ===
 
     /**
      * Starts a search of the terms.
@@ -9,13 +30,9 @@ class AnnotatorSearch extends TermsSearch {
      * @param {String} searchTerm the term to search for
      */
     static search(searchTerm) {
-        const searchEngine = new AnnotatorSearch();
+        const searchEngine = new Annotator();
         searchEngine.searchTerms(searchTerm);
     }
-    
-
-
-
 
     /**
      * Creates the content for the term's container.
@@ -38,7 +55,7 @@ class AnnotatorSearch extends TermsSearch {
 
         // right column - this contains the button to add the term to the annotation
         html += '<div class="col-3">';
-        html += '<p>This is where the button will go</p>';
+        html += '<input id="addToSelectedButton" type="button" value="Add Term" onclick="Annotator.addToSelectedTerms(\'' + term.label + '\');" />';
         html += '</div>';
 
         //close the grid
