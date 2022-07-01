@@ -5,22 +5,19 @@
  * This class extends TermsSearch to allow it to use the same methods to call the API to search the terms.
  */
 class Annotator extends TermsSearch {
-    
+
 
     // === Annotator Form Methods ===
 
     /**
      * Adds a term to the list of selected terms.
      * 
-     * @param {String} termLabel The label of the term to add to the selected terms list
+     * @param {String} termLabel The URI of the selected term
      */
     static addToSelectedTerms(termLabel) {
-        var selectedContainer = document.getElementById("selected-terms-container");
         var selectedInput = document.getElementById("selected-terms");
-
-        selectedContainer.innerHTML += "<p>" + termLabel + "</p>";
-
         selectedInput.value += termLabel + ",";
+        Annotator.refreshSelectedUI();
     }
 
 
@@ -37,6 +34,40 @@ class Annotator extends TermsSearch {
         });
 
     }
+
+
+
+    // === Selected Terms UI Methods ===
+
+
+    /**
+     * Refreshes the list of terms that the user can see based on the list stored in the hidden input.
+     * This ensures that the list that will be processed by the backend always matches what is shown to the user.
+     * This needs to be run after any change to the selected terms input value.
+     */
+    static refreshSelectedUI() {
+        var html = "";
+
+        // get the terms
+        var selectedInput = document.getElementById("selected-terms");
+        var terms = selectedInput.value.split(',');
+
+        // for each term
+        terms.forEach(term => {
+            html += '<p>' + term + '</p>';
+        });
+
+        // update the inner HTML of the selected terms container
+        var selectedContainer = document.getElementById("selected-terms-container");
+        selectedContainer.innerHTML = html;
+
+    }
+
+
+
+
+
+
 
 
 
@@ -73,7 +104,7 @@ class Annotator extends TermsSearch {
 
         // right column - this contains the button to add the term to the annotation
         html += '<div class="col-3">';
-        html += '<input id="addToSelectedButton" type="button" value="Add Term" onclick="Annotator.addToSelectedTerms(\'' + term.label + '\');" />';
+        html += '<input id="addToSelectedButton" type="button" value="Add Term" onclick="Annotator.addToSelectedTerms(\'' + term.about + '\');" />';
         html += '</div>';
 
         //close the grid
