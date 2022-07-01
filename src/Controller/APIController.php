@@ -58,6 +58,40 @@
                 ['content-type' => 'application/json']
             );
         }
+
+
+        /**
+         * Returns the data for a term in JSON format.
+         *
+         * @param Request $request the HTTP request
+         * @return Response the JSON string of the term's metadata
+         */
+        public function getTerm(Request $request) : Response {
+
+            // get the search string
+            $termURI = $request->query->get("term");
+
+            // create the ontology object
+            // currently from the t4fs.owl file in the tests directory
+            $ontology = new Ontology($_SERVER["DOCUMENT_ROOT"] . "/../tests/Resources/t4fs.owl");
+
+            // get the class matching the URI
+            $class = $ontology->getClass($termURI);
+
+            // create the array to store the data that should be returned
+            $data = array(
+                "label"=>$class->getLabel(),
+                "about"=>$class->getAbout()
+            );
+
+            // return the response
+            return new Response(
+                JSONFormatter::arrayToString($data),
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+
+        }
     }
 
 ?>

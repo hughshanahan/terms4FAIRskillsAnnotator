@@ -111,6 +111,21 @@
 
 
         /**
+         * Tests that the URI of the class returned from getClass is the URI that was requested.
+         *
+         * @return void
+         */
+        public function testGetClass() : void {
+            $class = $this->ontology->getClass("Resource_1");
+            $this->assertEquals(
+                "Resource_1",
+                $class->getAbout(),
+                "The URI of the return class did not match the requested URI"
+            );
+        }
+
+
+        /**
          * Tests that the correct classes are returned when querying the ontology classes.
          * The test should return the classes that have the Resource in the label, this should therefore
          * not return the classes that don't have the word resource in the label, such as the Alternative classes.

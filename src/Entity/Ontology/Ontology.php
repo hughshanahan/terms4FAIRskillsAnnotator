@@ -157,6 +157,19 @@
         }
 
 
+
+        /**
+         * Returns the OWLClass object for the requested class.
+         *
+         * @param String $URI The URI of the class to return
+         * @return OWLClass the OWLClass object
+         */
+        public function getClass(String $URI) : OWLClass {
+            return $this->classes[$URI];
+        }
+
+
+
         /**
          * Get the array of OWLClass objects that have a label matching the given query.
          * This is a case insensitive search.

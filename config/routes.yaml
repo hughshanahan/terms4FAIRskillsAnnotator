@@ -7,6 +7,11 @@ controllers:
 # === BACK END ROUTES ===
 # These are any routes that use the /api path
 
+apiGetTerm:
+    path: /api/getTerm
+    controller: App\Controller\APIController::getTerm
+
+
 apiSearchClasses:
     path: /api/searchTerms
     controller: App\Controller\APIController::searchTerms
