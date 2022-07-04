@@ -18,14 +18,17 @@
         <form id="annotator-form">
             <div class="container d-flex flex-column justify-content-center gap-3">
 
-                <input type="text" class="w-75 text-center" id="identifier-input" name="identifier-input" placeholder="Identifier">
-                <input type="text" class="w-75 text-center" id="name-input" name="name-input" placeholder="Name">
-                <input type="text" class="w-75 text-center" id="author-input" name="author-input" placeholder="Author">
-                <input type="text" class="w-75 text-center" id="date-input" name="date-input" placeholder="Date">
+                <div class="container w-75 d-flex flex-column justify-content-center gap-3" id="inputs-container">
+
+                    <input type="text" class="text-center" id="identifier-input" name="identifier-input" placeholder="Identifier">
+                    <input type="text" class="text-center" id="name-input" name="name-input" placeholder="Name">
+                    <input type="text" class="text-center" id="author-input" name="author-input" placeholder="Author">
+                    <input type="text" class="text-center" id="date-input" name="date-input" placeholder="Date">
+
+                </div>
 
                 <!-- Stores a comma seperated list of terms that have been selected -->
                 <input type="hidden" id="selected-terms" name="selected-terms">
-
 
             </div>
         </form>
@@ -44,8 +47,10 @@
                     
                 </div>
 
-                <!-- Empty cell to maintain 2x2 grid -->
-                <div class="col"></div>
+                <!-- Terms count -->
+                <div class="col d-flex flex-column justify-content-center gap-5">
+                    <p class="text-center"><span id="terms-count">0</span> term(s) selected</p>
+                </div>
             </div>
             <div class="row">
                 <!-- Search results -->

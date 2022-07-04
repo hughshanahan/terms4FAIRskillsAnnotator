@@ -80,6 +80,7 @@ class Annotator extends TermsSearch {
      */
     static refreshDynamicUI() {
         Annotator.refreshSelectedUI();
+        Annotator.refreshTermsCounter();
     }
 
 
@@ -125,6 +126,16 @@ class Annotator extends TermsSearch {
                 .catch(err => console.log(err));
         }
 
+    }
+
+
+    /**
+     * Refreshes the counter for the number of terms that have been selected.
+     */
+    static refreshTermsCounter() {
+        var selectedInput = document.getElementById("selected-terms");
+        var terms = selectedInput.value.split(',');
+        document.getElementById("terms-count").innerHTML = terms.length;
     }
 
 
