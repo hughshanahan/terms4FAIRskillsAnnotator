@@ -16,7 +16,12 @@
 
         <!-- Form container -->
         <form id="annotator-form">
-            <div class="container">
+            <div class="container d-flex flex-column justify-content-center gap-3">
+
+                <input type="text" class="w-75 text-center" id="identifier-input" name="identifier-input" placeholder="Identifier">
+                <input type="text" class="w-75 text-center" id="name-input" name="name-input" placeholder="Name">
+                <input type="text" class="w-75 text-center" id="author-input" name="author-input" placeholder="Author">
+                <input type="text" class="w-75 text-center" id="date-input" name="date-input" placeholder="Date">
 
                 <!-- Stores a comma seperated list of terms that have been selected -->
                 <input type="hidden" id="selected-terms" name="selected-terms">
