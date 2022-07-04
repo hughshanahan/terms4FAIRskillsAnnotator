@@ -12,17 +12,17 @@ class Annotator extends TermsSearch {
     /**
      * Adds a term to the list of selected terms.
      * 
-     * @param {String} termLabel The URI of the selected term
+     * @param {String} termToAdd The URI of the selected term
      */
-    static addToSelectedTerms(termLabel) {
+    static addToSelectedTerms(termToAdd) {
         var selectedInput = document.getElementById("selected-terms");
 
-        if (!(selectedInput.value.split(",").includes(termLabel))) {
+        if (!(selectedInput.value.split(",").includes(termToAdd))) {
             // the term is not already in the list
             if (selectedInput.value == "") {
-                selectedInput.value += termLabel;
+                selectedInput.value += termToAdd;
             } else {
-                selectedInput.value += "," + termLabel;
+                selectedInput.value += "," + termToAdd;
             }
 
             Annotator.refreshDynamicUI(); // only update the UI if something has changed
@@ -149,7 +149,7 @@ class Annotator extends TermsSearch {
 
         // right column - this contains the button to add the term to the annotation
         html += '<div class="col-3 d-flex flex-column justify-content-center">';
-        html += '<button type="button" class="btn btn-danger" id="removeFromSelectedButton" '
+        html += '<button type="button" class="btn btn-danger" id="selectedRemoveFromSelectedButton" '
             + 'onclick="Annotator.removeFromSelectedTerms(\'' + term.about + '\');" />Remove</button>';
         html += '</div>';
 
@@ -196,8 +196,22 @@ class Annotator extends TermsSearch {
 
         // right column - this contains the button to add the term to the annotation
         html += '<div class="col-3 d-flex flex-column justify-content-center">';
-        html += '<button type="button" class="btn btn-success" id="addToSelectedButton" '
-            + 'onclick="Annotator.addToSelectedTerms(\'' + term.about + '\');" />Add</button>';
+
+
+        var selectedTerms = document.getElementById("selected-terms").value.split(",");
+        if (selectedTerms.includes(term.about)) {
+            // the term is in the selected list - add the remove button
+            html += '<button type="button" class="btn btn-danger" id="addToSelectedButton" '
+                + 'onclick="Annotator.removeFromSelectedTerms(\'' + term.about + '\');" />Remove</button>';
+
+
+        } else {
+            // the term is not already in the selected list - add the add button
+            html += '<button type="button" class="btn btn-success" id="removeFromSelectedButton" '
+                + 'onclick="Annotator.addToSelectedTerms(\'' + term.about + '\');" />Add</button>';
+
+        }
+
         html += '</div>';
 
         //close the grid
