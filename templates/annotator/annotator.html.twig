@@ -11,49 +11,53 @@
 
 {% block content %}
 
-    <!-- Form container -->
-    <form id="annotator-form">
-        <div class="container">
 
-            <!-- Stores a comma seperated list of terms that have been selected -->
-            <input type="hidden" id="selected-terms" name="selected-terms">
+    <div class="container d-flex flex-column justify-content-center gap-3">
 
+        <!-- Form container -->
+        <form id="annotator-form">
+            <div class="container">
 
-        </div>
-    </form>
-
+                <!-- Stores a comma seperated list of terms that have been selected -->
+                <input type="hidden" id="selected-terms" name="selected-terms">
 
 
-
-    <!-- Terms Search Container -->
-    <div class="container" id="termssearch-container">
-        <div class="row">
-            <!-- Search box -->
-            <div class="col d-flex flex-column justify-content-center gap-5" id="termssearch-container">
-                <div class="container d-flex justify-content-center" id="search-container">
-                    <input type="text" class="w-75 lead text-center" id="search-box" name="search-box" onkeyup="Annotator.search(this.value)">
-                </div>   
-                
             </div>
+        </form>
 
-            <!-- Empty cell to maintain 2x2 grid -->
-            <div class="col"></div>
+
+
+
+        <!-- Terms Search Container -->
+        <div class="container" id="termssearch-container">
+            <div class="row">
+                <!-- Search box -->
+                <div class="col d-flex flex-column justify-content-center gap-5" id="termssearch-container">
+                    <div class="container d-flex justify-content-center" id="search-container">
+                        <input type="text" class="w-75 lead text-center" id="search-box" name="search-box" placeholder="Search for Terms..." onkeyup="Annotator.search(this.value)">
+                    </div>   
+                    
+                </div>
+
+                <!-- Empty cell to maintain 2x2 grid -->
+                <div class="col"></div>
+            </div>
+            <div class="row">
+                <!-- Search results -->
+                <div class="col d-flex flex-column justify-content-start gap-3" id="results-container"></div>
+
+                <!-- Selected terms list -->
+                <div class="col d-flex flex-column justify-content-start gap-3" id="selected-terms-container"></div>
+            </div>
         </div>
-        <div class="row">
-            <!-- Search results -->
-            <div class="col d-flex flex-column justify-content-start gap-3" id="results-container"></div>
 
-            <!-- Selected terms list -->
-            <div class="col d-flex flex-column justify-content-start gap-3" id="selected-terms-container"></div>
+
+        <!-- Submit Button Container -->
+        <div class="container w-75 d-flex flex-column justify-content-center" id="submit-button-container">
+            <button type="button" class="btn btn-primary" id="submit" onclick="Annotator.submit();" />Annotate</button>
         </div>
-    </div>
 
-
-    <!-- Submit Button Container -->
-    <div class="container" id="submit-button-container">
-        <input id="submit-button" type="button" value="Submit" onclick="Annotator.submit()" />
     </div>
-    
     
 
 {% endblock %}

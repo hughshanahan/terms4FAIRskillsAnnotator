@@ -204,7 +204,6 @@ class Annotator extends TermsSearch {
             html += '<button type="button" class="btn btn-danger" id="addToSelectedButton" '
                 + 'onclick="Annotator.removeFromSelectedTerms(\'' + term.about + '\');" />Remove</button>';
 
-
         } else {
             // the term is not already in the selected list - add the add button
             html += '<button type="button" class="btn btn-success" id="removeFromSelectedButton" '
