@@ -16,13 +16,17 @@ class Annotator extends TermsSearch {
      */
     static addToSelectedTerms(termLabel) {
         var selectedInput = document.getElementById("selected-terms");
-        if (selectedInput.value == "") {
-            selectedInput.value += termLabel;
-        } else {
-            selectedInput.value += "," + termLabel;
+
+        if (!(selectedInput.value.split(",").includes(termLabel))) {
+            // the term is not already in the list
+            if (selectedInput.value == "") {
+                selectedInput.value += termLabel;
+            } else {
+                selectedInput.value += "," + termLabel;
+            }
+
+            Annotator.refreshDynamicUI(); // only update the UI if something has changed
         }
-        
-        Annotator.refreshDynamicUI();
     }
 
     /**
