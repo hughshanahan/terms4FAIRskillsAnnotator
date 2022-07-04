@@ -21,7 +21,32 @@ class Annotator extends TermsSearch {
         } else {
             selectedInput.value += "," + termLabel;
         }
+        
+        Annotator.refreshDynamicUI();
+    }
 
+    /**
+     * Removes a term from the list of selected terms.
+     * 
+     * @param {String} termToRemove The URI of the selected term
+     */
+     static removeFromSelectedTerms(termToRemove) {
+        var terms = document.getElementById("selected-terms").value.split(',');
+        var newTerms = [];
+
+        // for each term
+        terms.forEach(term => {
+            if (!(term === termToRemove)) {
+                // the term is not the term to remove - add it to the new terms list
+                newTerms.push(term);
+            }
+        });
+
+        // clear the existing list
+        document.getElementById("selected-terms").value = "";
+
+        // add the new list
+        document.getElementById("selected-terms").value = newTerms.toString();
         
         Annotator.refreshDynamicUI();
     }
@@ -61,43 +86,76 @@ class Annotator extends TermsSearch {
      * This needs to be run after any change to the selected terms input value.
      */
     static refreshSelectedUI() {
-        var html = "";
+        // example used: https://stackoverflow.com/a/63370138
 
         // get the terms
         var selectedInput = document.getElementById("selected-terms");
         var terms = selectedInput.value.split(',');
 
-        // for each term
-        terms.forEach(term => {
-            html += Annotator.createSelectedTermContainer(term);
-        });
-
-        // update the inner HTML of the selected terms container
+        // get the container to place the selected container in
         var selectedContainer = document.getElementById("selected-terms-container");
-        selectedContainer.innerHTML = html;
+
+        if (terms[0] == "") {
+            // there are no terms as the input string was empty - clear the container
+            selectedContainer.innerHTML = "";
+        } else {
+            // there are terms - process them
+            let promiseArray = [];
+            for(let i=0; i<terms.length; i++){
+                promiseArray.push(fetch("/api/getTerm?term=" + terms[i]));
+            }
+
+            // proces the promises
+            Promise.all(promiseArray)
+                .then(responses => {
+                    // process the responses
+                    selectedContainer.innerHTML = "";
+                    responses.map(response => {
+                        // convert the response to JSON object and process it
+                        response.json()
+                            .then(json => {
+                                selectedContainer.innerHTML += Annotator.createSelectedTermContainer(json);
+                            });
+                    });
+                })
+                .catch(err => console.log(err));
+        }
 
     }
 
 
     /**
-     * Creates the container for selected term from the URI. 
+     * Creates the container for selected term from the Term JSON. 
      * 
-     * @param {String} termURI The URI for the term
+     * @param {JSON} term The JSON data for the term
      * @returns {String} the HTML string for the term container
      */
-    static createSelectedTermContainer(termURI) {
+    static createSelectedTermContainer(term) {
         var html = "";
         html += '<div class="container border border-secondary rounded p-3 m-0">';
 
+        // start the grid
+        html += '<div class="container">';
+        html += '<div class="row">';
 
-        html += '<p>' + termURI + '</p>';
+        // left column - this is the same as the terms search
+        html += '<div class="col">';
+        html += '<p>' + term.label + '</p>';
+        html += '</div>';
 
+        // right column - this contains the button to add the term to the annotation
+        html += '<div class="col-3 d-flex flex-column justify-content-center">';
+        html += '<button type="button" class="btn btn-danger" id="removeFromSelectedButton" '
+            + 'onclick="Annotator.removeFromSelectedTerms(\'' + term.about + '\');" />Remove</button>';
+        html += '</div>';
+
+        //close the grid
+        html += '</div>';
+        html += '</div>';
 
         html += '</div>';
         return html;
     }
-
-
 
 
 
@@ -133,15 +191,9 @@ class Annotator extends TermsSearch {
         html += '</div>';
 
         // right column - this contains the button to add the term to the annotation
-        var disabledAttribute = "";
-        if (document.getElementById("selected-terms").value.split(",").includes(term.about)) {
-            disabledAttribute = " disabled";
-        }
-
-
-        html += '<div class="col-3">';
-        html += '<input id="addToSelectedButton" type="button" value="Add Term" '
-            + 'onclick="Annotator.addToSelectedTerms(\'' + term.about + '\');" ' + disabledAttribute + '/>';
+        html += '<div class="col-3 d-flex flex-column justify-content-center">';
+        html += '<button type="button" class="btn btn-success" id="addToSelectedButton" '
+            + 'onclick="Annotator.addToSelectedTerms(\'' + term.about + '\');" />Add</button>';
         html += '</div>';
 
         //close the grid
