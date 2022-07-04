@@ -100,7 +100,7 @@ class Annotator extends TermsSearch {
         // get the container to place the selected container in
         var selectedContainer = document.getElementById("selected-terms-container");
 
-        if (terms[0] == "") {
+        if (terms[0] === "") {
             // there are no terms as the input string was empty - clear the container
             selectedContainer.innerHTML = "";
         } else {
@@ -135,7 +135,16 @@ class Annotator extends TermsSearch {
     static refreshTermsCounter() {
         var selectedInput = document.getElementById("selected-terms");
         var terms = selectedInput.value.split(',');
-        document.getElementById("terms-count").innerHTML = terms.length;
+
+        var count = "0"; // default to no terms
+
+        if (!(terms[0] === "")) {
+            // the input contains terms - update with the length
+            count = terms.length;
+        }
+
+        document.getElementById("terms-count").innerHTML = count;
+        
     }
 
 
