@@ -106,10 +106,57 @@ class TermsSearch {
         html += '<p class="text-primary p-0 m-0"><b>' + term.label + '</b></p>';
         html += '<p class="text-secondary p-0 m-0"><i>(' + T4FSAnnotator.breakURL(term.about) + ')</i></p>';
 
+        html += '<hr />';
+
+        html += this.createTermModal(term);
+
         html += '</div>';
 
         return html;
     }
 
+
+    createTermModal(term) {
+
+        // the modals need a way to identify themselves - the URI of the term is the only value that can be unique
+        // however this cannot be used because it may contain characters that cannot appear in an element ID.
+        // Therefore take a hash of the URI as this is very likely to be unique within the possible list of URIs
+        var uriHash = T4FSAnnotator.hashString(term.about);
+
+        var html = "";
+
+        // create the button to trigger the modal
+        html += '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TermModal' + uriHash + '">';
+        html += 'More...';
+        html += '</button>';
+
+        // create the modal containers
+        html += '<div class="modal fade" id="TermModal' + uriHash + '" tabindex="-1" aria-labelledby="TermModal' + uriHash + 'Label" aria-hidden="true">';
+        html += '<div class="modal-dialog">';
+        html += '<div class="modal-content">';
+
+        // create the modal header
+        html += '<div class="modal-header">';
+        html += '<h5 class="modal-title" id="TermModal' + uriHash + 'Label">' + term.label + '</h5>';
+        html += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+        html += '</div>';
+
+        // create the modal content
+        html += '<div class="modal-body">';
+        html += '<p>Modal Content</p>';
+        html += '</div>';
+
+        // create the modal footer
+        html += '<div class="modal-footer">';
+        html += '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>';
+        html += '</div>';
+
+        // close the modal containers
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+
+        return html;
+    }
 
 }

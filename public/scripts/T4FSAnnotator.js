@@ -29,5 +29,39 @@ class T4FSAnnotator {
     }
 
 
+
+
+
+    /**
+     * Creates a 32 bit hash of the given string.
+     * 
+     * 
+     * @param {String} string the string to hash
+     * @returns {String} the hash of the string
+     */
+    static hashString(string) {
+        var hash = 0;
+          
+        if (string.length == 0) {
+            // if the string is empty - the hash is 0
+            return hash;
+        }
+          
+        for (let i = 0; i < string.length; i++) {
+            // for each character in the string
+            const char = string.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+
+        if (hash < 0) {
+            // if the hash is negative, make it positive
+            hash *= -1;
+        }
+          
+        return hash;
+    }
+
+
 }
 
