@@ -173,11 +173,31 @@ class TermsSearch {
 
         html += '<div class="d-flex flex-column justify-content-start">';
 
-        html += '<h6 class="text-secondary">' + term.about + '</h6>';
+        html += this.createModalBodyPair("URI", term.about);
+
+        
+        if (term.comments.length > 0) {
+            // there are comments
+            html += this.createModalBodyPair("Comments", "");
+            html += '<ul>';
+            term.comments.forEach(comment => {
+                html += "<li>" + comment + '</li>';
+            });
+            html += '</ul>';
+        } else {
+            html += this.createModalBodyPair("Comments", "<i>(none)</i>");
+        }
+        
+
 
         html += '</div>';
 
         return html;
+    }
+
+
+    createModalBodyPair(title, value) {
+        return '<p><strong>' + title + ' - </strong>' + value + '</p>';
     }
 
 }
