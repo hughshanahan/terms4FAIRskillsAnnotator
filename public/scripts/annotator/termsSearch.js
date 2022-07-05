@@ -116,6 +116,8 @@ class TermsSearch {
     }
 
 
+    // === Modal View Methods ===
+
     createTermModal(term) {
 
         // the modals need a way to identify themselves - the URI of the term is the only value that can be unique
@@ -132,18 +134,18 @@ class TermsSearch {
 
         // create the modal containers
         html += '<div class="modal fade" id="TermModal' + uriHash + '" tabindex="-1" aria-labelledby="TermModal' + uriHash + 'Label" aria-hidden="true">';
-        html += '<div class="modal-dialog">';
+        html += '<div class="modal-dialog modal-xl">';
         html += '<div class="modal-content">';
 
         // create the modal header
         html += '<div class="modal-header">';
-        html += '<h5 class="modal-title" id="TermModal' + uriHash + 'Label">' + term.label + '</h5>';
+        html += '<h5 class="modal-title text-primary" id="TermModal' + uriHash + 'Label">' + term.label + '</h5>';
         html += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
         html += '</div>';
 
         // create the modal content
         html += '<div class="modal-body">';
-        html += '<p>Modal Content</p>';
+        html += this.createModalBody(term);
         html += '</div>';
 
         // create the modal footer
@@ -154,6 +156,25 @@ class TermsSearch {
         // close the modal containers
         html += '</div>';
         html += '</div>';
+        html += '</div>';
+
+        return html;
+    }
+
+
+    /**
+     * Creates the content for the term details modal view.
+     * 
+     * @param {JSON} term the JSON object for the term
+     * @returns {String} the HTML string for the modal content
+     */
+    createModalBody(term) {
+        var html = "";
+
+        html += '<div class="d-flex flex-column justify-content-start">';
+
+        html += '<h6 class="text-secondary">' + term.about + '</h6>';
+
         html += '</div>';
 
         return html;
