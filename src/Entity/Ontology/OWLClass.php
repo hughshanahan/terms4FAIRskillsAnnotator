@@ -161,6 +161,26 @@
             return $this->comments;
         }
 
+
+
+
+
+        /**
+         * Returns an array that can then be converted into JSON by the JSONFormatter.
+         *
+         * @return array an array ready to be converted to JSON
+         */
+        public function getJSONArray() : array {
+            $data = array();
+
+            $data["label"] = $this->getLabel();
+            $data["about"] = $this->getAbout();
+            $data["parents"] = $this->getParentClasses();
+            $data["comments"] = $this->getComments();
+
+            return $data;
+        }
+
     }
 
 ?>

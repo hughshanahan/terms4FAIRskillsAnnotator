@@ -40,10 +40,7 @@
             foreach ($classes as $class) {
                 array_push(
                     $results, 
-                    array(
-                        "label"=>$class->getLabel(),
-                        "about"=>$class->getAbout()
-                    )
+                    $class->getJSONArray()
                 );
             }
 
@@ -79,10 +76,7 @@
             $class = $ontology->getClass($termURI);
 
             // create the array to store the data that should be returned
-            $data = array(
-                "label"=>$class->getLabel(),
-                "about"=>$class->getAbout()
-            );
+            $data = $class->getJSONArray();
 
             // return the response
             return new Response(

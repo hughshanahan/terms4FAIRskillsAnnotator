@@ -120,6 +120,33 @@
         }
 
 
+
+        /**
+         * Tests that the array that is returned by the getJSONArray method matches the expected properties from the ontology.
+         *
+         * @return void
+         */
+        public function testGetJSONArray() : void {
+            $this->assertEquals(
+                array(
+                    "label"=>"Resource 1 Label",
+                    "about"=>"Resource_1",
+                    "parents"=>array(
+                        array("parent"=>"Resource_2"),
+                        array(
+                            "parent"=>"Resource_3",
+                            "restriction"=>
+                                array("property"=>"Property_1", "relationship"=>"someValues")
+                        )
+                    ),
+                    "comments"=> array("Resource 1 Comment")
+                ),
+                $this->class->getJSONArray(),
+                "The JSON array was not the expected array"
+            );
+        }
+
+
     }
 
 ?>
