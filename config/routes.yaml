@@ -17,7 +17,9 @@ apiSearchClasses:
     controller: App\Controller\APIController::searchTerms
 
 
-
+apiGetObjectProperty:
+    path: /api/getObjectProperty
+    controller: App\Controller\APIController::getObjectProperty
 
 
 
