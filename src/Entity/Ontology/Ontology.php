@@ -3,6 +3,8 @@
     namespace App\Entity\Ontology;
 
     use App\Entity\Ontology\OWLReader;
+    use App\Entity\Ontology\OWLClass;
+    use App\Entity\Ontology\OWLObjectProperty;
 
     /**
      * Stores the ontology file and allows it to be queried.
@@ -18,6 +20,8 @@
 
         private $classes; // stores a dictionary of strings to OWLClass objects 
         private $classesIndexed; // stores a dictionary of the class labels to class about properties
+
+        private $objectProperties; // stores a dictionary of strings to OWLObjectProperty objects
 
         /**
          * Constructs an Ontology object.
@@ -38,6 +42,8 @@
             $this->classes = array();
             $this->classesIndexed = array();
 
+            $this->objectProperties = array();
+
             // for each direct child of the root element in the ontology
             foreach (OWLReader::getChildren($xml) as $element) {
                 // get the fully qualifed name and handle the element depending on the name
@@ -48,6 +54,9 @@
                 } else if ($elementName == "owl:Class") {
                     $classElement = new OWLClass($element);
                     $this->classes[$classElement->getAbout()] = $classElement;
+                } else if ($elementName == "owl:ObjectProperty") {
+                    $propertyElement = new OWLObjectProperty($element);
+                    $this->objectProperties[$propertyElement->getAbout()] = $propertyElement;
                 }
 
             }
@@ -188,6 +197,19 @@
             }
             return $results;
         }
+
+
+        /**
+         * Returns the OWLObjectProperty object for the requested object property.
+         *
+         * @param String $URI The URI of the property to return
+         * @return OWLObjectProperty the OWLObjectProperty object
+         */
+        public function getObjectProperty(String $URI) : OWLObjectProperty {
+            return $this->objectProperties[$URI];
+        }
+
+
 
 
     }

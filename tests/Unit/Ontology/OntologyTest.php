@@ -150,7 +150,19 @@
 
 
 
-
+        /**
+         * Tests that the URI of the object property returned from getObjectProperty is the URI that was requested.
+         *
+         * @return void
+         */
+        public function testGetObjectProperty() : void {
+            $property = $this->ontology->getObjectProperty("Property_1");
+            $this->assertEquals(
+                "Property_1",
+                $property->getAbout(),
+                "The URI of the returned object property did not match the requested URI"
+            );
+        }
 
 
 

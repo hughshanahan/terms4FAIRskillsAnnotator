@@ -4,6 +4,7 @@
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:obo="http://purl.obolibrary.org/obo/"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:oboInOwl="http://www.geneontology.org/formats/oboInOwl#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:terms="http://purl.org/dc/terms/">
@@ -43,6 +44,20 @@
         <rdfs:comment>Alternative 1 Comment</rdfs:comment>
         <rdfs:label>Alternative 1 Label</rdfs:label>
     </owl:Class>
+
+
+    <!-- Object Properties -->
+
+    <owl:ObjectProperty rdf:about="Property_1">
+        <rdfs:subPropertyOf rdf:resource="Property_2"/>
+        <rdfs:domain rdf:resource="Property 1 Domain"/>
+        <rdfs:range rdf:resource="Property 1 Range"/>
+        <obo:IAO_0000117>Property 1 Editor 1</obo:IAO_0000117>
+        <obo:IAO_0000117>Property 1 Editor 1</obo:IAO_0000117>
+        <oboInOwl:created_by>Property 1 Creator</oboInOwl:created_by>
+        <oboInOwl:creation_date>2022-01-01T00:00:00.000000Z</oboInOwl:creation_date>
+        <rdfs:label xml:lang="en">Property 1 Label</rdfs:label>
+    </owl:ObjectProperty>
 
 
 </rdf:RDF>
