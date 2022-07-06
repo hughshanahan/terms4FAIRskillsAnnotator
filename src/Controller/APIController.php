@@ -10,7 +10,7 @@
     use App\Entity\Ontology\Ontology;
 
     /**
-     * Class to handle requests to the API
+     * Class to handle requests to the API.
      */
     class APIController {
 
@@ -89,7 +89,12 @@
 
 
 
-
+        /**
+         * Returns the data about the object property in JSON format
+         *
+         * @param Request $request the HTTP request containing the URI of the object property
+         * @return Response the response containing the JSON data about the object property
+         */
         public function getObjectProperty(Request $request) : Response {
             // get the property URI from the request
             $propertyURI = $request->query->get("property");
