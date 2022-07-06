@@ -23,13 +23,9 @@
          * @return Response the JSON string of the terms and their metadata
          */
         public function searchTerms(Request $request) : Response {
-
-            // get the search string
+            // get the search string from the request and get the results JSON String
             $searchQuery = $request->query->get("search");
-
-            $handler = new APIHandler("ontologyID"); // replace with real ontology ID string when developed
-            $jsonString = $handler->searchTerms($searchQuery);
-
+            $jsonString = APIHandler::searchTerms("ontologyID", $searchQuery); // replace with real ontology ID string when developed
             // return the response
             return new Response(
                 $jsonString,
@@ -46,13 +42,9 @@
          * @return Response the JSON string of the term's metadata
          */
         public function getTerm(Request $request) : Response {
-
-            // get the search string
+            // get the term URI from the request and get the term's JSON String
             $termURI = $request->query->get("term");
-
-            $handler = new APIHandler("ontologyID"); // replace with real ontology ID string when developed
-            $jsonString = $handler->getTerm($termURI);
-
+            $jsonString = APIHandler::getTerm("ontologyID", $termURI); // replace with real ontology ID string when developed
             // return the response
             return new Response(
                 $jsonString,
@@ -71,12 +63,9 @@
          * @return Response the response containing the JSON data about the object property
          */
         public function getObjectProperty(Request $request) : Response {
-            // get the property URI from the request
+            // get the property URI from the request and get the property's JSON string
             $propertyURI = $request->query->get("property");
-
-            $handler = new APIHandler("ontologyID"); // replace with real ontology ID string when developed
-            $jsonString = $handler->getObjectProperty($propertyURI);
-
+            $jsonString = APIHandler::getObjectProperty("ontologyID", $propertyURI); // replace with real ontology ID string when developed
             // return the response
             return new Response(
                 $jsonString,

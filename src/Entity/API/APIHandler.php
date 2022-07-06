@@ -8,22 +8,89 @@
 
     /**
      * Class to process requests made to the API controller.
+     * 
+     * The purpose of this class is to remove as much of the logic from the APIController class.
      */
     class APIHandler {
 
+        /*
+            ===== Class Methods =====
+
+            These are methods called by the APIController.
+            Their purpose is to convert a call to the constructor and 
+            then to the correct method into one method call.
+        */
+
+
+        /**
+         * Returns an instance of the APIHandler class.
+         *
+         * @param String $ontologyID the Database ID of the ontology to use.
+         * @return APIHandler the APIHandler object
+         */
+        private static function getHandler(String $ontologyID) : APIHandler {
+            return new APIHandler($ontologyID);
+        }
+
+
+        /**
+         * Returns a JSON String of the search results.
+         *
+         * @param String $ontologyID the key of the ontology
+         * @param String $searchQuery the search query
+         * @return String the JSON string of the search results
+         */
+        public static function searchTerms(String $ontologyID, String $searchQuery) : String {
+            return self::getHandler($ontologyID)->_searchTerms($searchQuery);
+        }
+
+        /**
+         * Returns a JSON String of the term details.
+         *
+         * @param String $ontologyID the key of the ontology
+         * @param String $termURI the URI of the term to return
+         * @return String the JSON string of the term details
+         */
+        public static function getTerm(String $ontologyID, String $termURI) : String {
+            return self::getHandler($ontologyID)->_getTerm($termURI);
+        }
+
+        /**
+         * Returns a JSON String of the object property details.
+         *
+         * @param String $ontologyID the key of the ontology
+         * @param String $propertyURI the URI of the object property to return
+         * @return String the JSON string of the term details
+         */
+        public static function getObjectProperty(String $ontologyID, String $propertyURI) : String {
+            return self::getHandler($ontologyID)->_getObjectProperty($propertyURI);
+        }
+
+
+        /*
+            ===== Instance Methods =====
+
+            These are the methods that are run by the class methods.
+
+        */
+
+
+        // === Instance Variables ===
         private $ontology;
+
+
+        // === Constructor and related methods ====
 
         /**
          * Constructs an instance of the APIHandler class.
          * 
          * @param String $ontologyID the key of the ontology
          */
-        public function __construct(String $ontologyID) {
+        private function __construct(String $ontologyID) {
             // create the ontology object
             // currently from the t4fs.owl file in the tests directory
             $this->ontology = $this->getOntology($ontologyID);
         }
-
 
         /**
          * Returns the ontology object from the database.
@@ -44,13 +111,19 @@
         }
 
 
+
+
+        // === Operation methods ===
+        // They are all prefixed with an underscore to differentiate them from the class method versions
+
+
         /**
          * Returns a JSON String of the search results.
          *
          * @param String $searchQuery the search query
          * @return String the JSON string of the search results
          */
-        public function searchTerms(String $searchQuery) : String {
+        private function _searchTerms(String $searchQuery) : String {
 
             // search the ontology
             $classes = $this->ontology->queryClasses($searchQuery);
@@ -79,7 +152,7 @@
          * @param String $termURI the URI of the term to return
          * @return String the JSON string of the term details
          */
-        public function getTerm(String $termURI) : String {
+        private function _getTerm(String $termURI) : String {
             // get the class matching the URI
             $class = $this->ontology->getClass($termURI);
 
@@ -91,7 +164,13 @@
         }
 
 
-        public function getObjectProperty(String $propertyURI) : String {
+        /**
+         * Returns a JSON String of the object property details.
+         *
+         * @param String $propertyURI the URI of the object property to return
+         * @return String the JSON string of the term details
+         */
+        private function _getObjectProperty(String $propertyURI) : String {
             // get the object property matching the URI
             $property = $this->ontology->getObjectProperty($propertyURI);
 

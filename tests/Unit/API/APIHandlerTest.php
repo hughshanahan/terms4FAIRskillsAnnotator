@@ -12,26 +12,8 @@
      */
     class APIHandlerTest extends TestCase {
 
-        private $handler;
-
-        /**
-         * Set Up method to create an instance of the APIHandler class before each test.
-         *
-         * @return void
-         */
-        protected function setUp() : void {
-            $this->handler = new APIHandler("test");
-        }
-
-        /**
-         * Tests that the object is correctly instantiated.
-         *
-         * @return void
-         */
-        public function testInstantiation() : void {
-            $this->assertInstanceOf(APIHandler::class, $this->handler);
-        }
-
+        // the database ID to use for the tests
+        const ONTOLOGYID = "test";
 
         /**
          * Tests that the JSON String returned from the searchTerms method is in the correct format.
@@ -42,7 +24,7 @@
          */
         public function testSearchTerms() : void {
             // get the JSON String as an associative array
-            $string = $this->handler->searchTerms("metadata");
+            $string = APIHandler::searchTerms(self::ONTOLOGYID, "Resource");
             $array = JSONFormatter::stringToArray($string);
 
             // check for the expected keys
@@ -65,7 +47,7 @@
          */
         public function testGetTerm() : void {
             // get the json as an associative array
-            $string = $this->handler->getTerm("Resource_1");
+            $string = APIHandler::getTerm(self::ONTOLOGYID, "Resource_1");
             $array = JSONFormatter::stringToArray($string);
 
             // test that the URI of the term returned is the requested URI 
@@ -84,7 +66,7 @@
          */
         public function testGetObjectProperty() : void {
             // get the json as an associative array
-            $string = $this->handler->getObjectProperty("Property_1");
+            $string = APIHandler::getObjectProperty(self::ONTOLOGYID, "Property_1");
             $array = JSONFormatter::stringToArray($string);
 
             // test that the URI of the term returned is the requested URI 
