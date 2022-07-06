@@ -91,6 +91,18 @@
         }
 
 
+        public function getObjectProperty(String $propertyURI) : String {
+            // get the object property matching the URI
+            $property = $this->ontology->getObjectProperty($propertyURI);
+
+            // get the JSON data to return
+            $data = array("about"=>$property->getAbout());
+
+            // return the JSON String
+            return JSONFormatter::arrayToString($data);
+        }
+
+
     }
 
 ?>

@@ -77,6 +77,25 @@
         }
 
 
+        /**
+         * Test that the JSON data returned is for the object property that was requested.
+         *
+         * @return void
+         */
+        public function testGetObjectProperty() : void {
+            // get the json as an associative array
+            $string = $this->handler->getObjectProperty("Property_1");
+            $array = JSONFormatter::stringToArray($string);
+
+            // test that the URI of the term returned is the requested URI 
+            $this->assertEquals(
+                "Property_1",
+                $array["about"],
+                "The URI of the returned object property is not the requested URI"
+            );
+        }
+
+
     }
 
 ?>

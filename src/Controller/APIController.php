@@ -74,19 +74,12 @@
             // get the property URI from the request
             $propertyURI = $request->query->get("property");
 
-            // create the ontology object
-            // currently from the t4fs.owl file in the tests directory
-            $ontology = new Ontology($_SERVER["DOCUMENT_ROOT"] . "/../tests/Resources/t4fs.owl");
-
-            // get the object property matching the URI
-            $property = $ontology->getObjectProperty($propertyURI);
-
-            // get the JSON data to return
-            $data = array("about"=>$property->getAbout());
+            $handler = new APIHandler("ontologyID"); // replace with real ontology ID string when developed
+            $jsonString = $handler->getObjectProperty($propertyURI);
 
             // return the response
             return new Response(
-                JSONFormatter::arrayToString($data),
+                $jsonString,
                 Response::HTTP_OK,
                 ['content-type' => 'application/json']
             );
