@@ -175,29 +175,49 @@ class TermsSearch {
 
         html += this.createModalBodyPair("URI", term.about);
 
+        html += this.createModalBodyList("Comments", term.comments)
         
-        if (term.comments.length > 0) {
-            // there are comments
-            html += this.createModalBodyPair("Comments", "");
-            html += '<ul>';
-            term.comments.forEach(comment => {
-                html += "<li>" + comment + '</li>';
-            });
-            html += '</ul>';
-        } else {
-            html += this.createModalBodyPair("Comments", "<i>(none)</i>");
-        }
-        
-
-
         html += '</div>';
 
         return html;
     }
 
-
+    /**
+     * Creates an entry in the list of attributes. 
+     * The title is in bold and followed by a hyphen.
+     * The value followes this.
+     * 
+     * @param {String} title the title to give the pair
+     * @param {String} value the value of the pair
+     * @returns {String} the HTML string for the pair
+     */
     createModalBodyPair(title, value) {
         return '<p><strong>' + title + ' - </strong>' + value + '</p>';
+    }
+
+    /**
+     * Creates a list of the values from an array.
+     * 
+     * @param {String} title the title to give the list
+     * @param {array} list the list of values
+     * @return {String} the HTML string for the list
+     */
+    createModalBodyList(title, list) {
+        var html = "";
+        // process the comments element
+        if (list.length > 0) {
+            // there are elements in the list
+            html += this.createModalBodyPair(title, "");
+            html += '<ul>';
+            list.forEach(element => {
+                html += "<li>" + element + '</li>';
+            });
+            html += '</ul>';
+        } else {
+            // there are no elements in the list
+            html += this.createModalBodyPair(title, "<i>(none)</i>");
+        }
+        return html;
     }
 
 }

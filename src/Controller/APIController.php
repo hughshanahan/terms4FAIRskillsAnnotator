@@ -51,7 +51,6 @@
                 Response::HTTP_OK,
                 ['content-type' => 'application/json']
             );
-
         }
 
 
@@ -72,7 +71,6 @@
                 Response::HTTP_OK,
                 ['content-type' => 'application/json']
             );
-
         }
     }
 
