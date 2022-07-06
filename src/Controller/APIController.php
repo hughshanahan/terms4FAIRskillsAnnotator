@@ -5,6 +5,8 @@
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\Request;
 
+    use App\Entity\API\APIHandler;
+
     use App\Entity\API\JSONFormatter;
 
     use App\Entity\Ontology\Ontology;
@@ -25,32 +27,12 @@
             // get the search string
             $searchQuery = $request->query->get("search");
 
-            // create the array to store the data that should be returned
-            $data = array();
-
-            // create the ontology object
-            // currently from the t4fs.owl file in the tests directory
-            $ontology = new Ontology($_SERVER["DOCUMENT_ROOT"] . "/../tests/Resources/t4fs.owl");
-
-            // search the ontology
-            $classes = $ontology->queryClasses($searchQuery);
-
-            // process the classes into the data array
-            $results = array();
-            foreach ($classes as $class) {
-                array_push(
-                    $results, 
-                    $class->getJSONArray()
-                );
-            }
-
-            //set the data properties
-            $data["search"] = $searchQuery;
-            $data["results"] = $results;
+            $handler = new APIHandler("ontologyID"); // replace with real ontology ID string when developed
+            $jsonString = $handler->searchTerms($searchQuery);
 
             // return the response
             return new Response(
-                JSONFormatter::arrayToString($data),
+                $jsonString,
                 Response::HTTP_OK,
                 ['content-type' => 'application/json']
             );

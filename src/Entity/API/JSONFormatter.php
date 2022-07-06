@@ -20,6 +20,17 @@
         }
 
 
+        /**
+         * Converts a JSON String to an associative array of values.
+         *
+         * @param String $string the JSON String
+         * @return array the associative array of values
+         */
+        public static function stringToArray(String $string) : array {
+            return json_decode($string, true);
+        }
+
+
     }
 
 ?>
