@@ -50,19 +50,12 @@
             // get the search string
             $termURI = $request->query->get("term");
 
-            // create the ontology object
-            // currently from the t4fs.owl file in the tests directory
-            $ontology = new Ontology($_SERVER["DOCUMENT_ROOT"] . "/../tests/Resources/t4fs.owl");
-
-            // get the class matching the URI
-            $class = $ontology->getClass($termURI);
-
-            // create the array to store the data that should be returned
-            $data = $class->getJSONArray();
+            $handler = new APIHandler("ontologyID"); // replace with real ontology ID string when developed
+            $jsonString = $handler->getTerm($termURI);
 
             // return the response
             return new Response(
-                JSONFormatter::arrayToString($data),
+                $jsonString,
                 Response::HTTP_OK,
                 ['content-type' => 'application/json']
             );

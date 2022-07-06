@@ -57,6 +57,26 @@
         }
 
 
+
+        /**
+         * Test that the JSON data returned is for the term that was requested.
+         *
+         * @return void
+         */
+        public function testGetTerm() : void {
+            // get the json as an associative array
+            $string = $this->handler->getTerm("Resource_1");
+            $array = JSONFormatter::stringToArray($string);
+
+            // test that the URI of the term returned is the requested URI 
+            $this->assertEquals(
+                "Resource_1",
+                $array["about"],
+                "The URI of the returned term is not the requested URI"
+            );
+        }
+
+
     }
 
 ?>

@@ -25,9 +25,16 @@
         }
 
 
+        /**
+         * Returns the ontology object from the database.
+         *
+         * @param String $ontologyID the key for the ontology
+         * @return Ontology the ontology object
+         */
         private function getOntology(String $ontologyID) : Ontology {
             if ($ontologyID == "test") {
-                return new Ontology("tests/Resources/t4fs.owl");
+                // if the ID is "test" return the Ontology object for the OntologyTest.owl file
+                return new Ontology("tests/Resources/OntologyTest.owl");
             } else {
                 // this will get the serialised ontology from the database and return the object
                 // for now just return the stored ontology
@@ -38,7 +45,7 @@
 
 
         /**
-         * Retuns a JSON String of the search results.
+         * Returns a JSON String of the search results.
          *
          * @param String $searchQuery the search query
          * @return String the JSON string of the search results
@@ -65,6 +72,23 @@
             return JSONFormatter::arrayToString($data);
         }
 
+
+        /**
+         * Returns a JSON String of the term details.
+         *
+         * @param String $termURI the URI of the term to return
+         * @return String the JSON string of the term details
+         */
+        public function getTerm(String $termURI) : String {
+            // get the class matching the URI
+            $class = $this->ontology->getClass($termURI);
+
+            // create the array to store the data that should be returned
+            $data = $class->getJSONArray();
+
+            // return the JSON String
+            return JSONFormatter::arrayToString($data);
+        }
 
 
     }
