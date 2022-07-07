@@ -63,5 +63,32 @@ class T4FSAnnotator {
     }
 
 
+
+
+    /**
+     * Convert a HTML form to a JSON object.
+     * 
+     * @param {HTMLElement} form the form HTML object
+     * @returns {JSON} a JSON object storing the form data
+     */
+    static formToJSON(form) {
+        let output = {};
+        new FormData(form).forEach((value, key) => {
+            // Check if property already exist in the JSON data
+            if ( Object.prototype.hasOwnProperty.call(output, key)) {
+                let current = output[key];
+                if (!(Array.isArray(current))) {
+                    // If it's not an array, convert it to an array.
+                    current = output[key] = [current];
+                }
+                current.push(value); // Add the new value to the array.
+            } else {
+                output[key] = value;
+            }
+        });
+        return JSON.stringify(output);
+    }
+
+
 }
 

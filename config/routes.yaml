@@ -23,6 +23,10 @@ apiGetObjectProperty:
 
 
 
+apiSaveResource:
+    path: /api/saveResource
+    controller: App\Controller\APIController::saveResource
+
 
 # === FRONT END ROUTES ===
 

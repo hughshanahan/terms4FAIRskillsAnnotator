@@ -72,6 +72,37 @@
                 ['content-type' => 'application/json']
             );
         }
+
+
+
+
+        /**
+         * Saves the resource data to the database.
+         *
+         * @param Request $request the HTTP request
+         * @return Response the response containing JSON data with status information about the saving of the resource
+         */
+        public function saveResource(Request $request) : Response {
+
+            // get the data about the resource as an associative array
+            $resourceData = json_decode($request->getContent(), true);
+
+
+            // create the return string
+            $jsonString = JSONFormatter::arrayToString(
+                array(
+                    "status"=>"ok", 
+                    "data"=>$resourceData
+                )
+            );
+
+            // return the response
+            return new Response(
+                $jsonString,
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+        }
     }
 
 ?>

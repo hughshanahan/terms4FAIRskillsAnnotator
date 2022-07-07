@@ -61,12 +61,18 @@ class Annotator extends TermsSearch {
      */
     static submit() {
         var form = document.getElementById("annotator-form");
+        var data = T4FSAnnotator.formToJSON(form);
 
-        // for testing - print the terms that have been selected to the console
-        var terms = document.getElementById("selected-terms").value.split(',');
-        terms.forEach(term => {
-            console.log(term);
-        });
+        fetch("/api/saveResource",
+            {
+                method: "POST",
+                body: data
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(err => console.log(err));
 
     }
 
