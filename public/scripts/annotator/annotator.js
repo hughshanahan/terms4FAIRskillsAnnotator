@@ -100,6 +100,7 @@ class Annotator extends TermsSearch {
         // get the container to place the selected container in
         var selectedContainer = document.getElementById("selected-terms-container");
 
+
         if (terms[0] === "") {
             // there are no terms as the input string was empty - clear the container
             selectedContainer.innerHTML = "";
@@ -119,7 +120,7 @@ class Annotator extends TermsSearch {
                         // convert the response to JSON object and process it
                         response.json()
                             .then(json => {
-                                selectedContainer.innerHTML += Annotator.createSelectedTermContainer(json);
+                                selectedContainer.innerHTML += TermSearchResult.create(json, "annotator", terms);
                             });
                     });
                 })
@@ -148,39 +149,6 @@ class Annotator extends TermsSearch {
     }
 
 
-    /**
-     * Creates the container for selected term from the Term JSON. 
-     * 
-     * @param {JSON} term The JSON data for the term
-     * @returns {String} the HTML string for the term container
-     */
-    static createSelectedTermContainer(term) {
-        var html = "";
-        html += '<div class="container border border-secondary rounded p-3 m-0">';
-
-        // start the grid
-        html += '<div class="container">';
-        html += '<div class="row">';
-
-        // left column - this is the same as the terms search
-        html += '<div class="col">';
-        html += '<p>' + term.label + '</p>';
-        html += '</div>';
-
-        // right column - this contains the button to add the term to the annotation
-        html += '<div class="col-3 d-flex flex-column justify-content-center">';
-        html += '<button type="button" class="btn btn-danger" id="selectedRemoveFromSelectedButton" '
-            + 'onclick="Annotator.removeFromSelectedTerms(\'' + term.about + '\');" />Remove</button>';
-        html += '</div>';
-
-        //close the grid
-        html += '</div>';
-        html += '</div>';
-
-        html += '</div>';
-        return html;
-    }
-
 
 
     // === Annotator Search Methods ===
@@ -191,54 +159,9 @@ class Annotator extends TermsSearch {
      * @param {String} searchTerm the term to search for
      */
     static search(searchTerm) {
-        const searchEngine = new Annotator();
-        searchEngine.searchTerms(searchTerm);
+        var selectedInput = document.getElementById("selected-terms");
+        var selectedTerms = selectedInput.value.split(',');
+        TermsSearch.searchTerms(searchTerm, "annotator", selectedTerms);
     }
-
-    /**
-     * Creates the content for the term's container.
-     * This overrides the method of the same name in the TermsSearch class.
-     * 
-     * @param {JSON} term the JSON object for the term
-     * @returns {String} the HTML string for the term container's contents
-     */
-    createTermContainerContents(term) {
-        var html = "";
-
-        // start the grid
-        html += '<div class="container">';
-        html += '<div class="row">';
-
-        // left column - this is the same as the terms search
-        html += '<div class="col">';
-        html += super.createTermContainerContents(term);
-        html += '</div>';
-
-        // right column - this contains the button to add the term to the annotation
-        html += '<div class="col-3 d-flex flex-column justify-content-center">';
-
-
-        var selectedTerms = document.getElementById("selected-terms").value.split(",");
-        if (selectedTerms.includes(term.about)) {
-            // the term is in the selected list - add the remove button
-            html += '<button type="button" class="btn btn-danger" id="addToSelectedButton" '
-                + 'onclick="Annotator.removeFromSelectedTerms(\'' + term.about + '\');" />Remove</button>';
-
-        } else {
-            // the term is not already in the selected list - add the add button
-            html += '<button type="button" class="btn btn-success" id="removeFromSelectedButton" '
-                + 'onclick="Annotator.addToSelectedTerms(\'' + term.about + '\');" />Add</button>';
-
-        }
-
-        html += '</div>';
-
-        //close the grid
-        html += '</div>';
-        html += '</div>';
-
-        return html;
-    }
-
 
 }

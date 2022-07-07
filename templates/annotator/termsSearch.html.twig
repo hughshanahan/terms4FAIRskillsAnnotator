@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'annotator/annotatorBase.html.twig' %}
 
 {% block title %}Terms Search{% endblock %}
 
 {% block header %}
 
-    <script src="/scripts/annotator/termsSearch.js"></script>
+    {{ parent() }}
 
 {% endblock %}
 
