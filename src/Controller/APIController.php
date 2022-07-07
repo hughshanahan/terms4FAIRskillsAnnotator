@@ -9,8 +9,6 @@
 
     use App\Entity\API\JSONFormatter;
 
-    use App\Entity\Ontology\Ontology;
-
     /**
      * Class to handle requests to the API.
      */
@@ -25,7 +23,8 @@
         public function searchTerms(Request $request) : Response {
             // get the search string from the request and get the results JSON String
             $searchQuery = $request->query->get("search");
-            $jsonString = APIHandler::searchTerms("ontologyID", $searchQuery); // replace with real ontology ID string when developed
+            $jsonString = APIHandler::searchTerms("ontologyID", $searchQuery); 
+                // replace with real ontology ID string when developed
             // return the response
             return new Response(
                 $jsonString,
@@ -44,7 +43,8 @@
         public function getTerm(Request $request) : Response {
             // get the term URI from the request and get the term's JSON String
             $termURI = $request->query->get("term");
-            $jsonString = APIHandler::getTerm("ontologyID", $termURI); // replace with real ontology ID string when developed
+            $jsonString = APIHandler::getTerm("ontologyID", $termURI); 
+                // replace with real ontology ID string when developed
             // return the response
             return new Response(
                 $jsonString,
@@ -64,7 +64,8 @@
         public function getObjectProperty(Request $request) : Response {
             // get the property URI from the request and get the property's JSON string
             $propertyURI = $request->query->get("property");
-            $jsonString = APIHandler::getObjectProperty("ontologyID", $propertyURI); // replace with real ontology ID string when developed
+            $jsonString = APIHandler::getObjectProperty("ontologyID", $propertyURI); 
+                // replace with real ontology ID string when developed
             // return the response
             return new Response(
                 $jsonString,
@@ -84,17 +85,10 @@
          */
         public function saveResource(Request $request) : Response {
 
-            // get the data about the resource as an associative array
+            // get the data about the resource as an associative array and pass it to the handler
             $resourceData = json_decode($request->getContent(), true);
-
-
-            // create the return string
-            $jsonString = JSONFormatter::arrayToString(
-                array(
-                    "status"=>"ok", 
-                    "data"=>$resourceData
-                )
-            );
+            $jsonString = APIHandler::saveResource("ontologyID", "resourceID", $resourceData); 
+                // replace with real ontology and resource IDs string when developed
 
             // return the response
             return new Response(

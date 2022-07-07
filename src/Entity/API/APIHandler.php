@@ -22,6 +22,8 @@
         */
 
 
+        // === GET Methods ===
+
         /**
          * Returns an instance of the APIHandler class.
          *
@@ -65,6 +67,25 @@
         public static function getObjectProperty(String $ontologyID, String $propertyURI) : String {
             return self::getHandler($ontologyID)->_getObjectProperty($propertyURI);
         }
+
+
+
+        // === POST Methods ===
+
+        /**
+         * Saves the resource data to the database.
+         *
+         * @param String $ontologyID the ID of the ontology
+         * @param String $resourceID the ID of the resource
+         * @param array $resourceData an associative array of the resource data
+         * @return String A JSON String of the status of the save
+         */
+        public static function saveResource(String $ontologyID, String $resourceID, array $resourceData) : String {
+            return self::getHandler($ontologyID)->_saveResource($resourceID, $resourceData);
+        }
+
+
+
 
 
         /*
@@ -115,6 +136,9 @@
 
         // === Operation methods ===
         // They are all prefixed with an underscore to differentiate them from the class method versions
+
+
+        // === GET METHODS ===
 
 
         /**
@@ -179,6 +203,32 @@
 
             // return the JSON String
             return JSONFormatter::arrayToString($data);
+        }
+
+
+
+
+
+        // === POST Methods ===
+
+
+        /**
+         * Saves the resource data to the database.
+         *
+         * @param String $resourceID the ID of the resource
+         * @param array $resourceData an associative array of the resource data
+         * @return String A JSON String of the status of the save
+         */
+        public function _saveResource(String $resourceID, array $resourceData) : String {
+            // create the return string
+            $data = array(
+                "status"=>"ok", 
+                "data"=>$resourceData
+            );
+
+
+            return JSONFormatter::arrayToString($data);
+
         }
 
 
