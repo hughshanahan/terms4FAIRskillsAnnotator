@@ -13,18 +13,30 @@
 {% block content %}
 
 
-    <div class="container d-flex flex-column justify-content-center gap-3">
+    <div class="container d-flex flex-column justify-content-start gap-5 p-0">
 
         <!-- Form container -->
         <form id="annotator-form">
-            <div class="container d-flex flex-column justify-content-center gap-3">
+            <div class="container d-flex flex-column justify-content-center gap-3 p-0">
 
-                <div class="container w-75 d-flex flex-column justify-content-center gap-3" id="inputs-container">
+                <h4 class="text-center">Resource Details</h4>
+
+                <div class="container w-75 d-flex flex-column justify-content-center gap-3 p-0" id="inputs-container">
 
                     <input type="text" class="text-center" id="identifier-input" name="identifier-input" placeholder="Identifier">
-                    <input type="text" class="text-center" id="name-input" name="name-input" placeholder="Name">
-                    <input type="text" class="text-center" id="author-input" name="author-input" placeholder="Author">
-                    <input type="text" class="text-center" id="date-input" name="date-input" placeholder="Date">
+
+                    <input type="text" class="text-center" id="name-input" name="name-input" placeholder="Resource Name">
+
+                    <div class="container d-flex flex-row justify-content-center gap-3 p-0" id="author-input-container">
+                        <input type="text" class="flex-grow-1 text-center" id="author-firstname-input" name="author-firstname-input" placeholder="Author Firstname">
+                        <input type="text" class="flex-grow-1 text-center" id="author-surname-input" name="author-surname-input" placeholder="Author Surname">
+                    </div>
+
+                    <div class="container d-flex flex-row justify-content-center gap-3 p-0" id="date-input-container">
+                        <input type="text" class="flex-grow-1 text-center" id="date-day-input" name="date-day-input" placeholder="Day">
+                        <input type="text" class="flex-grow-1 text-center" id="date-month-input" name="date-month-input" placeholder="Month">
+                        <input type="text" class="flex-grow-1 text-center" id="date-year-input" name="date-year-input" placeholder="Year">
+                    </div>
 
                 </div>
 
@@ -35,30 +47,36 @@
         </form>
 
 
-
+        
 
         <!-- Terms Search Container -->
         <div class="container" id="termssearch-container">
-            <div class="row">
-                <!-- Search box -->
-                <div class="col d-flex flex-column justify-content-center gap-5" id="termssearch-container">
-                    <div class="container d-flex justify-content-center" id="search-container">
-                        <input type="text" class="w-75 lead text-center" id="search-box" name="search-box" placeholder="Search for Terms..." onkeyup="Annotator.search(this.value)">
-                    </div>   
-                    
-                </div>
 
-                <!-- Terms count -->
-                <div class="col d-flex flex-column justify-content-center gap-5">
-                    <p class="text-center"><span id="terms-count">0</span> term(s) selected</p>
-                </div>
-            </div>
-            <div class="row">
-                <!-- Search results -->
-                <div class="col d-flex flex-column justify-content-start gap-3" id="results-container"></div>
+            <h4 class="text-center">Resource Terms</h4>
 
-                <!-- Selected terms list -->
-                <div class="col d-flex flex-column justify-content-start gap-3" id="selected-terms-container"></div>
+            <!-- Grid container -->
+            <div class="container">
+                <div class="row">
+                    <!-- Search box -->
+                    <div class="col d-flex flex-column justify-content-center gap-5" id="termssearch-container">
+                        <div class="container d-flex justify-content-center" id="search-container">
+                            <input type="text" class="w-75 lead text-center" id="search-box" name="search-box" placeholder="Search for Terms..." onkeyup="Annotator.search(this.value)">
+                        </div>   
+                        
+                    </div>
+
+                    <!-- Terms count -->
+                    <div class="col d-flex flex-column justify-content-center gap-5">
+                        <p class="text-center"><span id="terms-count">0</span> term(s) selected</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Search results -->
+                    <div class="col d-flex flex-column justify-content-start gap-3" id="results-container"></div>
+
+                    <!-- Selected terms list -->
+                    <div class="col d-flex flex-column justify-content-start gap-3" id="selected-terms-container"></div>
+                </div>
             </div>
         </div>
 
