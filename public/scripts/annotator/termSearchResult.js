@@ -1,12 +1,28 @@
 
 class TermSearchResult {
 
+
+    /**
+     * Creates the container for the term.
+     * 
+     * @param {JSON} term The JSON data of the term
+     * @param {String} mode The mode to display the results - termSearch or annotator - defaults to termsSearch
+     * @param {Array} selectedTerms The list of already selected terms - defaults to an empty array
+     * @returns 
+     */
     static create(term, mode="termsSearch", selectedTerms=[]) {
         var termsSearchResult = new TermSearchResult(term, mode, selectedTerms);
         return termsSearchResult.createContainer();
     }
 
 
+    /**
+     * Constructs a TermSearchResult object.
+     * 
+     * @param {JSON} term The JSON data of the term
+     * @param {String} mode The mode to display the results - termSearch or annotator
+     * @param {Array} selectedTerms The list of already selected terms
+     */
     constructor(term, mode, selectedTerms) {
         this.term = term;
         this.mode = mode;

@@ -2,14 +2,27 @@
 
 class SearchResults {
 
-
+    /**
+     * Creates the HTML for the term search results.
+     * 
+     * @param {JSON} response The JSON data of the results
+     * @param {String} mode The mode to display the results - termSearch or annotator - defaults to termsSearch
+     * @param {Array} selectedTerms The list of already selected terms - defaults to an empty array
+     * @returns {String} the HTML string of the search results
+     */
     static create(response, mode="termsSearch", selectedTerms=[]) {
         var searchResults = new SearchResults(response, mode, selectedTerms);
         return searchResults.createResults();
     }
 
 
-
+    /**
+     * Constructs a SearchTerms object.
+     * 
+     * @param {JSON} response The JSON data of the results
+     * @param {String} mode The mode to display the results - termSearch or annotator - defaults to termsSearch
+     * @param {Array} selectedTerms The list of already selected terms - defaults to an empty array 
+     */
     constructor(response, mode, selectedTerms) {
         this.response = response;
         this.mode = mode;
@@ -17,6 +30,11 @@ class SearchResults {
     }
 
 
+    /**
+     * Returns the HTML string for the search results.
+     * 
+     * @returns {String} the HTML string of the search results
+     */
     createResults() {
         // create the JSON object from the string and initalise the html variable
         var html = "";
