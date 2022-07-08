@@ -17,9 +17,11 @@
 
 
         <!-- Submit Button Container -->
-        <div class="container w-75 d-flex flex-row justify-content-end align-items-baseline gap-5" id="submit-button-container">
-            <p>Last Saved at: <span id="last-saved-at">Never</span></p>
-            <button type="button" class="btn btn-primary" id="submit" onclick="Annotator.submit();">Save</button>
+        <div class="container w-75 d-flex flex-column justify-content-end p-0" id="submit-button-container">
+            <div class="container d-flex flex-column justify-content-center gap-2 p-0">
+                <button type="button" class="btn btn-primary text-center px-5" id="submit" onclick="Annotator.submit();">Save</button>
+                <p class="text-center">Last Saved at: <span id="last-saved-at">Never</span></p>
+            </div>
         </div>
 
 
