@@ -90,5 +90,49 @@ class T4FSAnnotator {
     }
 
 
+
+
+    /**
+     * Downlaods a JSON object as a .json file.
+     * 
+     * @param {JSON} exportObj the JSON object to download
+     * @param {String} exportName the filename of the download
+     */
+    static downloadObjectAsJson(exportObj, exportName) {
+        // https://stackoverflow.com/a/30800715
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", exportName + ".json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+
+
+    // === Timestamp to Clock conversion ===
+    
+    /**
+     * Converts a unix timestamp to hh:mm format.
+     * 
+     * @param {int} timestamp the unix timestamp to get as a string
+     * @returns {String} the timestamp in hh:mm format
+     */
+    static timestampToString(timestamp) {
+        // https://stackoverflow.com/a/847196
+
+        // Create a new JavaScript Date object based on the timestamp
+        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+        var date = new Date(timestamp * 1000);
+        // Hours part from the timestamp
+        var hours = ("0" + date.getHours()).slice(-2); // get the last two digits
+        // Minutes part from the timestamp
+        var minutes = ("0" + date.getMinutes()).slice(-2); // get the last two digits
+
+        return hours + ':' + minutes;
+
+    }
+
 }
 

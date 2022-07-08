@@ -220,13 +220,29 @@
          * @return String A JSON String of the status of the save
          */
         public function _saveResource(String $resourceID, array $resourceData) : String {
-            // create the return string
-            $data = array(
-                "status"=>"ok", 
-                "data"=>$resourceData
+            // outer array means that the object will be in an array - just like materials.json
+
+            $terms = explode(',', $resourceData["selected-terms"]);
+
+            $materialData = array(
+                array(
+                    "doi" => $resourceData["identifier-input"],
+                    "name" => $resourceData["name-input"],
+                    "author" => $resourceData["author-surname-input"] . ", " . $resourceData["author-firstname-input"],
+                    "date" => $resourceData["date-year-input"] . "-" . $resourceData["date-month-input"] . "-" . $resourceData["date-day-input"],
+                    "concept" => $terms
+                )
             );
 
+            // create the return data
+            $data = array(
+                "status"=>"ok", 
+                "savedAt" => time(),
+                "data"=>$resourceData,
+                "material"=>$materialData
+            );
 
+            // return the JSON String
             return JSONFormatter::arrayToString($data);
 
         }

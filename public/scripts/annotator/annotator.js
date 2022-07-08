@@ -71,6 +71,8 @@ class Annotator extends TermsSearch {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
+                T4FSAnnotator.downloadObjectAsJson(data.material, "materials");
+                document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt);
             })
             .catch(err => console.log(err));
 

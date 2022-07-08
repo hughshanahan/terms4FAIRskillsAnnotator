@@ -15,6 +15,14 @@
 
     <div class="container d-flex flex-column justify-content-start gap-5 p-0">
 
+
+        <!-- Submit Button Container -->
+        <div class="container w-75 d-flex flex-row justify-content-end align-items-baseline gap-5" id="submit-button-container">
+            <p>Last Saved at: <span id="last-saved-at">Never</span></p>
+            <button type="button" class="btn btn-primary" id="submit" onclick="Annotator.submit();">Save</button>
+        </div>
+
+
         <!-- Form container -->
         <form id="annotator-form">
             <div class="container d-flex flex-column justify-content-center gap-3 p-0">
@@ -78,12 +86,6 @@
                     <div class="col d-flex flex-column justify-content-start gap-3" id="selected-terms-container"></div>
                 </div>
             </div>
-        </div>
-
-
-        <!-- Submit Button Container -->
-        <div class="container w-75 d-flex flex-column justify-content-center" id="submit-button-container">
-            <button type="button" class="btn btn-primary" id="submit" onclick="Annotator.submit();" />Annotate</button>
         </div>
 
     </div>
