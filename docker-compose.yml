@@ -1,9 +1,56 @@
 version: '3.8'
 services:
+
+  db:
+    image: "mariadb:latest"
+    container_name: terms4FAIRskills_annotator_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_database:/var/lib/mysql/materials_annotator
+    networks:
+      - "annotatornet"
+    ports:
+      - "127.0.0.1:3306:3306"
+
   web:
     build:
       context: .
+      args:
+        - API_ADDRESS=${API_ADDRESS}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - SYMFONY_APP_ENV=${SYMFONY_APP_ENV}
+        - SYMFONY_APP_DEBUG=${SYMFONY_APP_DEBUG}
+    container_name: terms4FAIRskills_annotator_web
+    restart: unless-stopped
     volumes:
       - ./:/var/www/
     ports:
       - 8000:80
+    links:
+      - "db"
+    networks:
+      - "annotatornet"
+    depends_on:
+      - "db"
+    environment:
+      HTTPD_SERVER_ALIAS: ${HTTPD_SERVER_ALIAS}
+      HTTPD_SERVER_NAME: ${HTTPD_SERVER_NAME}
+      HTTPD_SERVER_ADMIN: ${HTTPD_SERVER_ADMIN}
+
+
+networks:
+  annotatornet: {}
+
+volumes:
+  mysql_data:
+    external: false
+  mysql_database:
+    external: false
