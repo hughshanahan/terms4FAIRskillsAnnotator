@@ -2,7 +2,7 @@ FROM php:8.1-apache
 
 # Configure Apache
 RUN a2enmod rewrite
-COPY docker/apache.conf /etc/apache2/sites-enabled/000-default.conf
+COPY docker/web/apache.conf /etc/apache2/sites-enabled/000-default.conf
 COPY . /var/www
 RUN service apache2 restart
 

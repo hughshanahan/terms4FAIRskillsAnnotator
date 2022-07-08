@@ -2,7 +2,12 @@ version: '3.8'
 services:
 
   db:
-    image: "mariadb:latest"
+    build:
+      context: ./docker/db
+      args:
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
     container_name: terms4FAIRskills_annotator_db
     restart: always
     environment:
@@ -11,6 +16,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
       - mysql_data:/var/lib/mysql
       - mysql_database:/var/lib/mysql/materials_annotator
     networks:
@@ -20,7 +26,7 @@ services:
 
   web:
     build:
-      context: .
+      context: ./docker/web
       args:
         - API_ADDRESS=${API_ADDRESS}
         - MYSQL_USER=${MYSQL_USER}
