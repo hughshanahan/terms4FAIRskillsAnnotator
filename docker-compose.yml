@@ -2,12 +2,7 @@ version: '3.8'
 services:
 
   db:
-    build:
-      context: ./docker/db
-      args:
-        - MYSQL_USER=${MYSQL_USER}
-        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        - MYSQL_DATABASE=${MYSQL_DATABASE}
+    image: mariadb:latest
     container_name: terms4FAIRskills_annotator_db
     restart: always
     environment:
@@ -22,11 +17,11 @@ services:
     networks:
       - "annotatornet"
     ports:
-      - "127.0.0.1:3306:3306"
+      - "8001:3306"
 
   web:
     build:
-      context: ./docker/web
+      context: .
       args:
         - API_ADDRESS=${API_ADDRESS}
         - MYSQL_USER=${MYSQL_USER}

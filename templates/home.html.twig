@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}terms4FAIRSkills Annotator{% endblock %}
+
+{% block header %}
+
+    <script>
+
+        function loadOntology() {
+            var form = document.getElementById("ontology-select-form");
+            var data = T4FSAnnotator.formToJSON(form);
+
+            fetch("/api/loadOntology",
+                {
+                    method: "POST",
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById("ontology-id").innerHTML = data.ontologyID;
+                })
+                .catch(err => console.log(err));
+        }
+
+    </script>
+
+
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="container d-flex flex-column justify-content-start gap-5 p-0">
+
+
+        <form id="ontology-select-form">
+            <input type="text" name="ontology-url-input" id="ontology-url-input" />
+        </form>
+
+        <button type="button" class="btn btn-primary text-center px-5" id="submit" onclick="loadOntology();">Load ontology</button>
+
+
+        <p id="ontology-id"></p>
+
+    </div>
+    
+
+{% endblock %}

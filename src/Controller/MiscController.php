@@ -10,6 +10,10 @@
      */
     class MiscController extends AbstractController {
 
+        public function home() : Response {
+            return $this->render('home.html.twig');
+        }
+
         /**
          * Returns the basic outline of the README.
          *
@@ -25,6 +29,19 @@
                 "content" => $content,
             ]);
         }
+
+
+        /**
+         * Returns the phpinfo contents.
+         *
+         * @return Response the Response containing the phpinfo output
+         */
+        public function serverInfo() : Response {
+            return new Response(
+                phpinfo()
+            );
+        }
+        
     }
 
 ?>

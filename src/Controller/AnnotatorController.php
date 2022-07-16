@@ -16,7 +16,7 @@
          *
          * @return Response The HTTP response that contains the annotator
          */
-        public function main() : Response {
+        public function annotator() : Response {
             return $this->render('annotator/annotator.html.twig');
         }
 

@@ -76,6 +76,26 @@
 
 
 
+        /**
+         * Loads the ontology into the database ready to use for annotating resources.
+         *
+         * @param Request $request the request containing the URL of the ontology to store.
+         * @return Response The response containing JSON data with the database id of the ontology 
+         */
+        public function loadOntology(Request $request) : Response {
+            // get the data as an associative array and pass it to the handler
+            $requestData = json_decode($request->getContent(), true);
+            $jsonString = APIHandler::loadOntology("test");  //$requestData["ontology-url-input"]
+                // replace with real ontology and resource IDs string when developed
+
+            // return the response
+            return new Response(
+                $jsonString,
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+        }
+
 
         /**
          * Saves the resource data to the database.

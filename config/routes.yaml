@@ -23,6 +23,12 @@ apiGetObjectProperty:
 
 
 
+
+apiLoadOntology:
+    path: /api/loadOntology
+    controller: App\Controller\APIController::loadOntology
+
+
 apiSaveResource:
     path: /api/saveResource
     controller: App\Controller\APIController::saveResource
@@ -30,15 +36,16 @@ apiSaveResource:
 
 # === FRONT END ROUTES ===
 
-# Routes for annotator and directly related pages
-
 root:
     path: /
-    controller: App\Controller\AnnotatorController::main
+    controller: App\Controller\MiscController::home
+
+
+# Routes for annotator and directly related pages
 
 annotator:
     path: /annotator
-    controller: App\Controller\AnnotatorController::main
+    controller: App\Controller\AnnotatorController::annotator
 
 termsSearch:
     path: terms-search
@@ -51,3 +58,8 @@ termsSearch:
 readme:
     path: /readme
     controller: App\Controller\MiscController::readme
+
+
+serverinfo:
+    path: /server-info
+    controller: App\Controller\MiscController::serverInfo

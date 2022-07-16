@@ -5,6 +5,8 @@
     use App\Entity\Ontology\Ontology;
     use App\Entity\API\JSONFormatter;
 
+    use mysqli;
+
 
     /**
      * Class to process requests made to the API controller.
@@ -32,6 +34,21 @@
          */
         private static function getHandler(String $ontologyID) : APIHandler {
             return new APIHandler($ontologyID);
+        }
+
+
+        /**
+         * Returns a connection to the database.
+         *
+         * @return mysqli the database connection object
+         */
+        private static function getDatabaseConnection() : mysqli {
+            return new \mysqli(
+                "terms4FAIRskills_annotator_db",    // server
+                $_ENV["MYSQL_USER"],                // user
+                $_ENV["MYSQL_PASSWORD"],            // password
+                $_ENV["MYSQL_DATABASE"]             // database
+            );
         }
 
 
@@ -84,6 +101,18 @@
             return self::getHandler($ontologyID)->_saveResource($resourceID, $resourceData);
         }
 
+
+        /**
+         * Loads the ontology into the database.
+         *
+         * @param String $ontologyURL the URL of the ontology to use
+         * @return String the JSON String of the ontology details
+         */
+        public static function loadOntology(String $ontologyURL) : String {
+            // this method doesn't use the handler as there is not an ontology to get
+            $database = self::getDatabaseConnection();
+            return "{\"ontologyID\":\"1\"}";
+        }
 
 
 
