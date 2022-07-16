@@ -212,6 +212,50 @@
 
 
 
+
+
+        // Serialise and Unserialise methods
+        // a serialised object is serialised, compressed and then base 64 encoded.
+
+        /**
+         * Serialises an Ontology object.
+         *
+         * @param Ontology $ontology the Ontology object to serialise
+         * @return String the serialised object
+         */
+        public static function serialise(Ontology $ontology) : String {
+            return base64_encode(
+                gzcompress(
+                    gzcompress(
+                        serialize($ontology),
+                        9
+                    ),
+                    9
+                )
+            );
+        }
+
+        /**
+         * Unserialises an Ontology object.
+         *
+         * @param String $serial the serial string produced from the serialise method
+         * @return Ontology the Ontology object
+         */
+        public static function unserialise(String $serial) : Ontology {
+            return unserialize(
+                gzuncompress(
+                    gzuncompress(
+                        base64_decode(
+                            $serial
+                        )
+                    )
+                )
+            );
+        }
+
+
+
+
     }
 
 

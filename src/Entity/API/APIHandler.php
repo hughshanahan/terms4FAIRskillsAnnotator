@@ -4,9 +4,7 @@
 
     use App\Entity\Ontology\Ontology;
     use App\Entity\API\JSONFormatter;
-
-    use mysqli;
-
+    use App\Entity\API\Database;
 
     /**
      * Class to process requests made to the API controller.
@@ -34,21 +32,6 @@
          */
         private static function getHandler(String $ontologyID) : APIHandler {
             return new APIHandler($ontologyID);
-        }
-
-
-        /**
-         * Returns a connection to the database.
-         *
-         * @return mysqli the database connection object
-         */
-        private static function getDatabaseConnection() : mysqli {
-            return new \mysqli(
-                "terms4FAIRskills_annotator_db",    // server
-                $_ENV["MYSQL_USER"],                // user
-                $_ENV["MYSQL_PASSWORD"],            // password
-                $_ENV["MYSQL_DATABASE"]             // database
-            );
         }
 
 
@@ -110,8 +93,10 @@
          */
         public static function loadOntology(String $ontologyURL) : String {
             // this method doesn't use the handler as there is not an ontology to get
-            $database = self::getDatabaseConnection();
-            return "{\"ontologyID\":\"1\"}";
+            $database = new Database();
+            $ontology = new Ontology($ontologyURL);
+            $ontologyID = $database->insertOntology($ontology);
+            return "{\"ontologyID\":\"" . $ontologyID . "\"}";
         }
 
 

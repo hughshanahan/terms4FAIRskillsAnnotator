@@ -164,7 +164,20 @@
             );
         }
 
-
+        /**
+         * Tests that the serialise and unserialise methods can return the same object.
+         *
+         * @return void
+         */
+        public function testSerialisation() : void {
+            $serial = Ontology::serialise($this->ontology);
+            $object = Ontology::unserialise($serial);
+            $this->assertEquals(
+                $this->ontology,
+                $object,
+                "The unserialised object did not match the object that was serialised"
+            );
+        }
 
     }
 

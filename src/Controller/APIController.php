@@ -85,7 +85,7 @@
         public function loadOntology(Request $request) : Response {
             // get the data as an associative array and pass it to the handler
             $requestData = json_decode($request->getContent(), true);
-            $jsonString = APIHandler::loadOntology("test");  //$requestData["ontology-url-input"]
+            $jsonString = APIHandler::loadOntology($requestData["ontology-url-input"]);
                 // replace with real ontology and resource IDs string when developed
 
             // return the response
