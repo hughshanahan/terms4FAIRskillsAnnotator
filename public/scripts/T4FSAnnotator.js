@@ -134,5 +134,23 @@ class T4FSAnnotator {
 
     }
 
+
+
+
+    static showElement(id) {
+        var element = document.getElementById(id);
+
+        console.log(element);
+
+        element.classList.add("d-flex");
+        element.classList.remove("d-none");
+    }
+
+    static hideElement(id) {
+        var element = document.getElementById(id);
+        element.classList.add("d-none");
+        element.classList.remove("d-flex");
+    }
+
 }
 

@@ -6,9 +6,19 @@
 
     <script>
 
+        function pageLoaded() {
+            T4FSAnnotator.showElement("load-ontology-container");
+            T4FSAnnotator.hideElement("loading-spinner-container");
+            T4FSAnnotator.hideElement("main-menu-container");
+        }
+
         function loadOntology() {
             var form = document.getElementById("ontology-select-form");
             var data = T4FSAnnotator.formToJSON(form);
+
+            // hide the form and show the loading spinner
+            T4FSAnnotator.hideElement("load-ontology-container");
+            T4FSAnnotator.showElement("loading-spinner-container");
 
             fetch("/api/loadOntology",
                 {
@@ -19,10 +29,17 @@
                 .then(data => {
                     console.log(data);
                     document.getElementById("ontology-id").innerHTML = data.ontologyID;
+
+                    T4FSAnnotator.hideElement("loading-spinner-container");
+                    T4FSAnnotator.showElement("main-menu-container");
                 })
                 .catch(err => console.log(err));
         }
+    </script>
 
+
+    <script>
+        window.onload = pageLoaded;
     </script>
 
 
@@ -30,20 +47,49 @@
 
 {% block content %}
 
+    <div class="container d-flex flex-column justify-content-center p-0 m-0">
 
-    <div class="container d-flex flex-column justify-content-start gap-5 p-0">
+        <!-- Form container for selecting an ontology -->
+        <div class="container d-flex flex-column justify-content-center gap-5 p-0" id="load-ontology-container">
+
+            <form id="ontology-select-form">
+
+                <div class="container d-flex flex-row justify-content-around gap-3 p-0">
+                    <div class="container d-flex flex-column justify-content-center">
+                        <label for="ontology-url-input" class="form-label">Load from URL</label>
+                        <input type="text" name="ontology-url-input" id="ontology-url-input" />
+                    </div>
+
+                    <p>Or</p>
+
+                    <div class="container d-flex flex-column justify-content-center">
+                        <label for="owl-file-upload" class="form-label">Upload from files</label>
+                        <input class="form-control" type="file" id="owl-file-upload">
+                    </div>
+
+                </div>
+            </form>
+            <button type="button" class="btn btn-primary text-center px-5" id="submit" onclick="loadOntology();">Load ontology</button>
+            
+        </div>
+
+        <!-- Loading Spinner Container -->
+        <div class="container d-flex flex-row justify-content-center gap-5 p-0" id="loading-spinner-container">
+
+            <div class="spinner-border text-secondary" style="width: 5rem; height: 5rem;" role="status"></div>
+
+        </div>
 
 
-        <form id="ontology-select-form">
-            <input type="text" name="ontology-url-input" id="ontology-url-input" />
-        </form>
+        <!-- Main menu container -->
+        <div class="container d-flex flex-column justify-content-center gap-5 p-0" id="main-menu-container">
 
-        <button type="button" class="btn btn-primary text-center px-5" id="submit" onclick="loadOntology();">Load ontology</button>
+            <p class="text-center">The ontology database id is <span id="ontology-id"></span></p>
 
+        </div>
 
-        <p id="ontology-id"></p>
 
     </div>
-    
+
 
 {% endblock %}
