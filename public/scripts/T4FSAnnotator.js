@@ -135,21 +135,89 @@ class T4FSAnnotator {
     }
 
 
+    /**
+     * Checks the status of the response was ok and returns it, 
+     * otherwise throws exception to trigger the fetch catch.
+     * 
+     * @param {Response} response the response from the fetch request
+     * @returns {Response} the response
+     * @throws {Error} if the status of the response was not ok
+     */
+    static checkStatus(response) {
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return response;
+    }
 
 
+    /**
+     * Shows an element with display: flex;
+     * 
+     * @param {String} id the id of the element to show
+     */
     static showElement(id) {
         var element = document.getElementById(id);
-
-        console.log(element);
-
         element.classList.add("d-flex");
         element.classList.remove("d-none");
     }
 
+    /**
+     * Hides an element with display: none;
+     * 
+     * @param {String} id the id of the element to hide
+     */
     static hideElement(id) {
         var element = document.getElementById(id);
         element.classList.add("d-none");
         element.classList.remove("d-flex");
+    }
+
+
+
+    /**
+     * Sets a cookie.
+     * 
+     * @param {String} name the name of the cookie
+     * @param {String} value the value of the cookie
+     * @param {int} days the number of days before the cookie expires, defaults to 7
+     */
+    static setCookie(name, value, days = 7) {
+        const d = new Date();
+        d.setTime(d.getTime() + (days*24*60*60*1000));
+        let expires = "expires="+ d.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
+    /**
+     * Deletes the cookie.
+     * 
+     * @param {String} name the name of the cookie
+     */
+    static deleteCookie(name) {
+        T4FSAnnotator.setCookie(name, "");
+    }
+
+    /**
+     * Returns the value of a cookie.
+     * 
+     * @param {String} name the name of the cookie
+     * @returns {String} the cookie value
+     */
+    static getCookie(name) {
+        let nameKey = name + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(nameKey) == 0) {
+                return c.substring(nameKey.length, c.length);
+            }
+        }
+        return "";
     }
 
 }

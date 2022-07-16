@@ -4,42 +4,12 @@
 
 {% block header %}
 
-    <script>
-
-        function pageLoaded() {
-            T4FSAnnotator.showElement("load-ontology-container");
-            T4FSAnnotator.hideElement("loading-spinner-container");
-            T4FSAnnotator.hideElement("main-menu-container");
-        }
-
-        function loadOntology() {
-            var form = document.getElementById("ontology-select-form");
-            var data = T4FSAnnotator.formToJSON(form);
-
-            // hide the form and show the loading spinner
-            T4FSAnnotator.hideElement("load-ontology-container");
-            T4FSAnnotator.showElement("loading-spinner-container");
-
-            fetch("/api/loadOntology",
-                {
-                    method: "POST",
-                    body: data
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    document.getElementById("ontology-id").innerHTML = data.ontologyID;
-
-                    T4FSAnnotator.hideElement("loading-spinner-container");
-                    T4FSAnnotator.showElement("main-menu-container");
-                })
-                .catch(err => console.log(err));
-        }
-    </script>
+    <script src="/scripts/mainMenu.js"></script>
 
 
     <script>
-        window.onload = pageLoaded;
+        // run the setup method when the page loads
+        window.onload = MainMenu.setup;
     </script>
 
 
@@ -47,7 +17,7 @@
 
 {% block content %}
 
-    <div class="container d-flex flex-column justify-content-center p-0 m-0">
+    <div class="container d-flex flex-column justify-content-center align-items-center p-0 m-0">
 
         <!-- Form container for selecting an ontology -->
         <div class="container d-flex flex-column justify-content-center gap-5 p-0" id="load-ontology-container">
@@ -69,12 +39,14 @@
 
                 </div>
             </form>
-            <button type="button" class="btn btn-primary text-center px-5" id="submit" onclick="loadOntology();">Load ontology</button>
+            <button type="button" class="btn btn-primary text-center px-5" id="submit" onclick="MainMenu.loadOntology();">Load ontology</button>
             
+            <p class="text-center text-danger" id="owl-selection-error"></p>
         </div>
 
+
         <!-- Loading Spinner Container -->
-        <div class="container d-flex flex-row justify-content-center gap-5 p-0" id="loading-spinner-container">
+        <div class="container w-100 d-flex flex-row justify-content-center gap-5 p-0" id="loading-spinner-container">
 
             <div class="spinner-border text-secondary" style="width: 5rem; height: 5rem;" role="status"></div>
 
@@ -82,9 +54,18 @@
 
 
         <!-- Main menu container -->
-        <div class="container d-flex flex-column justify-content-center gap-5 p-0" id="main-menu-container">
+        <div class="container w-100 d-flex flex-column justify-content-center gap-5 p-0" id="main-menu-container">
 
-            <p class="text-center">The ontology database id is <span id="ontology-id"></span></p>
+            <div class="container d-flex flex-column justify-content-center p-0">
+                <h2>Ontology <span id="ontology-name-span"></span></h2>
+                <button type="button" class="btn btn-danger btn-block" onclick="MainMenu.removeOntology()">Clear Ontology</button>
+            </div>
+
+            <div class="container d-flex flex-row justifty-content-center gap-3 p-0">
+                <button type="button" class="btn btn-primary btn-lg btn-block">New Resource</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block">View Resources</button>
+            </div>
+
 
         </div>
 
