@@ -75,6 +75,40 @@
 
 
         /**
+         * Selects data from the database.
+         *
+         * @param String $table the table to select data from
+         * @param string $where the predicate to match against in the where clause
+         * @return array an array of associative arrays storing the rows
+         */
+        private function select(String $table, String $where = "") : array {
+            // create the SQL
+            $sql = "SELECT * FROM " . $table;
+            if (!($where == "")) {
+                $sql .= " WHERE " . $where;
+            }
+            $sql .= ";";
+            // query the database
+            $result = $this->connection->query($sql);
+            // create the array to store the results
+            $data = array();
+            if ($result->num_rows > 0) {
+                // output data of each row
+                while($row = $result->fetch_assoc()) {
+                    $rowData = array();
+                    foreach ($row as $col => $val) {
+                        $rowData[$col] = $val;
+                    }
+                    array_push($data, $rowData);
+                }
+            }
+
+            return array("sql"=>$sql, "rows"=>$data);
+        }
+
+
+
+        /**
          * Inserts an ontology object into the database.
          *
          * @param Ontology $ontology the ontology object
@@ -83,10 +117,8 @@
         public function insertOntology(Ontology $ontology) : int {
             // serialise the ontology object
             $ontologySerialised = Ontology::serialise($ontology);
-
             // create the id
             $id = rand();
-
             // create the values array
             // the id is a random number, 
             // the content is the serialised content of the ontology object
@@ -96,11 +128,24 @@
                 "content"=>$ontologySerialised,
                 "accessed"=>time()
             );
-
             $this->insert("ontology", $values);
-
             return $id;
+        }
 
+
+        /**
+         * Gets the Ontology object from the database.
+         *
+         * @param String $ontologyID the database ID for the ontology
+         * @return Ontology the ontology object
+         */
+        public function getOntology(String $ontologyID) : Ontology {
+            $where = "id='" . $ontologyID . "'";
+            $data = $this->select("ontology", $where);
+            if (count($data["rows"]) == 0) {
+                throw new \Exception("The ontology could not be found - " . $data["sql"]);
+            }
+            return Ontology::unserialise($data["rows"][0]["content"]);
         }
 
     }

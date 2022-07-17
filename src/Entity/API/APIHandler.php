@@ -138,9 +138,9 @@
                 // if the ID is "test" return the Ontology object for the OntologyTest.owl file
                 return new Ontology("tests/Resources/OntologyTest.owl");
             } else {
-                // this will get the serialised ontology from the database and return the object
-                // for now just return the stored ontology
-                return new Ontology($_SERVER["DOCUMENT_ROOT"] . "/../tests/Resources/t4fs.owl");
+                // return the unserialised database object
+                $database = new Database();
+                return $database->getOntology($ontologyID);
             }
             
         }

@@ -23,8 +23,10 @@
         public function searchTerms(Request $request) : Response {
             // get the search string from the request and get the results JSON String
             $searchQuery = $request->query->get("search");
-            $jsonString = APIHandler::searchTerms("ontologyID", $searchQuery); 
-                // replace with real ontology ID string when developed
+            $jsonString = APIHandler::searchTerms(
+                $request->cookies->get("annotator-ontology-id"), 
+                $searchQuery
+            );
             // return the response
             return new Response(
                 $jsonString,
@@ -43,8 +45,10 @@
         public function getTerm(Request $request) : Response {
             // get the term URI from the request and get the term's JSON String
             $termURI = $request->query->get("term");
-            $jsonString = APIHandler::getTerm("ontologyID", $termURI); 
-                // replace with real ontology ID string when developed
+            $jsonString = APIHandler::getTerm(
+                $request->cookies->get("annotator-ontology-id"), 
+                $termURI
+            );
             // return the response
             return new Response(
                 $jsonString,
@@ -64,8 +68,10 @@
         public function getObjectProperty(Request $request) : Response {
             // get the property URI from the request and get the property's JSON string
             $propertyURI = $request->query->get("property");
-            $jsonString = APIHandler::getObjectProperty("ontologyID", $propertyURI); 
-                // replace with real ontology ID string when developed
+            $jsonString = APIHandler::getObjectProperty(
+                $request->cookies->get("annotator-ontology-id"), 
+                $propertyURI
+            ); 
             // return the response
             return new Response(
                 $jsonString,
@@ -85,8 +91,9 @@
         public function loadOntology(Request $request) : Response {
             // get the data as an associative array and pass it to the handler
             $requestData = json_decode($request->getContent(), true);
-            $jsonString = APIHandler::loadOntology($requestData["ontology-url-input"]);
-                // replace with real ontology and resource IDs string when developed
+            $jsonString = APIHandler::loadOntology(
+                $requestData["ontology-url-input"]
+            );
 
             // return the response
             return new Response(
@@ -107,8 +114,11 @@
 
             // get the data about the resource as an associative array and pass it to the handler
             $resourceData = json_decode($request->getContent(), true);
-            $jsonString = APIHandler::saveResource("ontologyID", "resourceID", $resourceData); 
-                // replace with real ontology and resource IDs string when developed
+            $jsonString = APIHandler::saveResource(
+                $request->cookies->get("annotator-ontology-id"), 
+                "resourceID", 
+                $resourceData
+            );
 
             // return the response
             return new Response(
