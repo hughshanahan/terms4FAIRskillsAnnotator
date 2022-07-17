@@ -60,10 +60,34 @@ class MainMenu {
             });
     }
 
-
+    /**
+     * Clears the currently loaded ontology.
+     */
     static removeOntology() {
         T4FSAnnotator.deleteCookie("annotator-ontology-id");
         MainMenu.setup();
+    }
+
+
+    /**
+     * Redirects to the terms search.
+     */
+    static goToTermsSearch() {
+        window.location.href = "/terms-search";
+    }
+
+    /**
+     * Redirects to the annotator.
+     */
+     static goToAnnotator() {
+        window.location.href = "/annotator";
+    }
+
+    /**
+     * Redirects to the annotated resources list.
+     */
+     static goToResourcesList() {
+        window.location.href = "/resources";
     }
 
 
