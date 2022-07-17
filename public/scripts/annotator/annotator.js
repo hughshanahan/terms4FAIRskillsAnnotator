@@ -6,6 +6,17 @@
  */
 class Annotator extends TermsSearch {
 
+    /**
+     * Sets up the annotator.
+     */
+    static setup() {
+        const ontologyID = T4FSAnnotator.getCookie("annotator-ontology-id");
+        if (ontologyID === "") {
+            // there is not an ontology stored in the cookie - redirect to the main menu
+            window.location.replace("/");
+        }
+    }
+
 
     // === Annotator Form Methods ===
 
