@@ -1,10 +1,11 @@
 
 /**
  * Class to contain the methods required for the annotator.
- * 
- * This class extends TermsSearch to allow it to use the same methods to call the API to search the terms.
  */
-class Annotator extends TermsSearch {
+class Annotator {
+
+    // variable to store the ontology id that was loaded when the annotator started
+    static setupOntologyID = "";
 
     /**
      * Sets up the annotator.
@@ -15,6 +16,9 @@ class Annotator extends TermsSearch {
             // there is not an ontology stored in the cookie - redirect to the main menu
             window.location.replace("/");
         }
+
+        // there is an ontology loaded - save the id into the setupOntologyID variable
+        Annotator.setupOntologyID = ontologyID;
     }
 
 
@@ -71,21 +75,30 @@ class Annotator extends TermsSearch {
      * Submits the form to create the output file.
      */
     static submit() {
-        var form = document.getElementById("annotator-form");
-        var data = T4FSAnnotator.formToJSON(form);
 
-        fetch("/api/saveResource",
-            {
-                method: "POST",
-                body: data
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                T4FSAnnotator.downloadObjectAsJson(data.material, "materials");
-                document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt);
-            })
-            .catch(err => console.log(err));
+        // check that the loaded ontology hasn't changed
+        if (Annotator.setupOntologyID === T4FSAnnotator.getCookie("annotator-ontology-id")) {
+            var form = document.getElementById("annotator-form");
+            var data = T4FSAnnotator.formToJSON(form);
+
+            fetch("/api/saveResource",
+                {
+                    method: "POST",
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    T4FSAnnotator.downloadObjectAsJson(data.material, "materials");
+                    document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt);
+                })
+                .catch(err => console.log(err));
+
+        } else {
+            alert("Error: The loaded ontology has changed");
+        }
+
+        
 
     }
 
@@ -178,9 +191,17 @@ class Annotator extends TermsSearch {
      * @param {String} searchTerm the term to search for
      */
     static search(searchTerm) {
-        var selectedInput = document.getElementById("selected-terms");
-        var selectedTerms = selectedInput.value.split(',');
-        TermsSearch.searchTerms(searchTerm, "annotator", selectedTerms);
+
+        // check that the loaded ontology hasn't changed
+        if (Annotator.setupOntologyID === T4FSAnnotator.getCookie("annotator-ontology-id")) {
+            
+            var selectedInput = document.getElementById("selected-terms");
+            var selectedTerms = selectedInput.value.split(',');
+            TermsSearch.searchTerms(searchTerm, "annotator", selectedTerms);
+
+        } else {
+            alert("Error: The loaded ontology has changed");
+        }
     }
 
 }

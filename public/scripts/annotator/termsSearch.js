@@ -3,13 +3,39 @@
  */
 class TermsSearch {
 
+    // variable to store the ontology id that was loaded when the terms search started
+    static setupOntologyID = "";
+
+    /**
+     * Sets up the TermsSearch.
+     */
+    static setup() {
+        const ontologyID = T4FSAnnotator.getCookie("annotator-ontology-id");
+        if (ontologyID === "") {
+            // there is not an ontology stored in the cookie - redirect to the main menu
+            window.location.replace("/");
+        }
+
+        // there is an ontology loaded - save the id into the setupOntologyID variable
+        TermsSearch.setupOntologyID = ontologyID;
+    }
+
     /**
      * Starts a search of the terms.
      * 
      * @param {String} searchTerm the term to search for
      */
     static search(searchTerm) {
-        TermsSearch.searchTerms(searchTerm); // just search for the term with the default settings
+
+        // check that the loaded ontology hasn't changed
+        if (TermsSearch.setupOntologyID === T4FSAnnotator.getCookie("annotator-ontology-id")) {
+            
+            TermsSearch.searchTerms(searchTerm); // just search for the term with the default settings
+
+        } else {
+            alert("Error: The loaded ontology has changed");
+        }
+
     }
 
     /**

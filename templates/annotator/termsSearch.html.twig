@@ -6,6 +6,11 @@
 
     {{ parent() }}
 
+    <script>
+        // run the setup method when the page loads
+        window.onload = TermsSearch.setup;
+    </script>
+
 {% endblock %}
 
 {% block content %}
