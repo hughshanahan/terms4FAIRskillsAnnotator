@@ -9,6 +9,23 @@
      */
     class Database {
 
+
+        /*
+            ===== Contents =====
+            - Constructor and properties
+            - SQL Methods
+            - Ontology Methods
+            - Resource Methods
+
+        */
+
+
+        /*
+            === Constrcutor and Properties ===
+            The class constructor and the class properties.
+        */
+        
+
         private $connection; // holds the database connection
 
         /**
@@ -29,6 +46,12 @@
                 throw $e;
             }
         }
+
+
+        /*
+            === SQL methods ===
+            A method for each required SQL command.
+        */
 
 
         /**
@@ -107,6 +130,12 @@
         }
 
 
+        /*
+            === Ontology Methods ===
+            Methods that change the ontology table.
+            This includes the method that updates the last time that the ontology was accessed.
+        */
+
 
         /**
          * Inserts an ontology object into the database.
@@ -146,6 +175,49 @@
                 throw new \Exception("The ontology could not be found - " . $data["sql"]);
             }
             return Ontology::unserialise($data["rows"][0]["content"]);
+        }
+
+
+        /*
+            === Resource Methods ===
+            Methods that change the resources table.
+        */
+
+
+        public function createResource(
+            String $ontologyID, 
+            String $identifier,
+            String $name,
+            String $author,
+            String $date,
+            array $terms,
+        ) : int {
+            // create the id
+            $id = rand();
+
+            // create the values array
+            $values = array(
+                "id"=>$id,
+                "ontologyID"=>$ontologyID,
+                "identifier"=>$identifier,
+                "name"=>$name,
+                "author"=>$author,
+                "date"=>$date
+            );
+
+            // insert into database
+            $this->insert("resource", $values);
+
+            // insert into the terms table
+            foreach ($terms as $term) {
+                $values = array(
+                    "resourceID"=>$id,
+                    "termURI"=>$term
+                );
+                $this->insert("term", $values);
+            }
+
+            return $id;
         }
 
     }

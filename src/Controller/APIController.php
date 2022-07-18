@@ -104,6 +104,29 @@
         }
 
 
+
+        /**
+         * Creates a new resource in the database and returns the ID in a JSON string.
+         *
+         * @param Request $request the HTTP Request
+         * @return Response the HTTP Response containing the resource ID in a JSON String
+         */
+        public function createResource(Request $request) : Response {
+            $resourceData = json_decode($request->getContent(), true);
+            $jsonString = APIHandler::createResource(
+                $request->cookies->get("annotator-ontology-id"), 
+                $resourceData
+            );
+
+            // return the response
+            return new Response(
+                $jsonString,
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+        }
+
+
         /**
          * Saves the resource data to the database.
          *
@@ -116,7 +139,7 @@
             $resourceData = json_decode($request->getContent(), true);
             $jsonString = APIHandler::saveResource(
                 $request->cookies->get("annotator-ontology-id"), 
-                "resourceID", 
+                $request->cookies->get("annotator-resource-id"), 
                 $resourceData
             );
 

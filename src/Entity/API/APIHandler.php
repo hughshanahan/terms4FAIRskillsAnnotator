@@ -14,6 +14,149 @@
     class APIHandler {
 
         /*
+            ===== Contents =====
+            - General Methods
+            - Ontology File Loading
+            - Saving Resource Annotations
+
+        */
+
+
+        /*
+            === General Methods ===
+            Methods that could be used by any of the following methods in the class.
+        */
+
+        /**
+         * Returns the ontology object from the database.
+         *
+         * @param String $ontologyID the key for the ontology
+         * @return Ontology the ontology object
+         */
+        private static function getOntology(String $ontologyID) : Ontology {
+            if ($ontologyID == "test") {
+                // if the ID is "test" return the Ontology object for the OntologyTest.owl file
+                return new Ontology("tests/Resources/OntologyTest.owl");
+            } else {
+                // return the unserialised database object
+                $database = new Database();
+                return $database->getOntology($ontologyID);
+            }
+            
+        }
+
+
+        /*
+            === Ontology File Loading ===
+            These are all the methods related to the user selecting an 
+            ontology file to use with the annotator.
+        */
+
+
+        /**
+         * Loads the ontology into the database.
+         *
+         * @param String $ontologyURL the URL of the ontology to use
+         * @return String the JSON String of the ontology details
+         */
+        public static function loadOntology(String $ontologyURL) : String {
+            $database = new Database();
+            $ontology = new Ontology($ontologyURL);
+            $ontologyID = $database->insertOntology($ontology);
+            return "{\"ontologyID\":\"" . $ontologyID . "\"}";
+        }
+
+
+        /*  
+            === Saving Resource Annotations ===
+            These are methods related to saving the annotations made about a resource into the database.
+        */
+
+        /**
+         * Creates an entry in the database for the resource. 
+         *
+         * @param String $ontologyID the ID of the ontology
+         * @param array $resourceData an associative array of the resource data
+         * @return String A JSON String of the status of the save
+         */
+        public static function createResource(String $ontologyID, array $resourceData) : String {
+            // format the resource data array values into data the database can store
+            $formattedData = self::formatResourceData($resourceData);
+
+            // create the entry in the database and get the resource id back
+            $database = new Database();
+            $resourceID = $database->createResource(
+                $ontologyID,
+                $formattedData["identifier"],
+                $formattedData["name"],
+                $formattedData["author"],
+                $formattedData["date"],
+                $formattedData["terms"]
+            );
+
+            return self::createResourceReturnJSON($resourceID, $resourceData);
+        }
+
+
+        /**
+         * Saves the resource data to the database.
+         *
+         * @param String $ontologyID the ID of the ontology
+         * @param String $resourceID the ID of the resource
+         * @param array $resourceData an associative array of the resource data
+         * @return String A JSON String of the status of the save
+         */
+        public static function saveResource(String $ontologyID, String $resourceID, array $resourceData) : String {
+            // update the database here
+
+            return self::createResourceReturnJSON($resourceID, $resourceData);
+        }
+
+
+        private static function formatResourceData(array $resourceData) : array {
+            $terms = explode(',', $resourceData["selected-terms"]);
+
+            return array(
+                "identifier" => $resourceData["identifier-input"],
+                "name" => $resourceData["name-input"],
+                "author" => $resourceData["author-surname-input"] . ", " . $resourceData["author-firstname-input"],
+                "date" => strval(mktime(
+                        0,0,0, //hours, minutes, seconds 
+                        $resourceData["date-month-input"],
+                        $resourceData["date-day-input"],
+                        $resourceData["date-year-input"]
+                    )),
+                "terms" => $terms
+            );
+        }
+
+
+        /**
+         * Creates the JSON String that is returned to the frontend when the resource is saved successfully.
+         *
+         * @param String $resourceID the resource's database id
+         * @param array $resourceData the array of data entered into the annotator form
+         * @return String the JSON String to return to the frontend
+         */
+        private static function createResourceReturnJSON(String $resourceID, array $resourceData) : String {
+            // create the return data
+            $data = array(
+                "status" => "ok", 
+                "resourceID" => $resourceID,
+                "savedAt" => time(),
+                "data" => $resourceData
+            );
+
+            // return the JSON String
+            return JSONFormatter::arrayToString($data);
+        }
+
+
+
+
+
+
+        /*
             ===== Class Methods =====
 
             These are methods called by the APIController.
@@ -69,39 +212,6 @@
         }
 
 
-
-        // === POST Methods ===
-
-        /**
-         * Saves the resource data to the database.
-         *
-         * @param String $ontologyID the ID of the ontology
-         * @param String $resourceID the ID of the resource
-         * @param array $resourceData an associative array of the resource data
-         * @return String A JSON String of the status of the save
-         */
-        public static function saveResource(String $ontologyID, String $resourceID, array $resourceData) : String {
-            return self::getHandler($ontologyID)->_saveResource($resourceID, $resourceData);
-        }
-
-
-        /**
-         * Loads the ontology into the database.
-         *
-         * @param String $ontologyURL the URL of the ontology to use
-         * @return String the JSON String of the ontology details
-         */
-        public static function loadOntology(String $ontologyURL) : String {
-            // this method doesn't use the handler as there is not an ontology to get
-            $database = new Database();
-            $ontology = new Ontology($ontologyURL);
-            $ontologyID = $database->insertOntology($ontology);
-            return "{\"ontologyID\":\"" . $ontologyID . "\"}";
-        }
-
-
-
-
         /*
             ===== Instance Methods =====
 
@@ -122,28 +232,11 @@
          * @param String $ontologyID the key of the ontology
          */
         private function __construct(String $ontologyID) {
-            // create the ontology object
-            // currently from the t4fs.owl file in the tests directory
-            $this->ontology = $this->getOntology($ontologyID);
+            // get the ontology
+            $this->ontology = self::getOntology($ontologyID);
         }
 
-        /**
-         * Returns the ontology object from the database.
-         *
-         * @param String $ontologyID the key for the ontology
-         * @return Ontology the ontology object
-         */
-        private function getOntology(String $ontologyID) : Ontology {
-            if ($ontologyID == "test") {
-                // if the ID is "test" return the Ontology object for the OntologyTest.owl file
-                return new Ontology("tests/Resources/OntologyTest.owl");
-            } else {
-                // return the unserialised database object
-                $database = new Database();
-                return $database->getOntology($ontologyID);
-            }
-            
-        }
+        
 
 
 
@@ -218,49 +311,6 @@
             // return the JSON String
             return JSONFormatter::arrayToString($data);
         }
-
-
-
-
-
-        // === POST Methods ===
-
-
-        /**
-         * Saves the resource data to the database.
-         *
-         * @param String $resourceID the ID of the resource
-         * @param array $resourceData an associative array of the resource data
-         * @return String A JSON String of the status of the save
-         */
-        public function _saveResource(String $resourceID, array $resourceData) : String {
-            // outer array means that the object will be in an array - just like materials.json
-
-            $terms = explode(',', $resourceData["selected-terms"]);
-
-            $materialData = array(
-                array(
-                    "doi" => $resourceData["identifier-input"],
-                    "name" => $resourceData["name-input"],
-                    "author" => $resourceData["author-surname-input"] . ", " . $resourceData["author-firstname-input"],
-                    "date" => $resourceData["date-year-input"] . "-" . $resourceData["date-month-input"] . "-" . $resourceData["date-day-input"],
-                    "concept" => $terms
-                )
-            );
-
-            // create the return data
-            $data = array(
-                "status"=>"ok", 
-                "savedAt" => time(),
-                "data"=>$resourceData,
-                "material"=>$materialData
-            );
-
-            // return the JSON String
-            return JSONFormatter::arrayToString($data);
-
-        }
-
 
     }
 

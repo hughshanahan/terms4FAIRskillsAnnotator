@@ -29,6 +29,10 @@ apiLoadOntology:
     controller: App\Controller\APIController::loadOntology
 
 
+apiCreateResource:
+    path: /api/createResource
+    controller: App\Controller\APIController::createResource
+
 apiSaveResource:
     path: /api/saveResource
     controller: App\Controller\APIController::saveResource

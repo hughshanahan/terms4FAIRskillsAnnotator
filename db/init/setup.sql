@@ -17,17 +17,28 @@ CREATE TABLE ontology (
     Create table to store the resources that are being annotated.
     Each resource has a unique id, the id of the ontology 
     that it is being annotated from, the DOI identifier, 
-    the name, the author's first name and surname, and the date.
+    the resource name, the author's name, and the date.
 */
 CREATE TABLE resource (
     id int,
     ontologyID int, 
     identifier varchar(255),
     name varchar(255),
-    authorFirstname varchar(255),
-    authorSurname varchar(255),
+    author varchar(255),
     date int,
 
     PRIMARY KEY (id),
     FOREIGN KEY (ontologyID) REFERENCES ontology(id)
+);
+
+
+/*
+    Create table to store resource id to term URI pairs.
+*/
+CREATE TABLE term (
+    resourceID int,
+    termURI varchar(255),
+
+    PRIMARY KEY (resourceID, termURI),
+    FOREIGN KEY (resourceID) REFERENCES resource(id)
 );

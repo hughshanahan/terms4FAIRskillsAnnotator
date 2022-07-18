@@ -81,7 +81,17 @@ class Annotator {
             var form = document.getElementById("annotator-form");
             var data = T4FSAnnotator.formToJSON(form);
 
-            fetch("/api/saveResource",
+            // select the api endpoint to use depending on if the cookie has been set
+            var url = "";
+            if (T4FSAnnotator.getCookie("annotator-resource-id") === "") {
+                // the resource id cookie has not been set, therefore create a new resource
+                url = "/api/createResource";
+            } else {
+                // cookie has been set, therefore save the changes
+                url = "/api/saveResource";
+            }
+
+            fetch(url,
                 {
                     method: "POST",
                     body: data
@@ -89,7 +99,9 @@ class Annotator {
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    T4FSAnnotator.downloadObjectAsJson(data.material, "materials");
+                    // store the resource id in the cookie - this is redundant for saving changes but is needed for the first save
+                    T4FSAnnotator.setCookie("annotator-resource-id", data.resourceID);
+                    // update the text for when the resource was last saved
                     document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt);
                 })
                 .catch(err => console.log(err));
