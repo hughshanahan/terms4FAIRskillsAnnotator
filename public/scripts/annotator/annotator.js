@@ -94,7 +94,8 @@ class Annotator {
             fetch(url,
                 {
                     method: "POST",
-                    body: data
+                    body: data,
+                    credentials: 'include'
                 })
                 .then(response => response.json())
                 .then(data => {

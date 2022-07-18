@@ -83,7 +83,7 @@
             }
 
             // create the SQL query
-            $sql = "INSERT INTO " . $table . " (" . $columns . ") VALUES (" . $values . ")";
+            $sql = "INSERT INTO " . $table . " (" . $columns . ") VALUES (" . $values . ");";
 
             // complete the insertion
             $success = $this->connection->query($sql);
@@ -128,6 +128,62 @@
 
             return array("sql"=>$sql, "rows"=>$data);
         }
+
+
+        /**
+         * Runs a delete query on the database.
+         *
+         * @param String $table the table to delete from
+         * @param String $where the predicate to match for deletion
+         * @return void
+         * @throws \Exception if an error occured during the deletion
+         */
+        private function delete(String $table, String $where) : void {
+            $sql = "DELETE FROM " . $table . " WHERE " . $where . ";";
+            $success = $this->connection->query($sql);
+
+            // check for an error during the delete and throw exception if so
+            if (!($success === TRUE)) {
+                throw new \Exception($conn->error);
+            }
+
+        }
+
+
+        /**
+         * Updates a record in the database.
+         *
+         * @param String $table the table to update the records in
+         * @param array $columnValues the column/value pairs to update
+         * @param String $where the where predicate
+         * @return void
+         */
+        public function update(String $table, array $columnValues, String $where) : void {
+
+            // process the columnValues array
+            $values = "";
+            $firstPair = true;
+            foreach ($columnValues as $column => $value) {
+                if (!($firstPair)) {
+                    // if the pair is not the first pair, then add the commas
+                    $values .= ", ";
+                }
+                // add the column/value pair
+                $escapedValue = $this->connection->real_escape_string($value);
+                $values .= $column . "='" . $escapedValue . "'";
+                // set the first pair flag to false
+                $firstPair = false;
+            }
+
+            $sql = "UPDATE " . $table . " SET " . $values .  " WHERE " . $where . ";";
+            $success = $this->connection->query($sql);
+
+            // check for an error during the delete and throw exception if so
+            if (!($success === TRUE)) {
+                throw new \Exception($conn->error);
+            }
+        }
+
 
 
         /*
@@ -184,6 +240,17 @@
         */
 
 
+        /**
+         * Create an entry in the database for a new resource.
+         *
+         * @param String $ontologyID the database id for the ontology
+         * @param String $identifier the DOI identifier for the resource
+         * @param String $name the name of the resource
+         * @param String $author the author of the resoruce
+         * @param String $date the date of the resource
+         * @param array $terms the array of term URIs that have been selected
+         * @return integer the database identifer for the resource
+         */
         public function createResource(
             String $ontologyID, 
             String $identifier,
@@ -207,19 +274,68 @@
 
             // insert into database
             $this->insert("resource", $values);
-
-            // insert into the terms table
-            foreach ($terms as $term) {
-                $values = array(
-                    "resourceID"=>$id,
-                    "termURI"=>$term
-                );
-                $this->insert("term", $values);
-            }
+            $this->insertTerms($terms);
 
             return $id;
         }
 
+
+        /**
+         * Saves the changes made to the resource in the database.
+         *
+         * @param String $resourceID the id of the resource to change
+         * @param String $identifier the DOI identifier of the resource
+         * @param String $name the name of the resource
+         * @param String $author the author of the resource
+         * @param String $date the date of the resource
+         * @param array $terms an array of term URIs
+         * @return void
+         */
+        public function saveResource(
+            String $resourceID,
+            String $identifier,
+            String $name,
+            String $author,
+            String $date,
+            array $terms,
+        ) {
+            // clear all the terms for the resource
+            $this->delete("term", "resourceID='" . $resourceID . "'");
+
+            // create the values array
+            $values = array(
+                "identifier"=>$identifier,
+                "name"=>$name,
+                "author"=>$author,
+                "date"=>$date
+            );
+
+            $this->update("resource", $values, "id='" . $resourceID . "'");
+            $this->insertTerms($resourceID, $terms);
+
+        }
+
+
+        /**
+         * Inserts an array of terms into the term table of the database.
+         *
+         * @param String $resourceID the id of the resource that the terms are related to
+         * @param array $terms the array of term URIs
+         * @return void
+         */
+        private function insertTerms(String $resourceID, array $terms) : void {
+            // insert into the terms table
+            foreach ($terms as $term) {
+                $values = array(
+                    "resourceID"=>$resourceID,
+                    "termURI"=>$term
+                );
+                $this->insert("term", $values);
+            }
+        }
+
     }
+
+
 
 ?>

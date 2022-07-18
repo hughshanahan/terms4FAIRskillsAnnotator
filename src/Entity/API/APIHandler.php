@@ -101,18 +101,35 @@
         /**
          * Saves the resource data to the database.
          *
-         * @param String $ontologyID the ID of the ontology
          * @param String $resourceID the ID of the resource
          * @param array $resourceData an associative array of the resource data
          * @return String A JSON String of the status of the save
          */
-        public static function saveResource(String $ontologyID, String $resourceID, array $resourceData) : String {
-            // update the database here
+        public static function saveResource(String $resourceID, array $resourceData) : String {
+            // format the resource data array values into data the database can store
+            $formattedData = self::formatResourceData($resourceData);
+
+            // create the entry in the database and get the resource id back
+            $database = new Database();
+            $database->saveResource(
+                $resourceID,
+                $formattedData["identifier"],
+                $formattedData["name"],
+                $formattedData["author"],
+                $formattedData["date"],
+                $formattedData["terms"]
+            );
 
             return self::createResourceReturnJSON($resourceID, $resourceData);
         }
 
 
+        /**
+         * Formats the annotator form data to be the format needed for the database.
+         *
+         * @param array $resourceData the form data
+         * @return array the formatted data
+         */
         private static function formatResourceData(array $resourceData) : array {
             $terms = explode(',', $resourceData["selected-terms"]);
 

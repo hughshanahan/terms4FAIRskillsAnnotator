@@ -112,9 +112,13 @@
          * @return Response the HTTP Response containing the resource ID in a JSON String
          */
         public function createResource(Request $request) : Response {
+            // get the ontology id from the cookies 
+            $ontologyID = $request->cookies->get("annotator-ontology-id");
+
+            // get the data from the content and create the resource
             $resourceData = json_decode($request->getContent(), true);
             $jsonString = APIHandler::createResource(
-                $request->cookies->get("annotator-ontology-id"), 
+                $ontologyID, 
                 $resourceData
             );
 
@@ -134,12 +138,12 @@
          * @return Response the response containing JSON data with status information about the saving of the resource
          */
         public function saveResource(Request $request) : Response {
-
+            // get the resource ID from the cookies
+            $resourceID = $request->cookies->get("annotator-resource-id");
             // get the data about the resource as an associative array and pass it to the handler
             $resourceData = json_decode($request->getContent(), true);
             $jsonString = APIHandler::saveResource(
-                $request->cookies->get("annotator-ontology-id"), 
-                $request->cookies->get("annotator-resource-id"), 
+                $resourceID,
                 $resourceData
             );
 
