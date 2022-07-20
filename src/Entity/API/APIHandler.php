@@ -72,6 +72,20 @@
             These are methods related to saving the annotations made about a resource into the database.
         */
 
+
+        /**
+         * Returns the resource data from the database.
+         *
+         * @param String $resourceID the resource 
+         * @return String
+         */
+        public static function getResource(String $resourceID) : String {
+            $database = new Database();
+            $data = $database->getResource($resourceID);
+            return JSONFormatter::arrayToString($data);
+        }
+
+
         /**
          * Creates an entry in the database for the resource. 
          *

@@ -103,6 +103,24 @@
             );
         }
 
+        /**
+         * Returns the data about the resource.
+         *
+         * @param Request $request the HTTP request
+         * @return Response the HTTP response containing the resource data as a JSON String
+         */
+        public function getResource(Request $request) : Response {
+            // get the resource ID from request
+            $resourceID = $request->query->get("id");
+            // get the data about the resource
+            $jsonString = APIHandler::getResource($resourceID);
+            // return the response
+            return new Response(
+                $jsonString,
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+        }
 
 
         /**

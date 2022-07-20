@@ -241,6 +241,36 @@
 
 
         /**
+         * Returns the resource data.
+         *
+         * @param String $resourceID the resource to get
+         * @return array the resource data
+         */
+        public function getResource(String $resourceID) : array {
+            $data = array();
+            // get the resource data from the resource table
+            $where = "id='" . $resourceID . "'";
+            $resourceData = $this->select("resource", $where);
+            if (count($resourceData["rows"]) == 0) {
+                throw new \Exception("The resource could not be found - " . $resourceData["sql"]);
+            }
+            $data = $resourceData["rows"][0];
+
+            // get the terms from the term table and add them to the data
+            $terms = array();
+            $where = "resourceID='" . $resourceID . "'";
+            $termsData = $this->select("term", $where);
+            foreach ($termsData["rows"] as $term) {
+                array_push($terms, $term["termURI"]);
+            }   
+            $data["terms"] = $terms;
+
+            // return the data
+            return $data;
+        } 
+
+
+        /**
          * Create an entry in the database for a new resource.
          *
          * @param String $ontologyID the database id for the ontology

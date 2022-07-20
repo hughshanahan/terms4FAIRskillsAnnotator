@@ -116,7 +116,7 @@ class T4FSAnnotator {
     /**
      * Converts a unix timestamp to hh:mm format.
      * 
-     * @param {int} timestamp the unix timestamp to get as a string
+     * @param {String} timestamp the unix timestamp to get as a string
      * @returns {String} the timestamp in hh:mm format
      */
     static timestampToString(timestamp) {
@@ -132,6 +132,27 @@ class T4FSAnnotator {
 
         return hours + ':' + minutes;
 
+    }
+
+
+    /**
+     * Converts a timestamp to YYYY-MM-DD format.
+     * 
+     * @param {String} timestamp the unix timestamp to convert
+     * @returns {String} the date in YYYY-MM-DD format
+     */
+    static timestampToYear(timestamp) {
+        // Create a new JavaScript Date object based on the timestamp
+        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+        var date = new Date(timestamp * 1000);
+        // day part from the timestamp
+        var day = ("0" + date.getDate()).slice(-2); // get the last two digits of the day number
+        // day part from the timestamp
+        var month = ("0" + (date.getMonth() + 1)).slice(-2); // get the last two digits of the month
+        // day part from the timestamp
+        var year = date.getFullYear();
+
+        return year + "-" + month + "-" + day;
     }
 
 

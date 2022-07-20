@@ -38,6 +38,10 @@ apiSaveResource:
     controller: App\Controller\APIController::saveResource
 
 
+apiGetResource:
+    path: /api/getResource
+    controller: App\Controller\APIController::getResource
+
 # === FRONT END ROUTES ===
 
 root:

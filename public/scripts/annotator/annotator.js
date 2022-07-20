@@ -15,10 +15,53 @@ class Annotator {
         if (ontologyID === "") {
             // there is not an ontology stored in the cookie - redirect to the main menu
             window.location.replace("/");
-        }
+        } 
 
         // there is an ontology loaded - save the id into the setupOntologyID variable
         Annotator.setupOntologyID = ontologyID;
+
+        const resourceID = T4FSAnnotator.getCookie("annotator-resource-id");
+        if (!(resourceID === "")) {
+            // there is a resource loaded - get the data and populate the inputs
+            Annotator.getResourceDetails(resourceID);
+        }
+    }
+
+
+    /**
+     * Updates the values in the form from the api.
+     * 
+     * @param {String} resourceID The ID of the resource to get
+     */
+    static getResourceDetails(resourceID) {
+        fetch("/api/getResource?id=" + resourceID)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+                document.getElementById("identifier-input").value = data.identifier;
+                document.getElementById("name-input").value = data.name;
+
+                // process the author name into the firstname and surname inputs
+                const author = data.author.split(", ");
+                document.getElementById("author-firstname-input").value = author[1];
+                document.getElementById("author-surname-input").value = author[0];
+
+                // Process the date
+                const date = T4FSAnnotator.timestampToYear(data.date).split("-");
+                document.getElementById("date-day-input").value = date[2];
+                document.getElementById("date-month-input").value = date[1];
+                document.getElementById("date-year-input").value = date[0];
+
+                // Process the terms
+                const terms = data.terms.join(",");
+                document.getElementById("selected-terms").value = terms;
+
+                // refresh the UI
+                Annotator.refreshDynamicUI();
+
+            })
+            .catch(err => console.log(err));
     }
 
 
