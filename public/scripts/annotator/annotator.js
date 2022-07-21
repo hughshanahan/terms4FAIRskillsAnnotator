@@ -11,6 +11,15 @@ class Annotator {
      * Sets up the annotator.
      */
     static setup() {
+
+        // hide the form container and show the loading spinner
+        T4FSAnnotator.showElement("form-loading-spinner-container");
+        T4FSAnnotator.hideElement("annotator-container");
+        
+        // hide the form saving spinner and show the annotator form container
+        T4FSAnnotator.hideElement("form-saving-spinner-container");
+        T4FSAnnotator.showElement("annotator-form-container");
+
         const ontologyID = T4FSAnnotator.getCookie("annotator-ontology-id");
         if (ontologyID === "") {
             // there is not an ontology stored in the cookie - redirect to the main menu
@@ -24,7 +33,22 @@ class Annotator {
         if (!(resourceID === "")) {
             // there is a resource loaded - get the data and populate the inputs
             Annotator.getResourceDetails(resourceID);
+        } else {
+            // there is not a resource loaded - show the form
+            Annotator.formLoaded();
         }
+
+        
+    }
+
+
+    /**
+     * Shows the form and stops showing the form loading spinner.
+     */
+    static formLoaded() {
+        // the annotator has been loaded - hide the loading spinner and show the form
+        T4FSAnnotator.hideElement("form-loading-spinner-container");
+        T4FSAnnotator.showElement("annotator-container");
     }
 
 
@@ -59,6 +83,9 @@ class Annotator {
 
                 // refresh the UI
                 Annotator.refreshDynamicUI();
+
+                // the details of the form have been updated - ensure that the form is shown
+                Annotator.formLoaded();
 
             })
             .catch(err => console.log(err));
@@ -96,7 +123,7 @@ class Annotator {
         var terms = document.getElementById("selected-terms").value.split(',');
         var newTerms = [];
 
-        // for each term
+        // for each term in the list of terms
         terms.forEach(term => {
             if (!(term === termToRemove)) {
                 // the term is not the term to remove - add it to the new terms list
@@ -121,6 +148,12 @@ class Annotator {
 
         // check that the loaded ontology hasn't changed
         if (Annotator.setupOntologyID === T4FSAnnotator.getCookie("annotator-ontology-id")) {
+
+            // hide the form and show the spinner
+            T4FSAnnotator.showElement("form-saving-spinner-container");
+            T4FSAnnotator.hideElement("annotator-form-container");
+
+            // get the elements and data
             var form = document.getElementById("annotator-form");
             var data = T4FSAnnotator.formToJSON(form);
 
@@ -147,6 +180,10 @@ class Annotator {
                     T4FSAnnotator.setCookie("annotator-resource-id", data.resourceID);
                     // update the text for when the resource was last saved
                     document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt);
+
+                    // data saved, show the form again
+                    T4FSAnnotator.hideElement("form-saving-spinner-container");
+                    T4FSAnnotator.showElement("annotator-form-container");
                 })
                 .catch(err => console.log(err));
 
