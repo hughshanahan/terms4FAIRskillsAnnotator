@@ -1,0 +1,48 @@
+{% block content %}
+
+
+    <!-- Form container for selecting an ontology -->
+    <div class="container d-flex flex-column justify-content-center gap-5 p-0" id="load-ontology-container">
+
+        <!-- Grid to contain the inputs/buttons for selecting  -->
+        <div class="container">
+            <div class="row my-3">
+                <div class="col">
+                    <!-- Details about the use of the terms4FAIRskills GitHub ontology -->
+                    <h3>Use terms4FAIRSkills Ontology</h3>
+                    <p>Use the ontology from <a class="link-primary" href="https://github.com/terms4fairskills/FAIRterminology">terms4FAIRskills GitHub repository</a>.</p>
+                </div>
+                <div class="col">
+                    <!-- Input to enter the URL of an OWL file-->
+                    <h3>Ontology From URL</h3>
+                    <label for="ontology-url-input" class="form-label">Load from URL</label>
+                    <input class="form-control" type="text" name="ontology-url-input" id="ontology-url-input" />
+                </div>
+                <div class="col">
+                    <!-- Input to upload an OWL file -->
+                    <h3>Ontology From File</h3>
+                    <label for="owl-file-upload" class="form-label">Upload from files</label>
+                    <input class="form-control" type="file" id="owl-file-upload" />
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col">
+                    <!-- Button to select the terms4FAIRskills OWL file -->
+                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="github-load-submit" onclick="OntologyLoader.loadFromGitHub()">Load ontology</button>
+                </div>
+                <div class="col">
+                    <!-- Button to import the OWL file from the URL -->
+                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="url-load-submit" onclick="OntologyLoader.loadFromURL()">Import ontology</button>
+                </div>
+                <div class="col">
+                    <!-- Button to upload the OWL file -->
+                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="file-load-submit" onclick="OntologyLoader.loadFromFile()">Upload ontology</button>
+                </div>
+            </div>
+        </div>
+
+        
+        <p class="text-center text-danger" id="owl-selection-error"></p>
+    </div>
+
+{% endblock %}
