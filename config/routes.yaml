@@ -49,18 +49,6 @@ root:
     controller: App\Controller\MiscController::home
 
 
-# Routes for annotator and directly related pages
-
-annotator:
-    path: /annotator
-    controller: App\Controller\AnnotatorController::annotator
-
-termsSearch:
-    path: terms-search
-    controller: App\Controller\AnnotatorController::termsSearch
-
-
-
 # Routes for other pages
 
 readme:
