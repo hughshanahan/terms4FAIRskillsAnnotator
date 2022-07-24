@@ -221,6 +221,11 @@ class Annotator {
     static refreshDynamicUI() {
         Annotator.refreshSelectedUI();
         Annotator.refreshTermsCounter();
+
+        // run the search again to update the add/remove buttons as they might have changed
+        Annotator.search(
+            document.getElementById("search-box").value
+        );
     }
 
 
@@ -260,7 +265,7 @@ class Annotator {
                         // convert the response to JSON object and process it
                         response.json()
                             .then(json => {
-                                selectedContainer.innerHTML += TermSearchResult.create(json, "annotator", terms);
+                                selectedContainer.innerHTML += TermSearchResult.create(json, terms);
                             });
                     });
                 })
@@ -305,7 +310,19 @@ class Annotator {
             
             var selectedInput = document.getElementById("selected-terms");
             var selectedTerms = selectedInput.value.split(',');
-            TermsSearch.searchTerms(searchTerm, "annotator", selectedTerms);
+
+            // fetch the data
+            fetch("/api/searchTerms?search=" + searchTerm, { method: 'get' })
+                // then convert response to JSON object
+                .then(response => response.json()) 
+                // then process the data to get the list of fetch requests for fetching the relations
+                .then(data => {
+                    // print the id of the first request response
+                    document.getElementById("results-container").innerHTML = SearchResults.create(data, selectedTerms);
+                    console.log("Updated results");
+                })
+                .catch(err => console.log(err));
+
 
         } else {
             alert("Error: The loaded ontology has changed");

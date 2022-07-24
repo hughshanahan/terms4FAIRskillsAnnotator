@@ -7,9 +7,14 @@
     <script src="/scripts/T4FSAnnotator.js"></script>
     <script src="/scripts/cookies.js"></script>
     <script src="/scripts/viewManager.js"></script>
+    <script src="/scripts/modalController.js"></script>
+
     <script src="/scripts/ontologySelector.js"></script>
     <script src="/scripts/mainMenu.js"></script>
     <script src="/scripts/annotator.js"></script>
+
+    <script src="/scripts/searchResults.js"></script>
+    <script src="/scripts/termSearchResult.js"></script>
 
     <script>
         // run the setup method when the page loads
@@ -24,12 +29,12 @@
     <div class="container d-flex flex-column justify-content-center align-items-center p-0 m-0">
 
         {% include 'elements/ontologySelector.html.twig' %}
-
         {% include 'elements/mainMenu.html.twig' %}
-
         {% include 'elements/annotator.html.twig' %}
         
         {% include 'elements/loadingSpinner.html.twig' %}
+
+        {% include 'elements/modalView.html.twig' %}
 
     </div>
 
