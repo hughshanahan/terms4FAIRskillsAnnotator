@@ -4,12 +4,16 @@
 
 {% block header %}
 
+    <script src="/scripts/T4FSAnnotator.js"></script>
+    <script src="/scripts/cookies.js"></script>
+    <script src="/scripts/viewManager.js"></script>
+    <script src="/scripts/ontologySelector.js"></script>
     <script src="/scripts/mainMenu.js"></script>
-    <script src="/scripts/ontology/ontologyloader.js"></script>
+    <script src="/scripts/annotator.js"></script>
 
     <script>
         // run the setup method when the page loads
-        window.onload = MainMenu.setup;
+        window.onload = T4FSAnnotator.initialise;
     </script>
 
 
@@ -22,6 +26,8 @@
         {% include 'elements/ontologySelector.html.twig' %}
 
         {% include 'elements/mainMenu.html.twig' %}
+
+        {% include 'elements/annotator.html.twig' %}
         
         {% include 'elements/loadingSpinner.html.twig' %}
 

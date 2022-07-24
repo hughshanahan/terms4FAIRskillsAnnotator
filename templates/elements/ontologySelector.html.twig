@@ -2,7 +2,7 @@
 
 
     <!-- Form container for selecting an ontology -->
-    <div class="container d-flex flex-column justify-content-center gap-5 p-0" id="load-ontology-container">
+    <div class="container d-flex flex-column justify-content-center gap-5 p-0" id="ontology-selector-container">
 
         <!-- Grid to contain the inputs/buttons for selecting  -->
         <div class="container">
@@ -28,15 +28,15 @@
             <div class="row my-3">
                 <div class="col">
                     <!-- Button to select the terms4FAIRskills OWL file -->
-                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="github-load-submit" onclick="OntologyLoader.loadFromGitHub()">Load ontology</button>
+                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="github-load-submit" onclick="OntologySelector.loadFromGitHub()">Load ontology</button>
                 </div>
                 <div class="col">
                     <!-- Button to import the OWL file from the URL -->
-                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="url-load-submit" onclick="OntologyLoader.loadFromURL()">Import ontology</button>
+                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="url-load-submit" onclick="OntologySelector.loadFromURL()">Import ontology</button>
                 </div>
                 <div class="col">
                     <!-- Button to upload the OWL file -->
-                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="file-load-submit" onclick="OntologyLoader.loadFromFile()">Upload ontology</button>
+                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="file-load-submit" onclick="OntologySelector.loadFromFile()">Upload ontology</button>
                 </div>
             </div>
         </div>

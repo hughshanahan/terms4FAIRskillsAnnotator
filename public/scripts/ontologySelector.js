@@ -2,7 +2,17 @@
 /**
  * Class to contain methods related to loading ontologies into the annotator.
  */
-class OntologyLoader {
+class OntologySelector {
+
+
+    /**
+     * Shows the ontology selector.
+     */
+    static show() {
+        ViewManager.showLoadingSpinner();
+        ViewManager.showOntologySelector();
+    }
+
 
     /**
      * Loads the Ontology from the terms4FAIRskills Github
@@ -12,7 +22,7 @@ class OntologyLoader {
         // set the url input to the raw github url
         document.getElementById("ontology-url-input").value = 
             "https://raw.githubusercontent.com/terms4fairskills/FAIRterminology/master/development/t4fs.owl";
-        OntologyLoader.loadFromURL();
+        OntologySelector.loadFromURL();
     }
 
     /**
@@ -21,9 +31,8 @@ class OntologyLoader {
     static loadFromURL() {
         var data = "{\"ontology-url-input\": \"" + document.getElementById("ontology-url-input").value + "\"}"
 
-        // hide the form and show the loading spinner
-        T4FSAnnotator.hideElement("load-ontology-container");
-        T4FSAnnotator.showElement("loading-spinner-container");
+        // show the loading spinner
+        ViewManager.showLoadingSpinner();
 
         fetch("/api/loadOntology",
             {
@@ -36,16 +45,15 @@ class OntologyLoader {
                 console.log(data);
                 const ontologyID = data.ontologyID;
 
-                T4FSAnnotator.hideElement("loading-spinner-container");
-                T4FSAnnotator.showElement("main-menu-container");
+                MainMenu.show();
 
                 document.getElementById("ontology-name-span").innerHTML = ontologyID;
-                T4FSAnnotator.setCookie("annotator-ontology-id", ontologyID, 7); 
+                Cookies.set("annotator-ontology-id", ontologyID, 7); 
                     // set the cookie for the ontology id
             })
             .catch(err => {
                 console.log(err);
-                MainMenu.setup(); // reset which elements are shown
+                T4FSAnnotator.initialise();
                 document.getElementById("owl-selection-error").innerHTML = err;
             });
     }

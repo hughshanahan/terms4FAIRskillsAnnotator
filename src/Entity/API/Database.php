@@ -304,7 +304,7 @@
 
             // insert into database
             $this->insert("resource", $values);
-            $this->insertTerms($terms);
+            $this->insertTerms($id, $terms);
 
             return $id;
         }

@@ -5,6 +5,33 @@
 class T4FSAnnotator {
 
     /**
+     * Initalises the annotator.
+     */
+    static initialise() {
+        console.log("Initialising annotator");
+
+        // show the loading spinner while initialising the annotator
+        ViewManager.showLoadingSpinner();
+
+        // load the correct part of the annotator depending on the cookies set
+        if (Cookies.get("annotator-ontology-id") === "") {
+            // there is not an ontology loaded - show the ontology selector
+            console.log("No ontology loaded - loading ontology selector");
+            OntologySelector.show();
+        } else if (Cookies.get("annotator-resource-id") === "") {
+            // there is an ontology loaded but no resource selected
+            console.log("No resource selected - loading main menu");
+            MainMenu.show();
+        } else {
+            // there is an ontology loaded and a resource selected
+            console.log("Loading annotator");
+            Annotator.show();
+        }
+
+        console.log("Annotator ready!");
+    }
+
+    /**
      * Adds word breaks into URLs to prevent overflow issues with longer URLs.
      * 
      * @param {String} url the URL to insert word breaks into
@@ -171,75 +198,6 @@ class T4FSAnnotator {
         return response;
     }
 
-
-    /**
-     * Shows an element with display: flex;
-     * 
-     * @param {String} id the id of the element to show
-     */
-    static showElement(id) {
-        var element = document.getElementById(id);
-        element.classList.add("d-flex");
-        element.classList.remove("d-none");
-    }
-
-    /**
-     * Hides an element with display: none;
-     * 
-     * @param {String} id the id of the element to hide
-     */
-    static hideElement(id) {
-        var element = document.getElementById(id);
-        element.classList.add("d-none");
-        element.classList.remove("d-flex");
-    }
-
-
-
-    /**
-     * Sets a cookie.
-     * 
-     * @param {String} name the name of the cookie
-     * @param {String} value the value of the cookie
-     * @param {int} days the number of days before the cookie expires, defaults to 7
-     */
-    static setCookie(name, value, days = 7) {
-        const d = new Date();
-        d.setTime(d.getTime() + (days*24*60*60*1000));
-        let expires = "expires="+ d.toUTCString();
-        document.cookie = name + "=" + value + ";" + expires + ";path=/";
-    }
-
-    /**
-     * Deletes the cookie.
-     * 
-     * @param {String} name the name of the cookie
-     */
-    static deleteCookie(name) {
-        T4FSAnnotator.setCookie(name, "");
-    }
-
-    /**
-     * Returns the value of a cookie.
-     * 
-     * @param {String} name the name of the cookie
-     * @returns {String} the cookie value
-     */
-    static getCookie(name) {
-        let nameKey = name + "=";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for(let i = 0; i <ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(nameKey) == 0) {
-                return c.substring(nameKey.length, c.length);
-            }
-        }
-        return "";
-    }
 
 }
 

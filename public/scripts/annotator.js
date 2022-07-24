@@ -10,46 +10,63 @@ class Annotator {
     /**
      * Sets up the annotator.
      */
-    static setup() {
+    static show() {
 
-        // hide the form container and show the loading spinner
-        T4FSAnnotator.showElement("form-loading-spinner-container");
-        T4FSAnnotator.hideElement("annotator-container");
-        
-        // hide the form saving spinner and show the annotator form container
-        T4FSAnnotator.hideElement("form-saving-spinner-container");
-        T4FSAnnotator.showElement("annotator-form-container");
+        // show the loading spinner while the annotator is setup
+        ViewManager.showLoadingSpinner();
 
-        const ontologyID = T4FSAnnotator.getCookie("annotator-ontology-id");
+        // show the form
+        Annotator.showAnnotatorForm();
+
+        const ontologyID = Cookies.get("annotator-ontology-id");
         if (ontologyID === "") {
-            // there is not an ontology stored in the cookie - redirect to the main menu
-            window.location.replace("/");
+            // there is not an ontology stored in the cookie - show the ontology selector
+            ViewManager.showOntologySelector();
         } 
 
         // there is an ontology loaded - save the id into the setupOntologyID variable
         Annotator.setupOntologyID = ontologyID;
 
-        const resourceID = T4FSAnnotator.getCookie("annotator-resource-id");
+        const resourceID = Cookies.get("annotator-resource-id");
         if (!(resourceID === "")) {
             // there is a resource loaded - get the data and populate the inputs
             Annotator.getResourceDetails(resourceID);
         } else {
             // there is not a resource loaded - show the form
-            Annotator.formLoaded();
+            ViewManager.showAnnotator();
         }
 
         
     }
 
+    /**s
+     * Hides the annotator and navigates back to the main menu.
+     */
+     static hide() {
+        MainMenu.show();
+    }
+
 
     /**
-     * Shows the form and stops showing the form loading spinner.
+     * Hides the form and shows the saving spinner.
      */
-    static formLoaded() {
-        // the annotator has been loaded - hide the loading spinner and show the form
-        T4FSAnnotator.hideElement("form-loading-spinner-container");
-        T4FSAnnotator.showElement("annotator-container");
+    static showSavingSpinner() {
+        // hide the form and show the spinner
+        console.log("Showing saving spinner");
+        ViewManager.hideElement("annotator-form-container");
+        ViewManager.showElement("form-saving-spinner-container");
     }
+
+    /**
+     * Hides the saving spinner and shows the annotator form.
+     */
+    static showAnnotatorForm() {
+        // hide the spinner and show the form
+        console.log("Showing annotator form");
+        ViewManager.hideElement("form-saving-spinner-container");
+        ViewManager.showElement("annotator-form-container");
+    }
+
 
 
     /**
@@ -85,7 +102,7 @@ class Annotator {
                 Annotator.refreshDynamicUI();
 
                 // the details of the form have been updated - ensure that the form is shown
-                Annotator.formLoaded();
+                ViewManager.showAnnotator();
 
             })
             .catch(err => console.log(err));
@@ -147,11 +164,10 @@ class Annotator {
     static submit() {
 
         // check that the loaded ontology hasn't changed
-        if (Annotator.setupOntologyID === T4FSAnnotator.getCookie("annotator-ontology-id")) {
+        if (Annotator.setupOntologyID === Cookies.get("annotator-ontology-id")) {
 
             // hide the form and show the spinner
-            T4FSAnnotator.showElement("form-saving-spinner-container");
-            T4FSAnnotator.hideElement("annotator-form-container");
+            Annotator.showSavingSpinner();
 
             // get the elements and data
             var form = document.getElementById("annotator-form");
@@ -159,7 +175,7 @@ class Annotator {
 
             // select the api endpoint to use depending on if the cookie has been set
             var url = "";
-            if (T4FSAnnotator.getCookie("annotator-resource-id") === "") {
+            if (Cookies.get("annotator-resource-id") === "") {
                 // the resource id cookie has not been set, therefore create a new resource
                 url = "/api/createResource";
             } else {
@@ -177,13 +193,12 @@ class Annotator {
                 .then(data => {
                     console.log(data);
                     // store the resource id in the cookie - this is redundant for saving changes but is needed for the first save
-                    T4FSAnnotator.setCookie("annotator-resource-id", data.resourceID);
+                    Cookies.set("annotator-resource-id", data.resourceID);
                     // update the text for when the resource was last saved
-                    document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt);
+                    document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt) + " on " +  T4FSAnnotator.timestampToYear(data.savedAt);
 
                     // data saved, show the form again
-                    T4FSAnnotator.hideElement("form-saving-spinner-container");
-                    T4FSAnnotator.showElement("annotator-form-container");
+                    Annotator.showAnnotatorForm();
                 })
                 .catch(err => console.log(err));
 
@@ -286,7 +301,7 @@ class Annotator {
     static search(searchTerm) {
 
         // check that the loaded ontology hasn't changed
-        if (Annotator.setupOntologyID === T4FSAnnotator.getCookie("annotator-ontology-id")) {
+        if (Annotator.setupOntologyID === Cookies.get("annotator-ontology-id")) {
             
             var selectedInput = document.getElementById("selected-terms");
             var selectedTerms = selectedInput.value.split(',');

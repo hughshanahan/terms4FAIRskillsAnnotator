@@ -1,0 +1,99 @@
+{% block content %}
+
+    <!-- Annotator container -->
+    <div class="container d-flex flex-column justify-content-start gap-5 p-0" id="annotator-container">
+
+        <!-- Navigation Bar -->
+        <div class="container d-flex flex-row justify-content-between p-0">
+            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="Annotator.hide()">Back</button>
+        </div>
+
+        <!-- Submit Button Container -->
+        <div class="container w-75 d-flex flex-column justify-content-end p-0" id="submit-button-container">
+            <div class="container d-flex flex-column justify-content-center gap-2 p-0">
+                <button type="button" class="btn btn-primary text-center px-5" id="submit" onclick="Annotator.submit();">Save</button>
+                <p class="text-center">Last Saved at: <span id="last-saved-at">Never</span></p>
+            </div>
+        </div>
+
+
+        <!-- Annotator -->
+        <div class="container d-flex flex-column justify-content-center align-items-center p-0 m-0" id="annotator-form-container">
+
+            <!-- Form -->
+            <form id="annotator-form">
+                <div class="container d-flex flex-column justify-content-center gap-3 p-0">
+
+                    <h4 class="text-center">Resource Details</h4>
+
+                    <div class="container w-75 d-flex flex-column justify-content-center gap-3 p-0" id="inputs-container">
+
+                        <input type="text" class="text-center" id="identifier-input" name="identifier-input" placeholder="Identifier">
+
+                        <input type="text" class="text-center" id="name-input" name="name-input" placeholder="Resource Name">
+
+                        <div class="container d-flex flex-row justify-content-center gap-3 p-0" id="author-input-container">
+                            <input type="text" class="flex-grow-1 text-center" id="author-firstname-input" name="author-firstname-input" placeholder="Author Firstname">
+                            <input type="text" class="flex-grow-1 text-center" id="author-surname-input" name="author-surname-input" placeholder="Author Surname">
+                        </div>
+
+                        <div class="container d-flex flex-row justify-content-center gap-3 p-0" id="date-input-container">
+                            <input type="text" class="flex-grow-1 text-center" id="date-day-input" name="date-day-input" placeholder="Day">
+                            <input type="text" class="flex-grow-1 text-center" id="date-month-input" name="date-month-input" placeholder="Month">
+                            <input type="text" class="flex-grow-1 text-center" id="date-year-input" name="date-year-input" placeholder="Year">
+                        </div>
+
+                    </div>
+
+                    <!-- Stores a comma seperated list of terms that have been selected -->
+                    <input type="hidden" id="selected-terms" name="selected-terms">
+
+                </div>
+            </form>
+
+            <!-- Terms Search Container -->
+            <div class="container" id="termssearch-container">
+
+                <h4 class="text-center">Resource Terms</h4>
+
+                <!-- Grid container -->
+                <div class="container">
+                    <div class="row">
+                        <!-- Search box -->
+                        <div class="col d-flex flex-column justify-content-center gap-5" id="termssearch-container">
+                            <div class="container d-flex justify-content-center" id="search-container">
+                                <input type="text" class="w-75 lead text-center" id="search-box" name="search-box" placeholder="Search for Terms..." onkeyup="Annotator.search(this.value)">
+                            </div>   
+                            
+                        </div>
+
+                        <!-- Terms count -->
+                        <div class="col d-flex flex-column justify-content-center gap-5">
+                            <p class="text-center"><span id="terms-count">0</span> term(s) selected</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Search results -->
+                        <div class="col d-flex flex-column justify-content-start gap-3" id="results-container"></div>
+
+                        <!-- Selected terms list -->
+                        <div class="col d-flex flex-column justify-content-start gap-3" id="selected-terms-container"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+        <!-- Form saving Spinner Container -->
+        <div class="container w-100 d-flex flex-row justify-content-center gap-5 p-0" id="form-saving-spinner-container">
+            <div class="spinner-border text-secondary" style="width: 5rem; height: 5rem;" role="status"></div>
+        </div>
+
+
+
+    </div>
+
+{% endblock %}

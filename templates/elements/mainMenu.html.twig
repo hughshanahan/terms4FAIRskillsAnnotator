@@ -3,9 +3,15 @@
     <!-- Main menu container -->
     <div class="container w-100 d-flex flex-column justify-content-center gap-5 p-0" id="main-menu-container">
 
+        <!-- Navigation Bar -->
+        <div class="container d-flex flex-row justify-content-between p-0">
+            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="MainMenu.hide()">Back</button>
+        </div>
+
+
         <div class="container d-flex flex-column justify-content-center p-0">
             <h2>Ontology <span id="ontology-name-span"></span></h2>
-            <button type="button" class="btn btn-danger btn-block" onclick="MainMenu.removeOntology()">Clear Ontology</button>
+            <button type="button" class="btn btn-danger btn-block" onclick="MainMenu.changeOntology()">Change Ontology</button>
         </div>
 
         <!-- Annotator menu options -->
@@ -13,7 +19,7 @@
             <h4>Annotator</h4>
 
             <div class="container d-flex flex-row justifty-content-center gap-3 p-0">
-                <button type="button" class="btn btn-primary btn-lg btn-block" onclick="MainMenu.goToAnnotator()">Annotate New Resource</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" onclick="Annotator.show()">Annotate New Resource</button>
                 <button type="button" class="btn btn-primary btn-lg btn-block" onclick="MainMenu.goToResourcesList()">View Annotated Resources</button>
             </div>
 
