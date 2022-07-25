@@ -7,7 +7,7 @@
 */
 CREATE TABLE ontology (
     id int,
-    content text,
+    content LONGTEXT,
     accessed int,
 
     PRIMARY KEY (id)

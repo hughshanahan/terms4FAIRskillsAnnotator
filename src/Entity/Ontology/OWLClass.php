@@ -14,6 +14,8 @@
         private $parentClasses; // stores an array of the URIs for the classes that this class is a sub class of
         private $comments; // array of comments about the class
 
+        private $description;
+
         /**
          * Constructs a class object from an owl:class element.
          *
@@ -35,6 +37,8 @@
             $this->label = "";
             $this->parentClasses = array();
             $this->comments = array();
+
+            $this->description = "";
 
             $this->processChildElements($element);
         }
@@ -61,6 +65,8 @@
                     $this->getParentClassDetails($child, $childAttributes);
                 } else if ($childName == "rdfs:comment") {
                     array_push($this->comments, strval($child));
+                } else if ($childName == "obo:IAO_0000115") {
+                    $this->description = strval($child);
                 }
             }
         }
@@ -162,6 +168,14 @@
         }
 
 
+        /**
+         * Returns the description of the class.
+         *
+         * @return String the class description
+         */
+        public function getDescription() : String {
+            return $this->description;
+        }
 
 
 
@@ -177,6 +191,7 @@
             $data["about"] = $this->getAbout();
             $data["parents"] = $this->getParentClasses();
             $data["comments"] = $this->getComments();
+            $data["description"] = $this->getDescription();
 
             return $data;
         }

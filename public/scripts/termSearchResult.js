@@ -99,6 +99,7 @@ class TermSearchResult {
                     html += '<div class="d-flex flex-column justify-content-start w-100">';
                     // add the content
                     html += this.createModalBodyPair("URI", data.about);
+                    html += this.createModalBodyPair("Description", data.description);
                     html += this.createModalBodyList("Relations", data.parents, TermSearchResult.processTermRelations);
                     html += this.createModalBodyList("Comments", data.comments);
                     // close the justification container
