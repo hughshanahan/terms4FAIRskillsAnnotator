@@ -48,6 +48,12 @@ apiExportAnnotations:
     controller: App\Controller\APIController::exportAnnotations
 
 
+
+apiGetOntologyResources:
+    path: /api/getOntologyResources
+    controller: App\Controller\APIController::getOntologyResources 
+
+
 # === FRONT END ROUTES ===
 
 root:

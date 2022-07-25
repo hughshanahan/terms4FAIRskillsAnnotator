@@ -365,6 +365,19 @@
         }
 
 
+        /**
+         * Returns the JSON String with all the ontology's resources in. 
+         *
+         * @param String $ontologyID the id of the ontology to export 
+         * @return String the JSON String of the resources
+         */
+        public static function getOntologyResources(String $ontologyID) : String {
+            $database = new Database();
+            $resources = $database->getOntologyResources($ontologyID);
+            return JSONFormatter::arrayToString($resources);
+        }
+
+
     }
 
 ?>

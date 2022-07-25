@@ -11,14 +11,19 @@
 
         <div class="container d-flex flex-column justify-content-center p-0">
             <h2>Ontology <span id="ontology-name-span"></span></h2>
-            <button type="button" class="btn btn-danger btn-block" onclick="MainMenu.changeOntology()">Change Ontology</button>
         </div>
 
         <!-- Menu options -->
         <div class="container d-flex flex-column justify-content-center gap-3 p-0">
-            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="Annotator.show()">Annotate New Resource</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="MainMenu.annotateNew()">Annotate New Resource</button>
             <button type="button" class="btn btn-primary btn-lg btn-block" onclick="MainMenu.export()">Export Annotations</button>
         </div>
+
+        <!-- Annotated Resources -->
+        <div class="container d-flex flex-column justify-content-center gap-3 p-0" id="annotated-resources">
+
+        </div>
+
 
     </div>
 

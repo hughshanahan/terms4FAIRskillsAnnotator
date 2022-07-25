@@ -17,6 +17,7 @@ class Annotator {
 
         // show the form
         Annotator.showAnnotatorForm();
+        Annotator.resetForm();
 
         // log what the ontology was when the annotator was shown
         Annotator.setupOntologyID = Cookies.get("annotator-ontology-id");;
@@ -36,6 +37,7 @@ class Annotator {
      * Hides the annotator and navigates back to the main menu.
      */
      static hide() {
+        Cookies.delete("annotator-resource-id");
         MainMenu.show();
     }
 
@@ -60,6 +62,26 @@ class Annotator {
         ViewManager.showElement("annotator-form-container");
     }
 
+
+    /**
+     * Resets the form elements.
+     */
+    static resetForm() {
+        const inputs = [
+            "identifier-input",
+            "name-input",
+            "author-firstname-input",
+            "author-surname-input",
+            "date-day-input",
+            "date-month-input",
+            "date-year-input",
+            "selected-terms"
+        ];
+        inputs.forEach(id => {
+            document.getElementById(id).value = "";
+        });
+        Annotator.refreshDynamicUI();
+    }
 
 
     /**
