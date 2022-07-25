@@ -12,6 +12,9 @@ class Annotator {
      */
     static show() {
 
+        // log what the ontology was when the annotator was shown
+        Annotator.setupOntologyID = Cookies.get("annotator-ontology-id");
+
         // show the loading spinner while the annotator is setup
         ViewManager.showLoadingSpinner();
 
@@ -19,15 +22,16 @@ class Annotator {
         Annotator.showAnnotatorForm();
         Annotator.resetForm();
 
-        // log what the ontology was when the annotator was shown
-        Annotator.setupOntologyID = Cookies.get("annotator-ontology-id");;
 
         const resourceID = Cookies.get("annotator-resource-id");
         if (!(resourceID === "")) {
             // there is a resource loaded - get the data and populate the inputs
             Annotator.getResourceDetails(resourceID);
         } else {
-            // there is not a resource loaded - show the form
+            // there is not a resource loaded
+            // clear the search box and refresh the dynamic ui - then show the form
+            document.getElementById("search-box").value = "";
+            Annotator.refreshDynamicUI();
             ViewManager.showAnnotator();
         }
 
@@ -120,7 +124,12 @@ class Annotator {
                 ViewManager.showAnnotator();
 
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                ModalController.show(
+                    "Error", 
+                    "An error occured while getting the resoruce details: " + err 
+                )
+            });
     }
 
 
@@ -215,10 +224,18 @@ class Annotator {
                     // data saved, show the form again
                     Annotator.showAnnotatorForm();
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    ModalController.show(
+                        "Error", 
+                        "An error occured while saving the resource details: " + err 
+                    )
+                });
 
         } else {
-            alert("Error: The loaded ontology has changed");
+            ModalController.show(
+                "Error", 
+                "<p>The loaded ontology has changed<br /><small>Annotator.sumbit()</small></p>"
+            );
         }
 
         
@@ -284,7 +301,12 @@ class Annotator {
                             });
                     });
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    ModalController.show(
+                        "Error", 
+                        "An error occured while getting the term details: " + err 
+                    );
+                });
         }
 
     }
@@ -320,28 +342,45 @@ class Annotator {
      */
     static search(searchTerm) {
 
-        // check that the loaded ontology hasn't changed
-        if (Annotator.setupOntologyID === Cookies.get("annotator-ontology-id")) {
-            
-            var selectedInput = document.getElementById("selected-terms");
-            var selectedTerms = selectedInput.value.split(',');
+        if (!(searchTerm === "")) {
+            // there is something to search for
 
-            // fetch the data
-            fetch("/api/searchTerms?search=" + searchTerm, { method: 'get' })
-                // then convert response to JSON object
-                .then(response => response.json()) 
-                // then process the data to get the list of fetch requests for fetching the relations
-                .then(data => {
-                    // print the id of the first request response
-                    document.getElementById("results-container").innerHTML = SearchResults.create(data, selectedTerms);
-                    console.log("Updated results");
-                })
-                .catch(err => console.log(err));
+            // check that the loaded ontology hasn't changed
+            if (Annotator.setupOntologyID === Cookies.get("annotator-ontology-id")) {
+                
+                var selectedInput = document.getElementById("selected-terms");
+                var selectedTerms = selectedInput.value.split(',');
+
+                // fetch the data
+                fetch("/api/searchTerms?search=" + searchTerm, { method: 'get' })
+                    // then convert response to JSON object
+                    .then(response => response.json()) 
+                    // then process the data to get the list of fetch requests for fetching the relations
+                    .then(data => {
+                        // print the id of the first request response
+                        document.getElementById("results-container").innerHTML = SearchResults.create(data, selectedTerms);
+                        console.log("Updated results");
+                    })
+                    .catch(err => {
+                        ModalController.show(
+                            "Error", 
+                            "An error occured while searching for terms: " + err 
+                        )
+                    });
 
 
+            } else {
+                ModalController.show(
+                    "Error", 
+                    "<p>The loaded ontology has changed<br /><small>Annotator.search()</small></p>"
+                );
+            }
         } else {
-            alert("Error: The loaded ontology has changed");
+            // clear the container
+            document.getElementById("results-container").innerHTML = "";
         }
+
+        
     }
 
 }

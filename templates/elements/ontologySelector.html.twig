@@ -18,12 +18,6 @@
                     <label for="ontology-url-input" class="form-label">Load from URL</label>
                     <input class="form-control" type="text" name="ontology-url-input" id="ontology-url-input" />
                 </div>
-                <div class="col">
-                    <!-- Input to upload an OWL file -->
-                    <h3>Ontology From File</h3>
-                    <label for="owl-file-upload" class="form-label">Upload from files</label>
-                    <input class="form-control" type="file" id="owl-file-upload" />
-                </div>
             </div>
             <div class="row my-3">
                 <div class="col">
@@ -33,10 +27,6 @@
                 <div class="col">
                     <!-- Button to import the OWL file from the URL -->
                     <button type="button" class="btn btn-primary text-center w-100 px-5" id="url-load-submit" onclick="OntologySelector.loadFromURL()">Import ontology</button>
-                </div>
-                <div class="col">
-                    <!-- Button to upload the OWL file -->
-                    <button type="button" class="btn btn-primary text-center w-100 px-5" id="file-load-submit" onclick="OntologySelector.loadFromFile()">Upload ontology</button>
                 </div>
             </div>
         </div>

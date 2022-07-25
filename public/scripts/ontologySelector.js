@@ -50,17 +50,11 @@ class OntologySelector {
                     
             })
             .catch(err => {
-                console.log(err);
-                T4FSAnnotator.initialise();
-                document.getElementById("owl-selection-error").innerHTML = err;
+                ModalController.show(
+                    "Error", 
+                    "An error occured while loading the ontology: " + err 
+                )
             });
-    }
-
-    /**
-     * Loads the ontology from the uploaded file.
-     */
-    static loadFromFile() {
-
     }
 
 }

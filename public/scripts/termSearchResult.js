@@ -107,7 +107,12 @@ class TermSearchResult {
                     // show the content in the modal
                     ModalController.showContent(html);
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    ModalController.show(
+                        "Error", 
+                        "An error occured while getting the term details: " + err 
+                    )
+                });
 
     }
 
