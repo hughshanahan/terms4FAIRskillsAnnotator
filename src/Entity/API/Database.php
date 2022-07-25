@@ -347,6 +347,25 @@
 
 
         /**
+         * Returns an array of the resources that are for the given ontology.
+         *
+         * @param String $ontologyID the ontology database id
+         * @return array the resources for the ontology
+         */
+        public function getOntologyResources(String $ontologyID) : array {
+            $resources = $this->select("resource", "ontologyID='" . $ontologyID . "'")["rows"];
+            $resourcesWithTerms = array();
+            foreach ($resources as $resource) {
+                $resourceWithTerms = array_merge(array(), $resource); //make a copy of the array
+                $resourceID = $resourceWithTerms["id"];
+                $resourceWithTerms["terms"] = $this->getTerms($resourceID);
+                array_push($resourcesWithTerms, $resourceWithTerms);
+            }
+            return $resourcesWithTerms;
+        }
+
+
+        /**
          * Inserts an array of terms into the term table of the database.
          *
          * @param String $resourceID the id of the resource that the terms are related to
@@ -362,6 +381,22 @@
                 );
                 $this->insert("term", $values);
             }
+        }
+
+
+        /**
+         * Returns an array of terms for a given resource.
+         *
+         * @param String $resourceID the resource
+         * @return array the resource terms
+         */
+        private function getTerms(String $resourceID) : array {
+            $terms = $this->select("term", "resourceID='" . $resourceID . "'")["rows"];
+            $termURIs = array();
+            foreach ($terms as $term) {
+                array_push($termURIs, $term["termURI"]);
+            }
+            return $termURIs;
         }
 
     }

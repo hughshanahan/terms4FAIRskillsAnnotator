@@ -172,6 +172,23 @@
                 ['content-type' => 'application/json']
             );
         }
+
+
+
+        public function exportAnnotations(Request $request) : Response {
+            // get the ontology id from the request
+            $ontologyID = $request->query->get("ontology");
+
+            // get the JSON String of all the annotations
+            $jsonString = APIHandler::exportAnnotations($ontologyID);
+
+            // return the response
+            return new Response(
+                $jsonString,
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+        }
     }
 
 ?>

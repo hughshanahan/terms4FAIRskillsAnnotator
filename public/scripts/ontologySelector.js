@@ -43,13 +43,11 @@ class OntologySelector {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                const ontologyID = data.ontologyID;
-
+                // set the cookie for the ontology id
+                Cookies.set("annotator-ontology-id", data.ontologyID, 7);
+                // show the main menu
                 MainMenu.show();
-
-                document.getElementById("ontology-name-span").innerHTML = ontologyID;
-                Cookies.set("annotator-ontology-id", ontologyID, 7); 
-                    // set the cookie for the ontology id
+                    
             })
             .catch(err => {
                 console.log(err);

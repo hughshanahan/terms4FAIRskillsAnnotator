@@ -42,6 +42,12 @@ apiGetResource:
     path: /api/getResource
     controller: App\Controller\APIController::getResource
 
+
+apiExportAnnotations:
+    path: /api/exportAnnotations
+    controller: App\Controller\APIController::exportAnnotations
+
+
 # === FRONT END ROUTES ===
 
 root:

@@ -18,14 +18,8 @@ class Annotator {
         // show the form
         Annotator.showAnnotatorForm();
 
-        const ontologyID = Cookies.get("annotator-ontology-id");
-        if (ontologyID === "") {
-            // there is not an ontology stored in the cookie - show the ontology selector
-            ViewManager.showOntologySelector();
-        } 
-
-        // there is an ontology loaded - save the id into the setupOntologyID variable
-        Annotator.setupOntologyID = ontologyID;
+        // log what the ontology was when the annotator was shown
+        Annotator.setupOntologyID = Cookies.get("annotator-ontology-id");;
 
         const resourceID = Cookies.get("annotator-resource-id");
         if (!(resourceID === "")) {
@@ -36,7 +30,6 @@ class Annotator {
             ViewManager.showAnnotator();
         }
 
-        
     }
 
     /**s

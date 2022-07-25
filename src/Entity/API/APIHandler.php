@@ -183,10 +183,6 @@
         }
 
 
-
-
-
-
         /*
             ===== Class Methods =====
 
@@ -342,6 +338,32 @@
             // return the JSON String
             return JSONFormatter::arrayToString($data);
         }
+
+
+
+        /**
+         * Returns the JSON String for the export file.
+         *
+         * @param String $ontologyID the id of the ontology to export 
+         * @return String the JSON String for the export file
+         */
+        public static function exportAnnotations(String $ontologyID) : String {
+            $database = new Database();
+            $resources = $database->getOntologyResources($ontologyID);
+            $annotations = array();
+            foreach ($resources as $resource) {
+                $resourceAnnotation = array(
+                    "doi" => $resource["identifier"],
+                    "name" => $resource["name"],
+                    "author" => $resource["author"],
+                    "date" => date("Y-m-d", $resource["date"]),
+                    "concept" => $resource["terms"]
+                );
+                array_push($annotations, $resourceAnnotation);
+            }
+            return JSONFormatter::arrayToString($annotations);
+        }
+
 
     }
 
