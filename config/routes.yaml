@@ -54,6 +54,11 @@ apiGetOntologyResources:
     controller: App\Controller\APIController::getOntologyResources 
 
 
+apiDeleteResource:
+    path: /api/deleteResource
+    controller: App\Controller\APIController::deleteResource
+
+
 # === FRONT END ROUTES ===
 
 root:

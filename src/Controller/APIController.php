@@ -216,6 +216,29 @@
                 ['content-type' => 'application/json']
             );
         }
+
+
+        /**
+         * Deletes a resource from the annotator.
+         *
+         * @param Request $request the request containing the id of the resource to delete
+         * @return Response the status of the deletion
+         */
+        public function deleteResource(Request $request) : Response {
+            // get the resource id from the request
+            $resourceID = $request->query->get("id");
+
+            // get the JSON String of the deletion status
+            $jsonString = APIHandler::deleteResource($resourceID);
+
+            // return the response
+            return new Response(
+                $jsonString,
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+
+        }
     }
 
 ?>

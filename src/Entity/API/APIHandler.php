@@ -378,6 +378,19 @@
         }
 
 
+        /**
+         * Deletes a resource from the database.
+         *
+         * @param String $resourceID the resource to delete
+         * @return String the JSON String containing the status information
+         */
+        public static function deleteResource(String $resourceID) : String {
+            $database = new Database();
+            $database->deleteResource($resourceID);
+            return JSONFormatter::arrayToString(array("status"=>"ok"));
+        }
+
+
     }
 
 ?>

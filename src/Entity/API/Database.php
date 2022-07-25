@@ -399,6 +399,18 @@
             return $termURIs;
         }
 
+        /**
+         * Deletes a resource from the database.
+         *
+         * @param String $resourceID the resource to delete
+         * @return void
+         */
+        public function deleteResource(String $resourceID) : void {
+            // delete the terms, then delete the resource
+            $this->delete("term", "resourceID='" . $resourceID . "'");
+            $this->delete("resource", "id='" . $resourceID . "'");
+        }
+
     }
 
 

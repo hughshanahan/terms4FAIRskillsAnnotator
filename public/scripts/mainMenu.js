@@ -35,6 +35,8 @@ class MainMenu {
         // check that the loaded ontology hasn't changed
         if (MainMenu.setupOntologyID === Cookies.get("annotator-ontology-id")) {
 
+            document.getElementById("annotated-resources").innerHTML = "";
+
             fetch("/api/getOntologyResources?ontology=" + Cookies.get("annotator-ontology-id"))
                 .then(response => response.json())
                 .then(data => {
@@ -44,34 +46,40 @@ class MainMenu {
 
                     // create the grid heading
                     html += '<div class="container">';
-                    html += '<div class="row">';
-                    html += '<div class="col">';
+                    html += '<div class="row">'; // no margin on the header row
+                    html += '<div class="col align-self-center">';
                     html += '<p><strong>Name</strong></p>';
                     html += '</div>';
-                    html += '<div class="col">';
+                    html += '<div class="col align-self-center">';
                     html += '<p><strong>Author</strong></p>';
                     html += '</div>';
-                    html += '<div class="col">';
+                    html += '<div class="col align-self-center">';
                     html += '<p><strong>Terms</strong></p>';
                     html += '</div>';
-                    html += '<div class="col">';
+                    html += '<div class="col align-self-center">';
                     html += '</div>';
                     html += '</div>';
 
                     // for each resource
                     data.forEach(resource => {
-                        html += '<div class="row">';
-                        html += '<div class="col">';
+                        html += '<div class="row my-1">';
+                        html += '<div class="col align-self-center">';
                         html += '<p>' + resource.name + '</p>';
                         html += '</div>';
-                        html += '<div class="col">';
+                        html += '<div class="col align-self-center">';
                         html += '<p>' + resource.author + '</p>';
                         html += '</div>';
-                        html += '<div class="col">';
+                        html += '<div class="col align-self-center">';
                         html += '<p>' + resource.terms.length + '</p>';
                         html += '</div>';
-                        html += '<div class="col">';
-                        html += '<button type="button" class="btn btn-primary btn-lg btn-block" onclick="MainMenu.annotateExisting(\'' + resource.id + '\')">Annotate</button>';
+                        html += '<div class="col align-self-center">';
+
+                        // create the container to hold the options buttons
+                        html += '<div class="container d-flex flex-row justify-content-center gap-3 p-0 w-100">';
+                        html += '<button type="button" class="btn btn-primary flex-fill" onclick="MainMenu.annotateExisting(\'' + resource.id + '\')">Annotate</button>';
+                        html += '<button type="button" class="btn btn-danger flex-fill" onclick="MainMenu.deleteResource(\'' + resource.id + '\', \'' + resource.name + '\')">Delete</button>';
+                        html += '</div>';
+
                         html += '</div>';
                         html += '</div>';
                     });
@@ -85,10 +93,18 @@ class MainMenu {
                     ViewManager.showMainMenu();
 
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    ModalController.show(
+                        "Error", 
+                        "An error occured getting the annotated resources: " + err
+                    );
+                });
 
         } else {
-            alert("Error: The loaded ontology has changed");
+            ModalController.show(
+                "Error", 
+                "<p>The loaded ontology has changed<br /><small>Annotator.sumbit()</small></p>"
+            );
         }
     }
 
@@ -106,10 +122,18 @@ class MainMenu {
                     console.log(data);
                     T4FSAnnotator.downloadObjectAsJson(data, "materials");
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    ModalController.show(
+                        "Error", 
+                        "An error occured getting export file: " + err
+                    );
+                });
 
         } else {
-            alert("Error: The loaded ontology has changed");
+            ModalController.show(
+                "Error", 
+                "<p>The loaded ontology has changed<br /><small>Annotator.export()</small></p>"
+            );
         }
     }
 
@@ -131,6 +155,47 @@ class MainMenu {
     static annotateNew() {
         Cookies.delete("annotator-resource-id");
         Annotator.show();
+    }
+
+
+    /**
+     * Deletes a resource from the annotator.
+     * 
+     * @param {String} resourceID the ID of the resource to delete
+     * @param {String} resourceName the name of the resource to delete
+     */
+    static deleteResource(resourceID, resourceName) {
+
+        // check that the loaded ontology hasn't changed
+        if (MainMenu.setupOntologyID === Cookies.get("annotator-ontology-id")) {
+
+            var confirmed = confirm("Are you sure you want to delete " + resourceName + "?");
+            if (confirmed) {
+                // the user has confirmed that they want to delete the resource
+
+                fetch("/api/deleteResource?id=" + resourceID)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        MainMenu.getResourcesList();
+                    })
+                    .catch(err => {
+                        ModalController.show(
+                            "Error", 
+                            "An error occured while deleting the resource: " + err 
+                        )
+                    });
+
+            }
+        } else {
+            ModalController.show(
+                "Error", 
+                "<p>The loaded ontology has changed<br /><small>Annotator.deleteResource()</small></p>"
+            );
+        }
+
+
+        
     }
 
 }

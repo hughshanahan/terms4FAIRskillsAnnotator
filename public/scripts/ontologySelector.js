@@ -10,6 +10,7 @@ class OntologySelector {
      */
     static show() {
         ViewManager.showLoadingSpinner();
+        document.getElementById("ontology-url-input").value = "";
         ViewManager.showOntologySelector();
     }
 
@@ -53,7 +54,7 @@ class OntologySelector {
                 ModalController.show(
                     "Error", 
                     "An error occured while loading the ontology: " + err 
-                )
+                );
             });
     }
 
