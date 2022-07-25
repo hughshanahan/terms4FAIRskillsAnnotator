@@ -17,14 +17,13 @@ class ModalController {
 
         // set the title and content
         document.getElementById("modal-title").innerHTML = title;
-        document.getElementById("modal-content-container").innerHTML = content;
 
         if (content === "") {
             // if there was no content provided, show the loading spinner
             ModalController.showLoadingSpinner()
         } else {
             // else show the content
-            ModalController.showContent();
+            ModalController.showContent(content);
         }
 
         // show the modal
@@ -36,7 +35,11 @@ class ModalController {
      * Hides the modal view.
      */
     static hide() {
+        // hide the modal
         $("#modal-view").modal('hide');
+        // clear the old title and content
+        document.getElementById("modal-title").innerHTML = '';
+        document.getElementById("modal-content-container").innerHTML = '';
     }
 
 
@@ -59,5 +62,28 @@ class ModalController {
         ViewManager.showElement("modal-content-container");
     }
 
+
+    /**
+     * Shows the modal with an error message.
+     * 
+     * @param {String} error the error message
+     */
+    static showError(error) {
+
+        var errorHTML = '';
+
+        errorHTML += '<div class="d-flex flex-column justify-content-center w-100">';
+        errorHTML += error;
+        errorHTML += '</div>';
+
+        // log the error to the console
+        console.error(error);
+
+        ModalController.show(
+            "Error",
+            errorHTML
+        );
+
+    }
 
 }

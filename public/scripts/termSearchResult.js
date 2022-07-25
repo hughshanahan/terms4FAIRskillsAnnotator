@@ -108,8 +108,7 @@ class TermSearchResult {
                     ModalController.showContent(html);
                 })
                 .catch(err => {
-                    ModalController.show(
-                        "Error", 
+                    ModalController.showError(
                         "An error occured while getting the term details: " + err 
                     )
                 });

@@ -51,8 +51,7 @@ class OntologySelector {
                     
             })
             .catch(err => {
-                ModalController.show(
-                    "Error", 
+                ModalController.showError(
                     "An error occured while loading the ontology: " + err 
                 );
             });

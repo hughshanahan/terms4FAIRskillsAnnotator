@@ -94,15 +94,13 @@ class MainMenu {
 
                 })
                 .catch(err => {
-                    ModalController.show(
-                        "Error", 
+                    ModalController.showError(
                         "An error occured getting the annotated resources: " + err
                     );
                 });
 
         } else {
-            ModalController.show(
-                "Error", 
+            ModalController.showError(
                 "<p>The loaded ontology has changed<br /><small>Annotator.sumbit()</small></p>"
             );
         }
@@ -123,15 +121,13 @@ class MainMenu {
                     T4FSAnnotator.downloadObjectAsJson(data, "materials");
                 })
                 .catch(err => {
-                    ModalController.show(
-                        "Error", 
+                    ModalController.showError(
                         "An error occured getting export file: " + err
                     );
                 });
 
         } else {
-            ModalController.show(
-                "Error", 
+            ModalController.showError( 
                 "<p>The loaded ontology has changed<br /><small>Annotator.export()</small></p>"
             );
         }
@@ -180,16 +176,14 @@ class MainMenu {
                         MainMenu.getResourcesList();
                     })
                     .catch(err => {
-                        ModalController.show(
-                            "Error", 
+                        ModalController.showError(
                             "An error occured while deleting the resource: " + err 
                         )
                     });
 
             }
         } else {
-            ModalController.show(
-                "Error", 
+            ModalController.showError(
                 "<p>The loaded ontology has changed<br /><small>Annotator.deleteResource()</small></p>"
             );
         }

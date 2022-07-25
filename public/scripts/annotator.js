@@ -124,8 +124,7 @@ class Annotator {
 
             })
             .catch(err => {
-                ModalController.show(
-                    "Error", 
+                ModalController.showError(
                     "An error occured while getting the resoruce details: " + err 
                 )
             });
@@ -224,15 +223,13 @@ class Annotator {
                     Annotator.showAnnotatorForm();
                 })
                 .catch(err => {
-                    ModalController.show(
-                        "Error", 
+                    ModalController.showError(
                         "An error occured while saving the resource details: " + err 
                     )
                 });
 
         } else {
-            ModalController.show(
-                "Error", 
+            ModalController.showError(
                 "<p>The loaded ontology has changed<br /><small>Annotator.sumbit()</small></p>"
             );
         }
@@ -301,8 +298,7 @@ class Annotator {
                     });
                 })
                 .catch(err => {
-                    ModalController.show(
-                        "Error", 
+                    ModalController.showError(
                         "An error occured while getting the term details: " + err 
                     );
                 });
@@ -361,16 +357,14 @@ class Annotator {
                         console.log("Updated results");
                     })
                     .catch(err => {
-                        ModalController.show(
-                            "Error", 
+                        ModalController.showError(
                             "An error occured while searching for terms: " + err 
-                        )
+                        );
                     });
 
 
             } else {
-                ModalController.show(
-                    "Error", 
+                ModalController.showError(
                     "<p>The loaded ontology has changed<br /><small>Annotator.search()</small></p>"
                 );
             }
