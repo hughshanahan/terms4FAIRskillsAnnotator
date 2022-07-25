@@ -29,9 +29,7 @@ class Annotator {
             Annotator.getResourceDetails(resourceID);
         } else {
             // there is not a resource loaded
-            // clear the search box and refresh the dynamic ui - then show the form
-            document.getElementById("search-box").value = "";
-            Annotator.refreshDynamicUI();
+            // show the form
             ViewManager.showAnnotator();
         }
 
@@ -84,6 +82,7 @@ class Annotator {
         inputs.forEach(id => {
             document.getElementById(id).value = "";
         });
+        document.getElementById("search-box").value = "";
         Annotator.refreshDynamicUI();
     }
 
