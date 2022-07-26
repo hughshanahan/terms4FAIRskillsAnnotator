@@ -14,6 +14,62 @@
      */
     class APIController {
 
+
+        // === Response Generators ===
+
+        /**
+         * Creates a response object containing JSON data for a successful request.
+         *
+         * @param String $json The JSON data to return
+         * @return Response The Response object
+         */
+        private function successResponse(String $json) : Response {
+            return new Response(
+                $json,
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+        }
+
+        /**
+         * Creates a response object containing the error message for a request that has thrown an exception.
+         *
+         * @param String $message the exception message
+         * @return Response The Response object
+         */
+        private function errorResponse(String $message) : Response {
+            // get the error message in a JSON object
+            $json = JSONFormatter::arrayToString(
+                array("message"=>$message)
+            );
+            // create the response
+            return new Response(
+                $json,
+                Response::HTTP_INTERNAL_SERVER_ERROR, // there was an error - response code "500: internal server error"
+                ['content-type' => 'application/json']
+            );
+        }
+
+
+
+        // === Ontology Methods ===
+
+
+        /**
+         * Loads the ontology into the database ready to use for annotating resources.
+         *
+         * @param Request $request the request containing the URL of the ontology to store.
+         * @return Response The response containing JSON data with the database id of the ontology 
+         */
+        public function loadOntology(Request $request) : Response {
+            // get the data as an associative array and pass it to the handler
+            $requestData = json_decode($request->getContent(), true);
+            $json = APIHandler::loadOntology(
+                $requestData["ontology-url-input"]
+            );
+            return $this->successResponse($json);
+        }
+
         /**
          * Returns the JSON for the terms matching the search term from the ontology.
          *
@@ -23,16 +79,11 @@
         public function searchTerms(Request $request) : Response {
             // get the search string from the request and get the results JSON String
             $searchQuery = $request->query->get("search");
-            $jsonString = APIHandler::searchTerms(
+            $json = APIHandler::searchTerms(
                 $request->cookies->get("annotator-ontology-id"), 
                 $searchQuery
             );
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
+            return $this->successResponse($json);
         }
 
 
@@ -45,19 +96,12 @@
         public function getTerm(Request $request) : Response {
             // get the term URI from the request and get the term's JSON String
             $termURI = $request->query->get("term");
-            $jsonString = APIHandler::getTerm(
+            $json = APIHandler::getTerm(
                 $request->cookies->get("annotator-ontology-id"), 
                 $termURI
             );
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
+            return $this->successResponse($json);
         }
-
-
 
         /**
          * Returns the data about the object property in JSON format
@@ -68,59 +112,46 @@
         public function getObjectProperty(Request $request) : Response {
             // get the property URI from the request and get the property's JSON string
             $propertyURI = $request->query->get("property");
-            $jsonString = APIHandler::getObjectProperty(
+            $json = APIHandler::getObjectProperty(
                 $request->cookies->get("annotator-ontology-id"), 
                 $propertyURI
             ); 
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
-        }
-
-
-
-        /**
-         * Loads the ontology into the database ready to use for annotating resources.
-         *
-         * @param Request $request the request containing the URL of the ontology to store.
-         * @return Response The response containing JSON data with the database id of the ontology 
-         */
-        public function loadOntology(Request $request) : Response {
-            // get the data as an associative array and pass it to the handler
-            $requestData = json_decode($request->getContent(), true);
-            $jsonString = APIHandler::loadOntology(
-                $requestData["ontology-url-input"]
-            );
-
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
+            return $this->successResponse($json);
         }
 
         /**
-         * Returns the data about the resource.
+         * Returns the JSON String with all the details about the ontology's resources.
          *
-         * @param Request $request the HTTP request
-         * @return Response the HTTP response containing the resource data as a JSON String
+         * @param Request $request the request containing the ontology id
+         * @return Response the response containing the JSON String
          */
-        public function getResource(Request $request) : Response {
-            // get the resource ID from request
-            $resourceID = $request->query->get("id");
-            // get the data about the resource
-            $jsonString = APIHandler::getResource($resourceID);
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
+        public function getOntologyResources(Request $request) : Response {
+            // get the ontology id from the request
+            $ontologyID = $request->query->get("ontology");
+            // get the JSON String of the ontology resources
+            $json = APIHandler::getOntologyResources($ontologyID);
+            return $this->successResponse($json);
         }
+
+        /**
+         * Returns the JSON String for the export file.
+         *
+         * @param Request $request the request containing the ontology id
+         * @return Response the response containing the JSON String
+         */
+        public function exportAnnotations(Request $request) : Response {
+            // get the ontology id from the request
+            $ontologyID = $request->query->get("ontology");
+            // get the JSON String of all the annotations
+            $json = APIHandler::exportAnnotations($ontologyID);
+            return $this->successResponse($json);
+        }
+
+
+
+
+
+        // === Resource Methods ===
 
 
         /**
@@ -135,17 +166,11 @@
 
             // get the data from the content and create the resource
             $resourceData = json_decode($request->getContent(), true);
-            $jsonString = APIHandler::createResource(
+            $json = APIHandler::createResource(
                 $ontologyID, 
                 $resourceData
             );
-
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
+            return $this->successResponse($json);
         }
 
 
@@ -160,63 +185,26 @@
             $resourceID = $request->cookies->get("annotator-resource-id");
             // get the data about the resource as an associative array and pass it to the handler
             $resourceData = json_decode($request->getContent(), true);
-            $jsonString = APIHandler::saveResource(
+            $json = APIHandler::saveResource(
                 $resourceID,
                 $resourceData
             );
-
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
+            return $this->successResponse($json);
         }
-
 
         /**
-         * Returns the JSON String for the export file.
+         * Returns the data about the resource.
          *
-         * @param Request $request the request containing the ontology id
-         * @return Response the response containing the JSON String
+         * @param Request $request the HTTP request
+         * @return Response the HTTP response containing the resource data as a JSON String
          */
-        public function exportAnnotations(Request $request) : Response {
-            // get the ontology id from the request
-            $ontologyID = $request->query->get("ontology");
-
-            // get the JSON String of all the annotations
-            $jsonString = APIHandler::exportAnnotations($ontologyID);
-
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
+        public function getResource(Request $request) : Response {
+            // get the resource ID from request
+            $resourceID = $request->query->get("id");
+            // get the data about the resource
+            $json = APIHandler::getResource($resourceID);
+            return $this->successResponse($json);
         }
-
-
-        /**
-         * Returns the JSON String with all the details about the ontology's resources.
-         *
-         * @param Request $request the request containing the ontology id
-         * @return Response the response containing the JSON String
-         */
-        public function getOntologyResources(Request $request) : Response {
-            // get the ontology id from the request
-            $ontologyID = $request->query->get("ontology");
-
-            // get the JSON String of the ontology resources
-            $jsonString = APIHandler::getOntologyResources($ontologyID);
-
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
-        }
-
 
         /**
          * Deletes a resource from the annotator.
@@ -227,17 +215,9 @@
         public function deleteResource(Request $request) : Response {
             // get the resource id from the request
             $resourceID = $request->query->get("id");
-
             // get the JSON String of the deletion status
-            $jsonString = APIHandler::deleteResource($resourceID);
-
-            // return the response
-            return new Response(
-                $jsonString,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json']
-            );
-
+            $json = APIHandler::deleteResource($resourceID);
+            return $this->successResponse($json);
         }
     }
 
