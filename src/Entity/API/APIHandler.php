@@ -13,19 +13,7 @@
      */
     class APIHandler {
 
-        /*
-            ===== Contents =====
-            - General Methods
-            - Ontology File Loading
-            - Saving Resource Annotations
-
-        */
-
-
-        /*
-            === General Methods ===
-            Methods that could be used by any of the following methods in the class.
-        */
+        // === private methods ===
 
         /**
          * Returns the ontology object from the database.
@@ -45,13 +33,56 @@
             
         }
 
+        /**
+         * Formats the annotator form data to be the format needed for the database.
+         *
+         * @param array $resourceData the form data
+         * @return array the formatted data
+         */
+        private static function formatResourceData(array $resourceData) : array {
+            $terms = explode(',', $resourceData["selected-terms"]);
 
-        /*
-            === Ontology File Loading ===
-            These are all the methods related to the user selecting an 
-            ontology file to use with the annotator.
-        */
+            return array(
+                "identifier" => $resourceData["identifier-input"],
+                "name" => $resourceData["name-input"],
+                "author" => $resourceData["author-surname-input"] . ", " . $resourceData["author-firstname-input"],
+                "date" => strval(mktime(
+                        0,0,0, //hours, minutes, seconds 
+                        $resourceData["date-month-input"],
+                        $resourceData["date-day-input"],
+                        $resourceData["date-year-input"]
+                    )),
+                "terms" => $terms
+            );
+        }
 
+        /**
+         * Creates the JSON String that is returned to the frontend when the resource is saved successfully.
+         *
+         * @param String $resourceID the resource's database id
+         * @param array $resourceData the array of data entered into the annotator form
+         * @return String the JSON String to return to the frontend
+         */
+        private static function createResourceReturnJSON(String $resourceID, array $resourceData) : String {
+            // create the return data
+            $data = array(
+                "status" => "ok", 
+                "resourceID" => $resourceID,
+                "savedAt" => time(),
+                "data" => $resourceData
+            );
+
+            // return the JSON String
+            return JSONFormatter::arrayToString($data);
+        }
+
+
+
+        
+        
+
+
+        // === Ontology Methods ===
 
         /**
          * Loads the ontology into the database.
@@ -67,23 +98,115 @@
         }
 
 
-        /*  
-            === Saving Resource Annotations ===
-            These are methods related to saving the annotations made about a resource into the database.
-        */
+        /**
+         * Returns a JSON String of the search results.
+         *
+         * @param String $ontologyID the key of the ontology
+         * @param String $searchQuery the search query
+         * @return String the JSON string of the search results
+         */
+        public static function searchTerms(String $ontologyID, String $searchQuery) : String {
+            $ontology = self::getOntology($ontologyID);
+            // search the ontology
+            $classes = $ontology->queryClasses($searchQuery);
+            // process the classes into the data array
+            $results = array();
+            foreach ($classes as $class) {
+                array_push(
+                    $results, 
+                    $class->getJSONArray()
+                );
+            }
+            //set the data properties
+            $data["search"] = $searchQuery;
+            $data["results"] = $results;
+
+            // return the JSON String
+            return JSONFormatter::arrayToString($data);
+        }
+
+        /**
+         * Returns a JSON String of the term details.
+         *
+         * @param String $ontologyID the key of the ontology
+         * @param String $termURI the URI of the term to return
+         * @return String the JSON string of the term details
+         */
+        public static function getTerm(String $ontologyID, String $termURI) : String {
+            $ontology = self::getOntology($ontologyID);
+            // get the class matching the URI
+            $class = $ontology->getClass($termURI);
+            // create the array to store the data that should be returned
+            $data = $class->getJSONArray();
+            // return the JSON String
+            return JSONFormatter::arrayToString($data);
+        }
 
 
         /**
-         * Returns the resource data from the database.
+         * Returns a JSON String of the object property details.
          *
-         * @param String $resourceID the resource 
-         * @return String
+         * @param String $ontologyID the key of the ontology
+         * @param String $propertyURI the URI of the object property to return
+         * @return String the JSON string of the term details
          */
-        public static function getResource(String $resourceID) : String {
-            $database = new Database();
-            $data = $database->getResource($resourceID);
+        public static function getObjectProperty(String $ontologyID, String $propertyURI) : String {
+            $ontology = self::getOntology($ontologyID);
+            // get the object property matching the URI
+            $property = $ontology->getObjectProperty($propertyURI);
+
+            // get the JSON data to return
+            $data = array("about"=>$property->getAbout());
+
+            // return the JSON String
             return JSONFormatter::arrayToString($data);
         }
+
+
+        /**
+         * Returns the JSON String with all the ontology's resources in. 
+         *
+         * @param String $ontologyID the id of the ontology to export 
+         * @return String the JSON String of the resources
+         */
+        public static function getOntologyResources(String $ontologyID) : String {
+            $database = new Database();
+            $resources = $database->getOntologyResources($ontologyID);
+            return JSONFormatter::arrayToString($resources);
+        }
+
+
+        /**
+         * Returns the JSON String for the export file.
+         *
+         * @param String $ontologyID the id of the ontology to export 
+         * @return String the JSON String for the export file
+         */
+        public static function exportAnnotations(String $ontologyID) : String {
+            $database = new Database();
+            $resources = $database->getOntologyResources($ontologyID);
+            $annotations = array();
+            foreach ($resources as $resource) {
+                $resourceAnnotation = array(
+                    "doi" => $resource["identifier"],
+                    "name" => $resource["name"],
+                    "author" => $resource["author"],
+                    "date" => date("Y-m-d", $resource["date"]),
+                    "concept" => $resource["terms"]
+                );
+                array_push($annotations, $resourceAnnotation);
+            }
+            return JSONFormatter::arrayToString($annotations);
+        }
+
+
+
+
+
+
+
+
+        // === Resource Methods ===
 
 
         /**
@@ -139,244 +262,16 @@
 
 
         /**
-         * Formats the annotator form data to be the format needed for the database.
+         * Returns the resource data from the database.
          *
-         * @param array $resourceData the form data
-         * @return array the formatted data
+         * @param String $resourceID the resource 
+         * @return String
          */
-        private static function formatResourceData(array $resourceData) : array {
-            $terms = explode(',', $resourceData["selected-terms"]);
-
-            return array(
-                "identifier" => $resourceData["identifier-input"],
-                "name" => $resourceData["name-input"],
-                "author" => $resourceData["author-surname-input"] . ", " . $resourceData["author-firstname-input"],
-                "date" => strval(mktime(
-                        0,0,0, //hours, minutes, seconds 
-                        $resourceData["date-month-input"],
-                        $resourceData["date-day-input"],
-                        $resourceData["date-year-input"]
-                    )),
-                "terms" => $terms
-            );
-        }
-
-
-        /**
-         * Creates the JSON String that is returned to the frontend when the resource is saved successfully.
-         *
-         * @param String $resourceID the resource's database id
-         * @param array $resourceData the array of data entered into the annotator form
-         * @return String the JSON String to return to the frontend
-         */
-        private static function createResourceReturnJSON(String $resourceID, array $resourceData) : String {
-            // create the return data
-            $data = array(
-                "status" => "ok", 
-                "resourceID" => $resourceID,
-                "savedAt" => time(),
-                "data" => $resourceData
-            );
-
-            // return the JSON String
-            return JSONFormatter::arrayToString($data);
-        }
-
-
-        /*
-            ===== Class Methods =====
-
-            These are methods called by the APIController.
-            Their purpose is to convert a call to the constructor and 
-            then to the correct method into one method call.
-        */
-
-
-        // === GET Methods ===
-
-        /**
-         * Returns an instance of the APIHandler class.
-         *
-         * @param String $ontologyID the Database ID of the ontology to use.
-         * @return APIHandler the APIHandler object
-         */
-        private static function getHandler(String $ontologyID) : APIHandler {
-            return new APIHandler($ontologyID);
-        }
-
-
-        /**
-         * Returns a JSON String of the search results.
-         *
-         * @param String $ontologyID the key of the ontology
-         * @param String $searchQuery the search query
-         * @return String the JSON string of the search results
-         */
-        public static function searchTerms(String $ontologyID, String $searchQuery) : String {
-            return self::getHandler($ontologyID)->_searchTerms($searchQuery);
-        }
-
-        /**
-         * Returns a JSON String of the term details.
-         *
-         * @param String $ontologyID the key of the ontology
-         * @param String $termURI the URI of the term to return
-         * @return String the JSON string of the term details
-         */
-        public static function getTerm(String $ontologyID, String $termURI) : String {
-            return self::getHandler($ontologyID)->_getTerm($termURI);
-        }
-
-        /**
-         * Returns a JSON String of the object property details.
-         *
-         * @param String $ontologyID the key of the ontology
-         * @param String $propertyURI the URI of the object property to return
-         * @return String the JSON string of the term details
-         */
-        public static function getObjectProperty(String $ontologyID, String $propertyURI) : String {
-            return self::getHandler($ontologyID)->_getObjectProperty($propertyURI);
-        }
-
-
-        /*
-            ===== Instance Methods =====
-
-            These are the methods that are run by the class methods.
-
-        */
-
-
-        // === Instance Variables ===
-        private $ontology;
-
-
-        // === Constructor and related methods ====
-
-        /**
-         * Constructs an instance of the APIHandler class.
-         * 
-         * @param String $ontologyID the key of the ontology
-         */
-        private function __construct(String $ontologyID) {
-            // get the ontology
-            $this->ontology = self::getOntology($ontologyID);
-        }
-
-        
-
-
-
-
-        // === Operation methods ===
-        // They are all prefixed with an underscore to differentiate them from the class method versions
-
-
-        // === GET METHODS ===
-
-
-        /**
-         * Returns a JSON String of the search results.
-         *
-         * @param String $searchQuery the search query
-         * @return String the JSON string of the search results
-         */
-        private function _searchTerms(String $searchQuery) : String {
-
-            // search the ontology
-            $classes = $this->ontology->queryClasses($searchQuery);
-
-            // process the classes into the data array
-            $results = array();
-            foreach ($classes as $class) {
-                array_push(
-                    $results, 
-                    $class->getJSONArray()
-                );
-            }
-
-            //set the data properties
-            $data["search"] = $searchQuery;
-            $data["results"] = $results;
-
-            // return the JSON String
-            return JSONFormatter::arrayToString($data);
-        }
-
-
-        /**
-         * Returns a JSON String of the term details.
-         *
-         * @param String $termURI the URI of the term to return
-         * @return String the JSON string of the term details
-         */
-        private function _getTerm(String $termURI) : String {
-            // get the class matching the URI
-            $class = $this->ontology->getClass($termURI);
-
-            // create the array to store the data that should be returned
-            $data = $class->getJSONArray();
-
-            // return the JSON String
-            return JSONFormatter::arrayToString($data);
-        }
-
-
-        /**
-         * Returns a JSON String of the object property details.
-         *
-         * @param String $propertyURI the URI of the object property to return
-         * @return String the JSON string of the term details
-         */
-        private function _getObjectProperty(String $propertyURI) : String {
-            // get the object property matching the URI
-            $property = $this->ontology->getObjectProperty($propertyURI);
-
-            // get the JSON data to return
-            $data = array("about"=>$property->getAbout());
-
-            // return the JSON String
-            return JSONFormatter::arrayToString($data);
-        }
-
-
-
-        /**
-         * Returns the JSON String for the export file.
-         *
-         * @param String $ontologyID the id of the ontology to export 
-         * @return String the JSON String for the export file
-         */
-        public static function exportAnnotations(String $ontologyID) : String {
+        public static function getResource(String $resourceID) : String {
             $database = new Database();
-            $resources = $database->getOntologyResources($ontologyID);
-            $annotations = array();
-            foreach ($resources as $resource) {
-                $resourceAnnotation = array(
-                    "doi" => $resource["identifier"],
-                    "name" => $resource["name"],
-                    "author" => $resource["author"],
-                    "date" => date("Y-m-d", $resource["date"]),
-                    "concept" => $resource["terms"]
-                );
-                array_push($annotations, $resourceAnnotation);
-            }
-            return JSONFormatter::arrayToString($annotations);
+            $data = $database->getResource($resourceID);
+            return JSONFormatter::arrayToString($data);
         }
-
-
-        /**
-         * Returns the JSON String with all the ontology's resources in. 
-         *
-         * @param String $ontologyID the id of the ontology to export 
-         * @return String the JSON String of the resources
-         */
-        public static function getOntologyResources(String $ontologyID) : String {
-            $database = new Database();
-            $resources = $database->getOntologyResources($ontologyID);
-            return JSONFormatter::arrayToString($resources);
-        }
-
 
         /**
          * Deletes a resource from the database.
