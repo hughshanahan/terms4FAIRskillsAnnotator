@@ -37,74 +37,77 @@ class MainMenu {
 
             document.getElementById("annotated-resources").innerHTML = "";
 
-            fetch("/api/getOntologyResources?ontology=" + Cookies.get("annotator-ontology-id"))
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-
-                    var html = '';
-
-                    // create the grid heading
-                    html += '<div class="container">';
-                    html += '<div class="row">'; // no margin on the header row
-                    html += '<div class="col align-self-center">';
-                    html += '<p><strong>Name</strong></p>';
-                    html += '</div>';
-                    html += '<div class="col align-self-center">';
-                    html += '<p><strong>Author</strong></p>';
-                    html += '</div>';
-                    html += '<div class="col align-self-center">';
-                    html += '<p><strong>Terms</strong></p>';
-                    html += '</div>';
-                    html += '<div class="col align-self-center">';
-                    html += '</div>';
-                    html += '</div>';
-
-                    // for each resource
-                    data.forEach(resource => {
-                        html += '<div class="row my-1">';
-                        html += '<div class="col align-self-center">';
-                        html += '<p>' + resource.name + '</p>';
-                        html += '</div>';
-                        html += '<div class="col align-self-center">';
-                        html += '<p>' + resource.author + '</p>';
-                        html += '</div>';
-                        html += '<div class="col align-self-center">';
-                        html += '<p>' + resource.terms.length + '</p>';
-                        html += '</div>';
-                        html += '<div class="col align-self-center">';
-
-                        // create the container to hold the options buttons
-                        html += '<div class="container d-flex flex-row justify-content-center gap-3 p-0 w-100">';
-                        html += '<button type="button" class="btn btn-primary flex-fill" onclick="MainMenu.annotateExisting(\'' + resource.id + '\')">Annotate</button>';
-                        html += '<button type="button" class="btn btn-danger flex-fill" onclick="MainMenu.deleteResource(\'' + resource.id + '\', \'' + resource.name + '\')">Delete</button>';
-                        html += '</div>';
-
-                        html += '</div>';
-                        html += '</div>';
-                    });
-                    
-                    // close the grid
-                    html += '</div>';
-
+            const ontologyID = Cookies.get("annotator-ontology-id");
+            APIRequest.fetch(
+                "/api/getOntologyResources?ontology=" + ontologyID,
+                function(data) {
+                    const html = MainMenu.createResourceTable(data);
                     document.getElementById("annotated-resources").innerHTML = html;
-
                     console.log("Showing main menu");
                     ViewManager.showMainMenu();
-
-                })
-                .catch(err => {
-                    ModalController.showError(
-                        "An error occured getting the annotated resources: " + err
-                    );
-                });
-
+                }
+            );
         } else {
             ModalController.showError(
                 "<p>The loaded ontology has changed<br /><small>Annotator.sumbit()</small></p>"
             );
         }
     }
+
+    /**
+     * Creates a table of the resource data.
+     * 
+     * @param {JSON} data the resource data from the API
+     */
+    static createResourceTable(data) {
+        var html = '';
+
+        // create the grid heading
+        html += '<div class="container">';
+        html += '<div class="row">'; // no margin on the header row
+        html += '<div class="col align-self-center">';
+        html += '<p><strong>Name</strong></p>';
+        html += '</div>';
+        html += '<div class="col align-self-center">';
+        html += '<p><strong>Author</strong></p>';
+        html += '</div>';
+        html += '<div class="col align-self-center">';
+        html += '<p><strong>Terms</strong></p>';
+        html += '</div>';
+        html += '<div class="col align-self-center">';
+        html += '</div>';
+        html += '</div>';
+
+        // for each resource
+        data.forEach(resource => {
+            html += '<div class="row my-1">';
+            html += '<div class="col align-self-center">';
+            html += '<p>' + resource.name + '</p>';
+            html += '</div>';
+            html += '<div class="col align-self-center">';
+            html += '<p>' + resource.author + '</p>';
+            html += '</div>';
+            html += '<div class="col align-self-center">';
+            html += '<p>' + resource.terms.length + '</p>';
+            html += '</div>';
+            html += '<div class="col align-self-center">';
+
+            // create the container to hold the options buttons
+            html += '<div class="container d-flex flex-row justify-content-center gap-3 p-0 w-100">';
+            html += '<button type="button" class="btn btn-primary flex-fill" onclick="MainMenu.annotateExisting(\'' + resource.id + '\')">Annotate</button>';
+            html += '<button type="button" class="btn btn-danger flex-fill" onclick="MainMenu.deleteResource(\'' + resource.id + '\', \'' + resource.name + '\')">Delete</button>';
+            html += '</div>';
+
+            html += '</div>';
+            html += '</div>';
+        });
+        
+        // close the grid
+        html += '</div>';
+
+        return html;
+    }
+
 
     /**
      * Exports the annotations in the format that the materials browser can import.

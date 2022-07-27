@@ -90,31 +90,36 @@ class TermSearchResult {
         ModalController.show(term, '');
 
         // fetch the term details and set the modal content
-        fetch("/api/getTerm?term=" + termURI, { method: 'get' })
-                // then convert response to JSON object
-                .then(response => response.json())
-                .then(data => {;
-                    var html = "";
-                    // create the container that justifies the content to the left edge
-                    html += '<div class="d-flex flex-column justify-content-start w-100">';
-                    // add the content
-                    html += this.createModalBodyPair("URI", data.about);
-                    html += this.createModalBodyPair("Description", data.description);
-                    html += this.createModalBodyList("Relations", data.parents, TermSearchResult.processTermRelations);
-                    html += this.createModalBodyList("Comments", data.comments);
-                    // close the justification container
-                    html += '</div>';
-                    // show the content in the modal
-                    ModalController.showContent(html);
-                })
-                .catch(err => {
-                    ModalController.showError(
-                        "An error occured while getting the term details: " + err 
-                    )
-                });
-
+        APIRequest.fetch(
+            "/api/getTerm?term=" + termURI,
+            function(data) {
+                const html = TermSearchResult.createModalContent(data);
+                // show the content in the modal
+                ModalController.showContent(html);
+            }
+        );
     }
 
+
+    /**
+     * Creates the content for the term detail modal.
+     * 
+     * @param {JSON} data the JSON data from the API Request
+     * @returns {String} the HTML for the modal content
+     */
+    static createModalContent(data) {
+        var html = "";
+        // create the container that justifies the content to the left edge
+        html += '<div class="d-flex flex-column justify-content-start w-100">';
+        // add the content
+        html += this.createModalBodyPair("URI", data.about);
+        html += this.createModalBodyPair("Description", data.description);
+        html += this.createModalBodyList("Relations", data.parents, TermSearchResult.processTermRelations);
+        html += this.createModalBodyList("Comments", data.comments);
+        // close the justification container
+        html += '</div>';
+        return html;
+    }
 
     /**
      * Creates an entry in the list of attributes. 

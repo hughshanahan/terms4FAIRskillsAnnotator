@@ -93,41 +93,43 @@ class Annotator {
      * @param {String} resourceID The ID of the resource to get
      */
     static getResourceDetails(resourceID) {
-        fetch("/api/getResource?id=" + resourceID)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-
-                document.getElementById("identifier-input").value = data.identifier;
-                document.getElementById("name-input").value = data.name;
-
-                // process the author name into the firstname and surname inputs
-                const author = data.author.split(", ");
-                document.getElementById("author-firstname-input").value = author[1];
-                document.getElementById("author-surname-input").value = author[0];
-
-                // Process the date
-                const date = T4FSAnnotator.timestampToYear(data.date).split("-");
-                document.getElementById("date-day-input").value = date[2];
-                document.getElementById("date-month-input").value = date[1];
-                document.getElementById("date-year-input").value = date[0];
-
-                // Process the terms
-                const terms = data.terms.join(",");
-                document.getElementById("selected-terms").value = terms;
-
-                // refresh the UI
-                Annotator.refreshDynamicUI();
-
+        APIRequest.fetch(
+            "/api/getResource?id=" + resourceID,
+            function(data) {
+                Annotator.setInputs(data);
                 // the details of the form have been updated - ensure that the form is shown
                 ViewManager.showAnnotator();
+            }  
+        );
+    }
 
-            })
-            .catch(err => {
-                ModalController.showError(
-                    "An error occured while getting the resoruce details: " + err 
-                )
-            });
+
+    /**
+     * Set the inputs to the annotator to the values from the API and refresh the UI.
+     * 
+     * @param {JSON} data the resource data from the API
+     */
+    static setInputs(data) {
+        document.getElementById("identifier-input").value = data.identifier;
+        document.getElementById("name-input").value = data.name;
+
+        // process the author name into the firstname and surname inputs
+        const author = data.author.split(", ");
+        document.getElementById("author-firstname-input").value = author[1];
+        document.getElementById("author-surname-input").value = author[0];
+
+        // Process the date
+        const date = T4FSAnnotator.timestampToYear(data.date).split("-");
+        document.getElementById("date-day-input").value = date[2];
+        document.getElementById("date-month-input").value = date[1];
+        document.getElementById("date-year-input").value = date[0];
+
+        // Process the terms
+        const terms = data.terms.join(",");
+        document.getElementById("selected-terms").value = terms;
+
+        // refresh the UI
+        Annotator.refreshDynamicUI();
     }
 
 
@@ -346,22 +348,13 @@ class Annotator {
                 var selectedInput = document.getElementById("selected-terms");
                 var selectedTerms = selectedInput.value.split(',');
 
-                // fetch the data
-                fetch("/api/searchTerms?search=" + searchTerm, { method: 'get' })
-                    // then convert response to JSON object
-                    .then(response => response.json()) 
-                    // then process the data to get the list of fetch requests for fetching the relations
-                    .then(data => {
-                        // print the id of the first request response
+                // fetch the terms that match the 
+                APIRequest.fetch(
+                    "/api/searchTerms?search=" + searchTerm,
+                    function(data) {
                         document.getElementById("results-container").innerHTML = SearchResults.create(data, selectedTerms);
-                        console.log("Updated results");
-                    })
-                    .catch(err => {
-                        ModalController.showError(
-                            "An error occured while searching for terms: " + err 
-                        );
-                    });
-
+                    }
+                );
 
             } else {
                 ModalController.showError(
