@@ -7,6 +7,11 @@ class Annotator {
     // variable to store the ontology id that was loaded when the annotator started
     static setupOntologyID = "";
 
+    // variable to store the array of selected terms
+    static selectedTerms = [];
+    // variable to store the array of removed terms
+    static removedTerms = [];
+
     /**
      * Sets up the annotator.
      */
@@ -76,8 +81,7 @@ class Annotator {
             "author-surname-input",
             "date-day-input",
             "date-month-input",
-            "date-year-input",
-            "selected-terms"
+            "date-year-input"
         ];
         inputs.forEach(id => {
             document.getElementById(id).value = "";
@@ -119,14 +123,14 @@ class Annotator {
         document.getElementById("author-surname-input").value = author[0];
 
         // Process the date
-        const date = T4FSAnnotator.timestampToYear(data.date).split("-");
+        const date = data.date.split("-");
         document.getElementById("date-day-input").value = date[2];
         document.getElementById("date-month-input").value = date[1];
         document.getElementById("date-year-input").value = date[0];
 
         // Process the terms
-        const terms = data.terms.join(",");
-        document.getElementById("selected-terms").value = terms;
+        Annotator.selectedTerms = data.terms;
+        Annotator.removedTerms = [];
 
         // refresh the UI
         Annotator.refreshDynamicUI();
@@ -141,18 +145,14 @@ class Annotator {
      * @param {String} termToAdd The URI of the selected term
      */
     static addToSelectedTerms(termToAdd) {
-        var selectedInput = document.getElementById("selected-terms");
-
-        if (!(selectedInput.value.split(",").includes(termToAdd))) {
-            // the term is not already in the list
-            if (selectedInput.value == "") {
-                selectedInput.value += termToAdd;
-            } else {
-                selectedInput.value += "," + termToAdd;
-            }
-
-            Annotator.refreshDynamicUI(); // only update the UI if something has changed
-        }
+        // filter the removed terms list for the term to add
+        Annotator.removedTerms = Annotator.removedTerms.filter(function(x) {
+            return x !== termToAdd;
+        });
+        // add the selected term to the list of terms to add
+        Annotator.selectedTerms.push(termToAdd);
+        // refresh the UI
+        Annotator.refreshDynamicUI();
     }
 
     /**
@@ -161,23 +161,13 @@ class Annotator {
      * @param {String} termToRemove The URI of the selected term
      */
      static removeFromSelectedTerms(termToRemove) {
-        var terms = document.getElementById("selected-terms").value.split(',');
-        var newTerms = [];
-
-        // for each term in the list of terms
-        terms.forEach(term => {
-            if (!(term === termToRemove)) {
-                // the term is not the term to remove - add it to the new terms list
-                newTerms.push(term);
-            }
+        // filter the selected terms list for the term to remove
+        Annotator.selectedTerms = Annotator.selectedTerms.filter(function(x) {
+            return x !== termToRemove;
         });
-
-        // clear the existing list
-        document.getElementById("selected-terms").value = "";
-
-        // add the new list
-        document.getElementById("selected-terms").value = newTerms.toString();
-        
+        // add the removed term to the list of terms to remove
+        Annotator.removedTerms.push(termToRemove);
+        // refresh the UI
         Annotator.refreshDynamicUI();
     }
 
@@ -193,51 +183,86 @@ class Annotator {
             // hide the form and show the spinner
             Annotator.showSavingSpinner();
 
-            // get the elements and data
-            var form = document.getElementById("annotator-form");
-            var data = T4FSAnnotator.formToJSON(form);
-
             // select the api endpoint to use depending on if the cookie has been set
+            // and the id for the ontology or resource depending on which the api needs
             var url = "";
+            var idParameter = "";
             if (Cookies.get("annotator-resource-id") === "") {
                 // the resource id cookie has not been set, therefore create a new resource
                 url = "/api/createResource";
+                // the resource doesn't already exist - give the ontology id
+                idParameter = "ontologyID=" + Cookies.get("annotator-ontology-id");
             } else {
                 // cookie has been set, therefore save the changes
                 url = "/api/saveResource";
+                // the resource already exists - give the resource ID
+                idParameter = "resourceID=" + Cookies.get("annotator-resource-id");
             }
 
-            fetch(url,
-                {
-                    method: "POST",
-                    body: data,
-                    credentials: 'include'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    // store the resource id in the cookie - this is redundant for saving changes but is needed for the first save
-                    Cookies.set("annotator-resource-id", data.resourceID);
-                    // update the text for when the resource was last saved
-                    document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt) + " on " +  T4FSAnnotator.timestampToYear(data.savedAt);
+            // create the query string of the form data
+            const queryString = Annotator.createQueryString();
 
-                    // data saved, show the form again
-                    Annotator.showAnnotatorForm();
-                })
-                .catch(err => {
-                    ModalController.showError(
-                        "An error occured while saving the resource details: " + err 
-                    )
-                });
+            APIRequest.fetch(
+                url + "?" + idParameter + "&" + queryString,
+                function(data) {
+                    const resourceID = data.resourceID;
+                    // store the resource id in the cookie - this is redundant for saving changes but is needed for the first save
+                    Cookies.set("annotator-resource-id", resourceID);
+
+                    // Remove the unselected ones and add the terms to the resource
+                    var resourceTermsURLs = [];
+                    Annotator.removedTerms.forEach(term => {
+                        resourceTermsURLs.push("/api/removeResourceTerm?resourceID=" + resourceID + "&term=" + term);
+                    });
+                    Annotator.selectedTerms.forEach(term => {
+                        resourceTermsURLs.push("/api/addResourceTerm?resourceID=" + resourceID + "&term=" + term);
+                    });
+
+                    APIRequest.fetchAll(
+                        resourceTermsURLs,
+                        (data) => {console.log(data);},
+                        function() {},
+                        function () {
+                            // update the text for when the resource was last saved
+                            document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt) + " on " +  T4FSAnnotator.timestampToYear(data.savedAt);
+                            // data saved, show the form again
+                            Annotator.showAnnotatorForm();
+                        }
+                    );
+                }
+            );       
 
         } else {
             ModalController.showError(
                 "<p>The loaded ontology has changed<br /><small>Annotator.sumbit()</small></p>"
             );
         }
+    }
 
-        
 
+    /**
+     * Creates the query string of the annotator form data for the API.
+     * This contains the identifier, name, author and the date.
+     * 
+     * @returns {String} The query string
+     */
+    static createQueryString() {
+        var string = "";
+        // add the identifier
+        string += "identifier=" + document.getElementById("identifier-input").value;
+        string += "&";
+        // add the name
+        string += "name=" + document.getElementById("name-input").value;
+        string += "&";
+        // add the author name
+        string += "author=" + document.getElementById("author-surname-input").value;
+        string += ", " + document.getElementById("author-firstname-input").value;
+        string += "&";
+        // add the date
+        string += "date=" + document.getElementById("date-year-input").value;
+        string += "-" + document.getElementById("date-month-input").value;
+        string += "-" + document.getElementById("date-day-input").value;
+        return string;
     }
 
 
@@ -268,15 +293,13 @@ class Annotator {
     static refreshSelectedUI() {
         // example used: https://stackoverflow.com/a/63370138
 
-        // get the terms
-        var selectedInput = document.getElementById("selected-terms");
-        var terms = selectedInput.value.split(',');
+        var terms = Annotator.selectedTerms;
 
         // get the container to place the selected container in
         var selectedContainer = document.getElementById("selected-terms-container");
 
 
-        if (terms[0] === "") {
+        if (terms.length === 0) {
             // there are no terms as the input string was empty - clear the container
             selectedContainer.innerHTML = "";
         } else {
@@ -313,18 +336,7 @@ class Annotator {
      * Refreshes the counter for the number of terms that have been selected.
      */
     static refreshTermsCounter() {
-        var selectedInput = document.getElementById("selected-terms");
-        var terms = selectedInput.value.split(',');
-
-        var count = "0"; // default to no terms
-
-        if (!(terms[0] === "")) {
-            // the input contains terms - update with the length
-            count = terms.length;
-        }
-
-        document.getElementById("terms-count").innerHTML = count;
-        
+        document.getElementById("terms-count").innerHTML = Annotator.selectedTerms.length;
     }
 
 
@@ -344,15 +356,11 @@ class Annotator {
 
             // check that the loaded ontology hasn't changed
             if (Annotator.setupOntologyID === Cookies.get("annotator-ontology-id")) {
-                
-                var selectedInput = document.getElementById("selected-terms");
-                var selectedTerms = selectedInput.value.split(',');
-
-                // fetch the terms that match the 
+                // fetch the terms that match the search
                 APIRequest.fetch(
                     "/api/searchTerms?search=" + searchTerm,
                     function(data) {
-                        document.getElementById("results-container").innerHTML = SearchResults.create(data, selectedTerms);
+                        document.getElementById("results-container").innerHTML = SearchResults.create(data, Annotator.selectedTerms);
                     }
                 );
 

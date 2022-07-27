@@ -4,6 +4,7 @@
 
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\InputBag;
 
     use App\Entity\API\APIHandler;
 
@@ -159,6 +160,26 @@
 
 
         /**
+         * Creates an array of the resource details from the query string.
+         *
+         * @param InputBag $query the query from the request
+         * @return array an array of the resource details provided in the query string
+         */
+        private function getResourceFromQuery(InputBag $query) : array {
+            $resourceData = array();
+            // the possible parameters
+            $parameters = array("identifier", "name", "author", "date");
+            // for each of the possible parameters
+            foreach ($parameters as $parameter) {
+                $value = $query->get($parameter, "");
+                if (!($value === "")) {
+                    $resourceData[$parameter] = $value;
+                }
+            }
+            return $resourceData;
+        }
+
+        /**
          * Creates a new resource in the database and returns the ID in a JSON string.
          *
          * @param Request $request the HTTP Request
@@ -166,10 +187,9 @@
          */
         public function createResource(Request $request) : Response {
             // get the ontology id from the cookies 
-            $ontologyID = $request->cookies->get("annotator-ontology-id");
-
-            // get the data from the content and create the resource
-            $resourceData = json_decode($request->getContent(), true);
+            $ontologyID = $request->query->get("ontologyID");
+            // get the resource data from the query
+            $resourceData = $this->getResourceFromQuery($request->query);
             $json = APIHandler::createResource(
                 $ontologyID, 
                 $resourceData
@@ -186,9 +206,9 @@
          */
         public function saveResource(Request $request) : Response {
             // get the resource ID from the cookies
-            $resourceID = $request->cookies->get("annotator-resource-id");
-            // get the data about the resource as an associative array and pass it to the handler
-            $resourceData = json_decode($request->getContent(), true);
+            $resourceID = $request->query->get("resourceID");
+            // get the resource data from the query
+            $resourceData = $this->getResourceFromQuery($request->query);
             $json = APIHandler::saveResource(
                 $resourceID,
                 $resourceData
@@ -223,6 +243,38 @@
             $json = APIHandler::deleteResource($resourceID);
             return $this->successResponse($json);
         }
+
+
+        /**
+         * Adds a term annotation to the resource and returns JSON containing all the annotated terms.
+         *
+         * @param Request $request the HTTP request containing the resource id and the term
+         * @return Response the repsonse containing the JSON of the terms
+         */
+        public function addResourceTerm(Request $request) : Response {
+            // get the resource id and term URI from the request
+            $resourceID = $request->query->get("resourceID");
+            $termURI = $request->query->get("term");
+            // get the JSON String of the deletion status
+            $json = APIHandler::addResourceTerm($resourceID, $termURI);
+            return $this->successResponse($json);
+        }
+
+        /**
+         * Removes a term annotation from the resource and returns JSON containing all the annotated terms.
+         *
+         * @param Request $request the HTTP request containing the resource id and the term
+         * @return Response the repsonse containing the JSON of the terms
+         */
+        public function removeResourceTerm(Request $request) : Response {
+            // get the resource id and term URI from the request
+            $resourceID = $request->query->get("resourceID");
+            $termURI = $request->query->get("term");
+            // get the JSON String of the deletion status
+            $json = APIHandler::removeResourceTerm($resourceID, $termURI);
+            return $this->successResponse($json);
+        }
+
     }
 
 ?>

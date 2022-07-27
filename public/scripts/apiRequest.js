@@ -16,22 +16,21 @@ class APIRequest {
         successCallback = (data) => {},
         failureCallback = () => {}
     ) {
-        fetch(url)
+        const encodedURL = encodeURI(url);
+        fetch(encodedURL)
             .then(APIRequest.checkStatus)
             .then(response => response.json())
             .then(data => {
-                console.log("Call to " + url + " returned:\n" + JSON.stringify(data, null, 4));
+                console.log("Call to " + encodedURL + " returned:\n" + JSON.stringify(data, null, 4));
                 successCallback(data);
             })
             .catch(err => {
                 // log the error to the console
-                console.log("Call to " + url + " retured an error:\n" + err);
+                console.log("Call to " + encodedURL + " retured an error:\n" + err);
                 // run the failure callback
                 failureCallback();
                 // show the error in the modal view
-                ModalController.showError(
-                    "An error occured while loading the ontology: " + err 
-                );
+                ModalController.showError(err);
             });
     }
 
@@ -51,5 +50,41 @@ class APIRequest {
         return response;
     }
 
+
+
+
+    static fetchAll(
+        urls,
+        successCallback = (data) => {},
+        failureCallback = () => {},
+        afterCallBack = () => {}
+    ) {
+        // example used: https://stackoverflow.com/a/63370138
+
+        // create the array of fetch requests
+        let promiseArray = [];
+        urls.forEach(url => {
+            promiseArray.push(
+                fetch(url)
+            );
+        })
+        // process the promises
+        Promise.all(promiseArray)
+            .then(responses => {
+                responses.map(response => { // for each response
+                    response.json() // convert the response to JSON object and process it
+                        .then(data => {
+                            successCallback(data); // call the success callback
+                        });
+                });
+            })
+            .then(function() {
+                afterCallBack(); // callback for after all responses have been processed
+            })
+            .catch(err => {
+                ModalController.showError(err);
+                failureCallback();
+            });
+    }
 
 }

@@ -25,7 +25,7 @@ CREATE TABLE resource (
     identifier varchar(255),
     name varchar(255),
     author varchar(255),
-    date int,
+    date varchar(10),
 
     PRIMARY KEY (id),
     FOREIGN KEY (ontologyID) REFERENCES ontology(id)

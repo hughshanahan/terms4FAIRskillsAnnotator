@@ -59,6 +59,15 @@ apiDeleteResource:
     controller: App\Controller\APIController::deleteResource
 
 
+apiAddResourceTerm:
+    path: /api/addResourceTerm
+    controller: App\Controller\APIController::addResourceTerm
+
+apiRemoveResourceTerm:
+    path: /api/removeResourceTerm
+    controller: App\Controller\APIController::removeResourceTerm
+
+
 # === FRONT END ROUTES ===
 
 root:

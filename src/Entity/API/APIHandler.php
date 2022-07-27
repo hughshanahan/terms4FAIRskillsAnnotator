@@ -34,29 +34,6 @@
         }
 
         /**
-         * Formats the annotator form data to be the format needed for the database.
-         *
-         * @param array $resourceData the form data
-         * @return array the formatted data
-         */
-        private static function formatResourceData(array $resourceData) : array {
-            $terms = explode(',', $resourceData["selected-terms"]);
-
-            return array(
-                "identifier" => $resourceData["identifier-input"],
-                "name" => $resourceData["name-input"],
-                "author" => $resourceData["author-surname-input"] . ", " . $resourceData["author-firstname-input"],
-                "date" => strval(mktime(
-                        0,0,0, //hours, minutes, seconds 
-                        $resourceData["date-month-input"],
-                        $resourceData["date-day-input"],
-                        $resourceData["date-year-input"]
-                    )),
-                "terms" => $terms
-            );
-        }
-
-        /**
          * Creates the JSON String that is returned to the frontend when the resource is saved successfully.
          *
          * @param String $resourceID the resource's database id
@@ -224,20 +201,12 @@
          * @return String A JSON String of the status of the save
          */
         public static function createResource(String $ontologyID, array $resourceData) : String {
-            // format the resource data array values into data the database can store
-            $formattedData = self::formatResourceData($resourceData);
-
             // create the entry in the database and get the resource id back
             $database = new Database();
             $resourceID = $database->createResource(
                 $ontologyID,
-                $formattedData["identifier"],
-                $formattedData["name"],
-                $formattedData["author"],
-                $formattedData["date"],
-                $formattedData["terms"]
+                $resourceData
             );
-
             return self::createResourceReturnJSON($resourceID, $resourceData);
         }
 
@@ -250,20 +219,12 @@
          * @return String A JSON String of the status of the save
          */
         public static function saveResource(String $resourceID, array $resourceData) : String {
-            // format the resource data array values into data the database can store
-            $formattedData = self::formatResourceData($resourceData);
-
-            // create the entry in the database and get the resource id back
+            // update the entry in the database
             $database = new Database();
             $database->saveResource(
                 $resourceID,
-                $formattedData["identifier"],
-                $formattedData["name"],
-                $formattedData["author"],
-                $formattedData["date"],
-                $formattedData["terms"]
+                $resourceData
             );
-
             return self::createResourceReturnJSON($resourceID, $resourceData);
         }
 
@@ -290,6 +251,34 @@
             $database = new Database();
             $database->deleteResource($resourceID);
             return JSONFormatter::arrayToString(array("status"=>"ok"));
+        }
+
+        /**
+         * Adds a term annotation to the resource and returns JSON containing all the annotated terms.
+         *
+         * @param String $resourceID the id of the resource to add the term to
+         * @param String $termURI the term to add
+         * @return String the JSON String with all the terms for the resource
+         */
+        public static function addResourceTerm(String $resourceID, String $termURI) : String {
+            $database = new Database();
+            $database->addResourceTerm($resourceID, $termURI);
+            $terms = $database->getResourceTerms($resourceID);
+            return JSONFormatter::arrayToString($terms);
+        }
+
+        /**
+         * Removes a term annotation from the resource and returns JSON containing all the annotated terms.
+         *
+         * @param String $resourceID the id of the resource to remove the term from
+         * @param String $termURI the term to remove
+         * @return String the JSON String with all the terms for the resource
+         */
+        public static function removeResourceTerm(String $resourceID, String $termURI) : String {
+            $database = new Database();
+            $database->removeResourceTerm($resourceID, $termURI);
+            $terms = $database->getResourceTerms($resourceID);
+            return JSONFormatter::arrayToString($terms);
         }
 
 

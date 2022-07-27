@@ -241,6 +241,27 @@
             return Ontology::unserialise($data["rows"][0]["content"]);
         }
 
+        /**
+         * Returns an array of the resources that are for the given ontology.
+         *
+         * @param String $ontologyID the ontology database id
+         * @return array the resources for the ontology
+         */
+        public function getOntologyResources(String $ontologyID) : array {
+            $resources = $this->select("resource", "ontologyID='" . $ontologyID . "'")["rows"];
+            $resourcesWithTerms = array();
+            foreach ($resources as $resource) {
+                $resourceWithTerms = array_merge(array(), $resource); //make a copy of the array
+                $resourceID = $resourceWithTerms["id"];
+                $resourceWithTerms["terms"] = $this->getResourceTerms($resourceID);
+                array_push($resourcesWithTerms, $resourceWithTerms);
+            }
+            return $resourcesWithTerms;
+        }
+
+
+
+
 
         /*
             === Resource Methods ===
@@ -277,43 +298,27 @@
             return $data;
         } 
 
-
         /**
          * Create an entry in the database for a new resource.
          *
          * @param String $ontologyID the database id for the ontology
-         * @param String $identifier the DOI identifier for the resource
-         * @param String $name the name of the resource
-         * @param String $author the author of the resoruce
-         * @param String $date the date of the resource
-         * @param array $terms the array of term URIs that have been selected
+         * @param array $resourceData the resource metadata
          * @return integer the database identifer for the resource
          */
-        public function createResource(
-            String $ontologyID, 
-            String $identifier,
-            String $name,
-            String $author,
-            String $date,
-            array $terms,
-        ) : int {
+        public function createResource(String $ontologyID, array $resourceData) : int {
             // create the id
             $id = rand();
-
             // create the values array
             $values = array(
                 "id"=>$id,
                 "ontologyID"=>$ontologyID,
-                "identifier"=>$identifier,
-                "name"=>$name,
-                "author"=>$author,
-                "date"=>$date
+                "identifier"=>$resourceData["identifier"],
+                "name"=>$resourceData["name"],
+                "author"=>$resourceData["author"],
+                "date"=>$resourceData["date"]
             );
-
             // insert into database
             $this->insert("resource", $values);
-            $this->insertTerms($id, $terms);
-
             return $id;
         }
 
@@ -322,90 +327,13 @@
          * Saves the changes made to the resource in the database.
          *
          * @param String $resourceID the id of the resource to change
-         * @param String $identifier the DOI identifier of the resource
-         * @param String $name the name of the resource
-         * @param String $author the author of the resource
-         * @param String $date the date of the resource
-         * @param array $terms an array of term URIs
+         * @param array $resourceData the resource metadata
          * @return void
          */
-        public function saveResource(
-            String $resourceID,
-            String $identifier,
-            String $name,
-            String $author,
-            String $date,
-            array $terms,
-        ) {
-            // clear all the terms for the resource
-            $this->delete("term", "resourceID='" . $resourceID . "'");
-
-            // create the values array
-            $values = array(
-                "identifier"=>$identifier,
-                "name"=>$name,
-                "author"=>$author,
-                "date"=>$date
-            );
-
-            $this->update("resource", $values, "id='" . $resourceID . "'");
-            $this->insertTerms($resourceID, $terms);
-
+        public function saveResource(String $resourceID, array $resourceData) : void {
+            $this->update("resource", $resourceData, "id='" . $resourceID . "'");
         }
 
-
-        /**
-         * Returns an array of the resources that are for the given ontology.
-         *
-         * @param String $ontologyID the ontology database id
-         * @return array the resources for the ontology
-         */
-        public function getOntologyResources(String $ontologyID) : array {
-            $resources = $this->select("resource", "ontologyID='" . $ontologyID . "'")["rows"];
-            $resourcesWithTerms = array();
-            foreach ($resources as $resource) {
-                $resourceWithTerms = array_merge(array(), $resource); //make a copy of the array
-                $resourceID = $resourceWithTerms["id"];
-                $resourceWithTerms["terms"] = $this->getTerms($resourceID);
-                array_push($resourcesWithTerms, $resourceWithTerms);
-            }
-            return $resourcesWithTerms;
-        }
-
-
-        /**
-         * Inserts an array of terms into the term table of the database.
-         *
-         * @param String $resourceID the id of the resource that the terms are related to
-         * @param array $terms the array of term URIs
-         * @return void
-         */
-        private function insertTerms(String $resourceID, array $terms) : void {
-            // insert into the terms table
-            foreach ($terms as $term) {
-                $values = array(
-                    "resourceID"=>$resourceID,
-                    "termURI"=>$term
-                );
-                $this->insert("term", $values);
-            }
-        }
-
-
-        /**
-         * Returns an array of terms for a given resource.
-         *
-         * @param String $resourceID the resource
-         * @return array the resource terms
-         */
-        private function getTerms(String $resourceID) : array {
-            $terms = $this->select("term", "resourceID='" . $resourceID . "'")["rows"];
-            $termURIs = array();
-            foreach ($terms as $term) {
-                array_push($termURIs, $term["termURI"]);
-            }
-            return $termURIs;
-        }
 
         /**
          * Deletes a resource from the database.
@@ -418,6 +346,70 @@
             $this->delete("term", "resourceID='" . $resourceID . "'");
             $this->delete("resource", "id='" . $resourceID . "'");
         }
+
+
+
+        /*
+            === Term Methods ===
+            Methods that change the term table.
+        */
+
+        /**
+         * Returns an array of terms for a given resource.
+         *
+         * @param String $resourceID the resource
+         * @return array the resource terms
+         */
+        public function getResourceTerms(String $resourceID) : array {
+            $terms = $this->select("term", "resourceID='" . $resourceID . "'")["rows"];
+            $termURIs = array();
+            foreach ($terms as $term) {
+                array_push($termURIs, $term["termURI"]);
+            }
+            return $termURIs;
+        }
+
+
+        /**
+         * Adds a term to the resource.
+         *
+         * @param String $resourceID the ID of the resource
+         * @param String $termURI the URI of the term
+         * @return void
+         */
+        public function addResourceTerm(String $resourceID, String $termURI) : void {
+            // check that the resource/term pair is not already in the database
+            $where = "resourceID='" . $resourceID . "' AND termURI='" . $termURI . "'";
+            $resourceTerms = $this->select("term", $where);
+            if (count($resourceTerms) > 0) {
+                // if the number of returned rows is greater than 0, the pairing already exists
+                return;
+            }
+
+            // add the pair as it is not already in the database
+            $this->insert(
+                "term", 
+                array(
+                    "resourceID" => $resourceID,
+                    "termURI" => $termURI
+                )
+            );
+        }
+
+
+        /**
+         * Removes a term annotation from the resource.
+         *
+         * @param String $resourceID the id of the resource to remove the term annotation from
+         * @param String $termURI the term to remove
+         * @return void
+         */
+        public function removeResourceTerm(String $resourceID, String $termURI) : void {
+            // delete from the database where resourceID and termURI are equal to parameters
+            $where = "resourceID='" . $resourceID . "' AND termURI='" . $termURI . "'";
+            $this->delete("term", $where);
+        }
+
 
     }
 
