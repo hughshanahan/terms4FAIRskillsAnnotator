@@ -26,10 +26,19 @@
         /**
          * Constructs an Ontology object.
          * 
-         * @param String $filepath the filepath or URL to the ontology file (.owl)
+         * @param String $url the URL (or filepath) of the ontology file (.owl)
+         * @throws \Exception if the ontology URL is not valid
          */
-        public function __construct(String $filepath) {
-            $xml = simplexml_load_string(file_get_contents($filepath));
+        public function __construct(String $url) {
+
+            $ontologyContents = @file_get_contents($url); 
+                // the @ surpresses the warning if the URL is not valid
+                // this means that the following check can handle the problem
+            if ($ontologyContents === False) {
+                throw new \Exception("Could not read ontology from '" . $url . "'");
+            }
+
+            $xml = simplexml_load_string($ontologyContents);
 
             // intialise the variables that are going to store the ontology
             $this->about = "";

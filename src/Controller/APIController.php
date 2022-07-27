@@ -34,10 +34,11 @@
         /**
          * Creates a response object containing the error message for a request that has thrown an exception.
          *
-         * @param String $message the exception message
+         * @param \Exception $exception the exception that was thrown
          * @return Response The Response object
          */
-        private function errorResponse(String $message) : Response {
+        private function errorResponse(\Exception $exception) : Response {
+            $message = $exception->getMessage();
             // get the error message in a JSON object
             $json = JSONFormatter::arrayToString(
                 array("message"=>$message)
@@ -62,12 +63,15 @@
          * @return Response The response containing JSON data with the database id of the ontology 
          */
         public function loadOntology(Request $request) : Response {
-            // get the data as an associative array and pass it to the handler
-            $requestData = json_decode($request->getContent(), true);
-            $json = APIHandler::loadOntology(
-                $requestData["ontology-url-input"]
-            );
-            return $this->successResponse($json);
+            try {
+                // get the data as an associative array and pass it to the handler
+                $ontologyURL = $request->query->get("url");
+                $json = APIHandler::loadOntology($ontologyURL);
+                return $this->successResponse($json);
+            } catch(\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
+            
         }
 
         /**

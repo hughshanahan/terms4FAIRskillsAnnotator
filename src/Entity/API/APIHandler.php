@@ -89,12 +89,19 @@
          *
          * @param String $ontologyURL the URL of the ontology to use
          * @return String the JSON String of the ontology details
+         * @throws Exception if there was an error connecting to the database
+         * @throws Exception if the ontology could not be loaded
+         * @throws Exception if the ontology could not be stored in the database
          */
         public static function loadOntology(String $ontologyURL) : String {
-            $database = new Database();
-            $ontology = new Ontology($ontologyURL);
-            $ontologyID = $database->insertOntology($ontology);
-            return "{\"ontologyID\":\"" . $ontologyID . "\"}";
+            try {
+                $database = new Database();
+                $ontology = new Ontology($ontologyURL);
+                $ontologyID = $database->insertOntology($ontology);
+                return "{\"ontologyID\":\"" . $ontologyID . "\"}";
+            } catch (\Exception $e) {
+                throw $e;
+            }
         }
 
 

@@ -30,31 +30,25 @@ class OntologySelector {
      * Loads the ontology from a URL.
      */
     static loadFromURL() {
-        var data = "{\"ontology-url-input\": \"" + document.getElementById("ontology-url-input").value + "\"}"
-
         // show the loading spinner
         ViewManager.showLoadingSpinner();
 
-        fetch("/api/loadOntology",
-            {
-                method: "POST",
-                body: data
-            })
-            .then(T4FSAnnotator.checkStatus)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
+        // get the ontology URL from the input
+        const ontologyURL = document.getElementById("ontology-url-input").value;
+
+        // load the ontology
+        APIRequest.fetch(
+            "/api/loadOntology?url=" + ontologyURL,
+            function(data) {
                 // set the cookie for the ontology id
                 Cookies.set("annotator-ontology-id", data.ontologyID, 7);
                 // show the main menu
                 MainMenu.show();
-                    
-            })
-            .catch(err => {
-                ModalController.showError(
-                    "An error occured while loading the ontology: " + err 
-                );
-            });
+            },
+            function() {
+                OntologySelector.show();
+            }
+        );
     }
 
 }

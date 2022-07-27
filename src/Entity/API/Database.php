@@ -30,7 +30,7 @@
 
         /**
          * Connects to the database in the terms4FAIRskills_annotator_db container.
-         * @throws Exception if the connection fails
+         * @throws \Exception if the connection fails
          */
         public function __construct() {
             try {
@@ -198,6 +198,7 @@
          *
          * @param Ontology $ontology the ontology object
          * @return int the key of the ontology in the database
+         * @throws Exception if the ontology could not be inserted into the database
          */
         public function insertOntology(Ontology $ontology) : int {
             // serialise the ontology object
@@ -213,8 +214,15 @@
                 "content"=>$ontologySerialised,
                 "accessed"=>time()
             );
-            $this->insert("ontology", $values);
-            return $id;
+
+            try {
+                $this->insert("ontology", $values);
+                return $id;
+            } catch (\Exception $e) {
+                // catch the exception and throw it on
+                throw $e;
+            }
+            
         }
 
 
