@@ -304,29 +304,17 @@ class Annotator {
             selectedContainer.innerHTML = "";
         } else {
             // there are terms - process them
-            let promiseArray = [];
-            for(let i=0; i<terms.length; i++){
-                promiseArray.push(fetch("/api/getTerm?term=" + terms[i]));
-            }
-
-            // proces the promises
-            Promise.all(promiseArray)
-                .then(responses => {
-                    // process the responses
-                    selectedContainer.innerHTML = "";
-                    responses.map(response => {
-                        // convert the response to JSON object and process it
-                        response.json()
-                            .then(json => {
-                                selectedContainer.innerHTML += TermSearchResult.create(json, terms);
-                            });
-                    });
-                })
-                .catch(err => {
-                    ModalController.showError(
-                        "An error occured while getting the term details: " + err 
-                    );
-                });
+            var urls = [];
+            terms.forEach(term => {
+                urls.push("/api/getTerm?term=" + term);
+            })
+            selectedContainer.innerHTML = "";
+            APIRequest.fetchAll(
+                urls,
+                function(data) {
+                    selectedContainer.innerHTML += TermSearchResult.create(data, terms);
+                }
+            );
         }
 
     }
