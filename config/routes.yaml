@@ -17,13 +17,6 @@ apiSearchClasses:
     controller: App\Controller\APIController::searchTerms
 
 
-apiGetObjectProperty:
-    path: /api/getObjectProperty
-    controller: App\Controller\APIController::getObjectProperty
-
-
-
-
 apiLoadOntology:
     path: /api/loadOntology
     controller: App\Controller\APIController::loadOntology

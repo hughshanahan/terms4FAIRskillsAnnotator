@@ -83,9 +83,10 @@
          */
         public function searchTerms(Request $request) : Response {
             // get the search string from the request and get the results JSON String
+            $ontologyID = $request->query->get("ontologyID");
             $searchQuery = $request->query->get("search");
             $json = APIHandler::searchTerms(
-                $request->cookies->get("annotator-ontology-id"), 
+                $ontologyID,
                 $searchQuery
             );
             return $this->successResponse($json);
@@ -100,27 +101,12 @@
          */
         public function getTerm(Request $request) : Response {
             // get the term URI from the request and get the term's JSON String
+            $ontologyID = $request->query->get("ontologyID");
             $termURI = $request->query->get("term");
             $json = APIHandler::getTerm(
-                $request->cookies->get("annotator-ontology-id"), 
+                $ontologyID,
                 $termURI
             );
-            return $this->successResponse($json);
-        }
-
-        /**
-         * Returns the data about the object property in JSON format
-         *
-         * @param Request $request the HTTP request containing the URI of the object property
-         * @return Response the response containing the JSON data about the object property
-         */
-        public function getObjectProperty(Request $request) : Response {
-            // get the property URI from the request and get the property's JSON string
-            $propertyURI = $request->query->get("property");
-            $json = APIHandler::getObjectProperty(
-                $request->cookies->get("annotator-ontology-id"), 
-                $propertyURI
-            ); 
             return $this->successResponse($json);
         }
 
@@ -186,7 +172,7 @@
          * @return Response the HTTP Response containing the resource ID in a JSON String
          */
         public function createResource(Request $request) : Response {
-            // get the ontology id from the cookies 
+            // get the ontology id from the request
             $ontologyID = $request->query->get("ontologyID");
             // get the resource data from the query
             $resourceData = $this->getResourceFromQuery($request->query);
@@ -205,7 +191,7 @@
          * @return Response the response containing JSON data with status information about the saving of the resource
          */
         public function saveResource(Request $request) : Response {
-            // get the resource ID from the cookies
+            // get the resource ID from the query
             $resourceID = $request->query->get("resourceID");
             // get the resource data from the query
             $resourceData = $this->getResourceFromQuery($request->query);

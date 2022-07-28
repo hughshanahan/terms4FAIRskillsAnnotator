@@ -91,7 +91,7 @@ class TermSearchResult {
 
         // fetch the term details and set the modal content
         APIRequest.fetch(
-            "/api/getTerm?term=" + termURI,
+            "/api/getTerm?ontologyID=" + Cookies.get("annotator-ontology-id") + "&term=" + termURI,
             function(data) {
                 const html = TermSearchResult.createModalContent(data);
                 // show the content in the modal

@@ -346,7 +346,7 @@ class Annotator {
             if (Annotator.setupOntologyID === Cookies.get("annotator-ontology-id")) {
                 // fetch the terms that match the search
                 APIRequest.fetch(
-                    "/api/searchTerms?search=" + searchTerm,
+                    "/api/searchTerms?ontologyID=" + Cookies.get("annotator-ontology-id") + "&search=" + searchTerm,
                     function(data) {
                         document.getElementById("results-container").innerHTML = SearchResults.create(data, Annotator.selectedTerms);
                     }

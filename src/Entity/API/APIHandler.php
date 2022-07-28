@@ -126,27 +126,6 @@
             return JSONFormatter::arrayToString($data);
         }
 
-
-        /**
-         * Returns a JSON String of the object property details.
-         *
-         * @param String $ontologyID the key of the ontology
-         * @param String $propertyURI the URI of the object property to return
-         * @return String the JSON string of the term details
-         */
-        public static function getObjectProperty(String $ontologyID, String $propertyURI) : String {
-            $ontology = self::getOntology($ontologyID);
-            // get the object property matching the URI
-            $property = $ontology->getObjectProperty($propertyURI);
-
-            // get the JSON data to return
-            $data = array("about"=>$property->getAbout());
-
-            // return the JSON String
-            return JSONFormatter::arrayToString($data);
-        }
-
-
         /**
          * Returns the JSON String with all the ontology's resources in. 
          *
