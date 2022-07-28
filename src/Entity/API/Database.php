@@ -231,6 +231,7 @@
          *
          * @param String $ontologyID the database ID for the ontology
          * @return Ontology the ontology object
+         * @throws \Exception if the ontologyID was invalid
          */
         public function getOntology(String $ontologyID) : Ontology {
             $where = "id='" . $ontologyID . "'";

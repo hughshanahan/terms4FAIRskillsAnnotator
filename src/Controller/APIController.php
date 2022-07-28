@@ -82,14 +82,18 @@
          * @return Response the JSON string of the terms and their metadata
          */
         public function searchTerms(Request $request) : Response {
-            // get the search string from the request and get the results JSON String
-            $ontologyID = $request->query->get("ontologyID");
-            $searchQuery = $request->query->get("search");
-            $json = APIHandler::searchTerms(
-                $ontologyID,
-                $searchQuery
-            );
-            return $this->successResponse($json);
+            try {
+                // get the search string from the request and get the results JSON String
+                $ontologyID = $request->query->get("ontologyID");
+                $searchQuery = $request->query->get("search");
+                $json = APIHandler::searchTerms(
+                    $ontologyID,
+                    $searchQuery
+                );
+                return $this->successResponse($json);
+            } catch(\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
         }
 
 
@@ -100,14 +104,18 @@
          * @return Response the JSON string of the term's metadata
          */
         public function getTerm(Request $request) : Response {
-            // get the term URI from the request and get the term's JSON String
-            $ontologyID = $request->query->get("ontologyID");
-            $termURI = $request->query->get("term");
-            $json = APIHandler::getTerm(
-                $ontologyID,
-                $termURI
-            );
-            return $this->successResponse($json);
+            try {
+                // get the term URI from the request and get the term's JSON String
+                $ontologyID = $request->query->get("ontologyID");
+                $termURI = $request->query->get("term");
+                $json = APIHandler::getTerm(
+                    $ontologyID,
+                    $termURI
+                );
+                return $this->successResponse($json);
+            } catch(\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
         }
 
         /**
@@ -117,11 +125,15 @@
          * @return Response the response containing the JSON String
          */
         public function getOntologyResources(Request $request) : Response {
-            // get the ontology id from the request
-            $ontologyID = $request->query->get("ontology");
-            // get the JSON String of the ontology resources
-            $json = APIHandler::getOntologyResources($ontologyID);
-            return $this->successResponse($json);
+            try {
+                // get the ontology id from the request
+                $ontologyID = $request->query->get("ontology");
+                // get the JSON String of the ontology resources
+                $json = APIHandler::getOntologyResources($ontologyID);
+                return $this->successResponse($json);
+            } catch(\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
         }
 
         /**
@@ -131,11 +143,16 @@
          * @return Response the response containing the JSON String
          */
         public function exportAnnotations(Request $request) : Response {
-            // get the ontology id from the request
-            $ontologyID = $request->query->get("ontology");
-            // get the JSON String of all the annotations
-            $json = APIHandler::exportAnnotations($ontologyID);
-            return $this->successResponse($json);
+            try {
+                // get the ontology id from the request
+                $ontologyID = $request->query->get("ontology");
+                // get the JSON String of all the annotations
+                $json = APIHandler::exportAnnotations($ontologyID);
+                return $this->successResponse($json);
+            } catch (\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
+            
         }
 
 

@@ -20,15 +20,20 @@
          *
          * @param String $ontologyID the key for the ontology
          * @return Ontology the ontology object
+         * @throws \Exception if there was an error retrieving the ontology from the database
          */
         private static function getOntology(String $ontologyID) : Ontology {
-            if ($ontologyID == "test") {
-                // if the ID is "test" return the Ontology object for the OntologyTest.owl file
-                return new Ontology("tests/Resources/OntologyTest.owl");
-            } else {
-                // return the unserialised database object
-                $database = new Database();
-                return $database->getOntology($ontologyID);
+            try {
+                if ($ontologyID == "test") {
+                    // if the ID is "test" return the Ontology object for the OntologyTest.owl file
+                    return new Ontology("tests/Resources/OntologyTest.owl");
+                } else {
+                    // return the unserialised database object
+                    $database = new Database();
+                    return $database->getOntology($ontologyID);
+                }    
+            } catch (\Exception $e) {
+                throw $e;
             }
             
         }
@@ -88,25 +93,31 @@
          * @param String $ontologyID the key of the ontology
          * @param String $searchQuery the search query
          * @return String the JSON string of the search results
+         * @throws \Exception if the ontology couldn't be searched
          */
         public static function searchTerms(String $ontologyID, String $searchQuery) : String {
-            $ontology = self::getOntology($ontologyID);
-            // search the ontology
-            $classes = $ontology->queryClasses($searchQuery);
-            // process the classes into the data array
-            $results = array();
-            foreach ($classes as $class) {
-                array_push(
-                    $results, 
-                    $class->getJSONArray()
-                );
-            }
-            //set the data properties
-            $data["search"] = $searchQuery;
-            $data["results"] = $results;
+            try {
+                $ontology = self::getOntology($ontologyID);
+                // search the ontology
+                $classes = $ontology->queryClasses($searchQuery);
+                // process the classes into the data array
+                $results = array();
+                foreach ($classes as $class) {
+                    array_push(
+                        $results, 
+                        $class->getJSONArray()
+                    );
+                }
+                //set the data properties
+                $data["search"] = $searchQuery;
+                $data["results"] = $results;
 
-            // return the JSON String
-            return JSONFormatter::arrayToString($data);
+                // return the JSON String
+                return JSONFormatter::arrayToString($data);
+            } catch (\Exception $e) {
+                throw $e;
+            }
+            
         }
 
         /**
@@ -115,15 +126,20 @@
          * @param String $ontologyID the key of the ontology
          * @param String $termURI the URI of the term to return
          * @return String the JSON string of the term details
+         * @throws \Exception If the ontology could be loaded, or the ontology class could not be found
          */
         public static function getTerm(String $ontologyID, String $termURI) : String {
-            $ontology = self::getOntology($ontologyID);
-            // get the class matching the URI
-            $class = $ontology->getClass($termURI);
-            // create the array to store the data that should be returned
-            $data = $class->getJSONArray();
-            // return the JSON String
-            return JSONFormatter::arrayToString($data);
+            try {
+                $ontology = self::getOntology($ontologyID);
+                // get the class matching the URI
+                $class = $ontology->getClass($termURI);
+                // create the array to store the data that should be returned
+                $data = $class->getJSONArray();
+                // return the JSON String
+                return JSONFormatter::arrayToString($data);
+            } catch (\Exception $e) {
+                throw $e;
+            }
         }
 
         /**
@@ -131,11 +147,17 @@
          *
          * @param String $ontologyID the id of the ontology to export 
          * @return String the JSON String of the resources
+         * @throws \Exception if the database could not be accessed or the ontology id was invalid
          */
         public static function getOntologyResources(String $ontologyID) : String {
-            $database = new Database();
-            $resources = $database->getOntologyResources($ontologyID);
-            return JSONFormatter::arrayToString($resources);
+            try {
+                $database = new Database();
+                $resources = $database->getOntologyResources($ontologyID);
+                return JSONFormatter::arrayToString($resources);
+            } catch (\Exception $e) {
+                throw $e;
+            }
+            
         }
 
 
@@ -144,22 +166,28 @@
          *
          * @param String $ontologyID the id of the ontology to export 
          * @return String the JSON String for the export file
+         * @throws \Exception if the database could not be accessed
          */
         public static function exportAnnotations(String $ontologyID) : String {
-            $database = new Database();
-            $resources = $database->getOntologyResources($ontologyID);
-            $annotations = array();
-            foreach ($resources as $resource) {
-                $resourceAnnotation = array(
-                    "doi" => $resource["identifier"],
-                    "name" => $resource["name"],
-                    "author" => $resource["author"],
-                    "date" => date("Y-m-d", $resource["date"]),
-                    "concept" => $resource["terms"]
-                );
-                array_push($annotations, $resourceAnnotation);
+            try {
+                $database = new Database();
+                $resources = $database->getOntologyResources($ontologyID);
+                $annotations = array();
+                foreach ($resources as $resource) {
+                    $resourceAnnotation = array(
+                        "doi" => $resource["identifier"],
+                        "name" => $resource["name"],
+                        "author" => $resource["author"],
+                        "date" => date("Y-m-d", $resource["date"]),
+                        "concept" => $resource["terms"]
+                    );
+                    array_push($annotations, $resourceAnnotation);
+                }
+                return JSONFormatter::arrayToString($annotations);
+            } catch (\Exception $e) {
+                throw $e;
             }
-            return JSONFormatter::arrayToString($annotations);
+            
         }
 
 
