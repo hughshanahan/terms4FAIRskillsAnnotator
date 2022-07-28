@@ -39,7 +39,7 @@ class MainMenu {
 
             const ontologyID = Cookies.get("annotator-ontology-id");
             APIRequest.fetch(
-                "/api/getOntologyResources?ontology=" + ontologyID,
+                "/api/getOntologyResources?ontologyID=" + ontologyID,
                 function(data) {
                     const html = MainMenu.createResourceTable(data);
                     document.getElementById("annotated-resources").innerHTML = html;
@@ -117,7 +117,7 @@ class MainMenu {
         // check that the loaded ontology hasn't changed
         if (MainMenu.setupOntologyID === Cookies.get("annotator-ontology-id")) {
 
-            fetch("/api/exportAnnotations?ontology=" + Cookies.get("annotator-ontology-id"))
+            fetch("/api/exportAnnotations?ontologyID=" + Cookies.get("annotator-ontology-id"))
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
@@ -172,7 +172,7 @@ class MainMenu {
             if (confirmed) {
                 // the user has confirmed that they want to delete the resource
 
-                fetch("/api/deleteResource?id=" + resourceID)
+                fetch("/api/deleteResource?resourceID=" + resourceID)
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);

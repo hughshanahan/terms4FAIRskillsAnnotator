@@ -157,8 +157,15 @@
          * @param array $columnValues the column/value pairs to update
          * @param String $where the where predicate
          * @return void
+         * @throws \Exception if there are no column values provided
+         * @throws \Exception if the database update failed
          */
         public function update(String $table, array $columnValues, String $where) : void {
+
+            // check that there are some column/value pairs
+            if (count($columnValues) === 0) {
+                throw new \Exception("No values provided to update the records");
+            }
 
             // process the columnValues array
             $values = "";
@@ -381,7 +388,7 @@
         public function addResourceTerm(String $resourceID, String $termURI) : void {
             // check that the resource/term pair is not already in the database
             $where = "resourceID='" . $resourceID . "' AND termURI='" . $termURI . "'";
-            $resourceTerms = $this->select("term", $where);
+            $resourceTerms = $this->select("term", $where)["rows"];
             if (count($resourceTerms) > 0) {
                 // if the number of returned rows is greater than 0, the pairing already exists
                 return;

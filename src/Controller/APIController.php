@@ -127,7 +127,7 @@
         public function getOntologyResources(Request $request) : Response {
             try {
                 // get the ontology id from the request
-                $ontologyID = $request->query->get("ontology");
+                $ontologyID = $request->query->get("ontologyID");
                 // get the JSON String of the ontology resources
                 $json = APIHandler::getOntologyResources($ontologyID);
                 return $this->successResponse($json);
@@ -145,7 +145,7 @@
         public function exportAnnotations(Request $request) : Response {
             try {
                 // get the ontology id from the request
-                $ontologyID = $request->query->get("ontology");
+                $ontologyID = $request->query->get("ontologyID");
                 // get the JSON String of all the annotations
                 $json = APIHandler::exportAnnotations($ontologyID);
                 return $this->successResponse($json);
@@ -176,6 +176,7 @@
             foreach ($parameters as $parameter) {
                 $value = $query->get($parameter, "");
                 if (!($value === "")) {
+                    // if the value is not the default - save to the data array
                     $resourceData[$parameter] = $value;
                 }
             }
@@ -189,15 +190,20 @@
          * @return Response the HTTP Response containing the resource ID in a JSON String
          */
         public function createResource(Request $request) : Response {
-            // get the ontology id from the request
-            $ontologyID = $request->query->get("ontologyID");
-            // get the resource data from the query
-            $resourceData = $this->getResourceFromQuery($request->query);
-            $json = APIHandler::createResource(
-                $ontologyID, 
-                $resourceData
-            );
-            return $this->successResponse($json);
+            try {
+                // get the ontology id from the request
+                $ontologyID = $request->query->get("ontologyID");
+                // get the resource data from the query
+                $resourceData = $this->getResourceFromQuery($request->query);
+                $json = APIHandler::createResource(
+                    $ontologyID, 
+                    $resourceData
+                );
+                return $this->successResponse($json);
+            } catch (\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
+            
         }
 
 
@@ -208,15 +214,20 @@
          * @return Response the response containing JSON data with status information about the saving of the resource
          */
         public function saveResource(Request $request) : Response {
-            // get the resource ID from the query
-            $resourceID = $request->query->get("resourceID");
-            // get the resource data from the query
-            $resourceData = $this->getResourceFromQuery($request->query);
-            $json = APIHandler::saveResource(
-                $resourceID,
-                $resourceData
-            );
-            return $this->successResponse($json);
+            try {
+                // get the resource ID from the query
+                $resourceID = $request->query->get("resourceID");
+                // get the resource data from the query
+                $resourceData = $this->getResourceFromQuery($request->query);
+                $json = APIHandler::saveResource(
+                    $resourceID,
+                    $resourceData
+                );
+                return $this->successResponse($json);
+            } catch (\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
+            
         }
 
         /**
@@ -226,11 +237,15 @@
          * @return Response the HTTP response containing the resource data as a JSON String
          */
         public function getResource(Request $request) : Response {
-            // get the resource ID from request
-            $resourceID = $request->query->get("id");
-            // get the data about the resource
-            $json = APIHandler::getResource($resourceID);
-            return $this->successResponse($json);
+            try {
+                // get the resource ID from request
+                $resourceID = $request->query->get("resourceID");
+                // get the data about the resource
+                $json = APIHandler::getResource($resourceID);
+                return $this->successResponse($json);
+            } catch (\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
         }
 
         /**
@@ -240,11 +255,15 @@
          * @return Response the status of the deletion
          */
         public function deleteResource(Request $request) : Response {
-            // get the resource id from the request
-            $resourceID = $request->query->get("id");
-            // get the JSON String of the deletion status
-            $json = APIHandler::deleteResource($resourceID);
-            return $this->successResponse($json);
+            try {
+                // get the resource id from the request
+                $resourceID = $request->query->get("resourceID");
+                // get the JSON String of the deletion status
+                $json = APIHandler::deleteResource($resourceID);
+                return $this->successResponse($json);
+            } catch (\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
         }
 
 
@@ -255,12 +274,16 @@
          * @return Response the repsonse containing the JSON of the terms
          */
         public function addResourceTerm(Request $request) : Response {
-            // get the resource id and term URI from the request
-            $resourceID = $request->query->get("resourceID");
-            $termURI = $request->query->get("term");
-            // get the JSON String of the deletion status
-            $json = APIHandler::addResourceTerm($resourceID, $termURI);
-            return $this->successResponse($json);
+            try {
+                // get the resource id and term URI from the request
+                $resourceID = $request->query->get("resourceID");
+                $termURI = $request->query->get("term");
+                // get the JSON String of the deletion status
+                $json = APIHandler::addResourceTerm($resourceID, $termURI);
+                return $this->successResponse($json);
+            } catch (\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
         }
 
         /**
@@ -270,12 +293,16 @@
          * @return Response the repsonse containing the JSON of the terms
          */
         public function removeResourceTerm(Request $request) : Response {
-            // get the resource id and term URI from the request
-            $resourceID = $request->query->get("resourceID");
-            $termURI = $request->query->get("term");
-            // get the JSON String of the deletion status
-            $json = APIHandler::removeResourceTerm($resourceID, $termURI);
-            return $this->successResponse($json);
+            try {
+                // get the resource id and term URI from the request
+                $resourceID = $request->query->get("resourceID");
+                $termURI = $request->query->get("term");
+                // get the JSON String of the deletion status
+                $json = APIHandler::removeResourceTerm($resourceID, $termURI);
+                return $this->successResponse($json);
+            } catch (\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
         }
 
     }

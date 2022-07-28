@@ -98,7 +98,7 @@ class Annotator {
      */
     static getResourceDetails(resourceID) {
         APIRequest.fetch(
-            "/api/getResource?id=" + resourceID,
+            "/api/getResource?resourceID=" + resourceID,
             function(data) {
                 Annotator.setInputs(data);
                 // the details of the form have been updated - ensure that the form is shown
@@ -306,7 +306,7 @@ class Annotator {
             // there are terms - process them
             var urls = [];
             terms.forEach(term => {
-                urls.push("/api/getTerm?term=" + term);
+                urls.push("/api/getTerm?ontologyID=" + Cookies.get("annotator-ontology-id") + "&term=" + term);
             })
             selectedContainer.innerHTML = "";
             APIRequest.fetchAll(
