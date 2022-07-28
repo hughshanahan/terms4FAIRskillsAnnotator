@@ -87,6 +87,10 @@ class Annotator {
             document.getElementById(id).value = "";
         });
         document.getElementById("search-box").value = "";
+
+        Annotator.selectedTerms = [];
+        Annotator.removedTerms = [];
+
         Annotator.refreshDynamicUI();
     }
 
