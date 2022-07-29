@@ -80,19 +80,55 @@ class MainMenu {
     }
     
 
+
+    /**
+     * Hides the resources list and shows the loading resources spinner.
+     */
+     static showLoadingResourcesSpinner() {
+        // hide the list and show the spinner
+        console.log("Showing loading resources spinner");
+        ViewManager.hideElement("annotated-resources-container");
+        ViewManager.showElement("loading-resources-spinner-container");
+    }
+
+    /**
+     * Hides the loading resources spinner and shows the resources list.
+     */
+    static showResourcesList() {
+        // hide the spinner and show the list
+        console.log("Showing resources list form");
+        ViewManager.hideElement("loading-resources-spinner-container");
+        ViewManager.showElement("annotated-resources-container");
+    }
+
+
     /**
      * Gets the list of resources that have been annotated using the ontology and the shows the menu.
      */
     static getResourcesList() {
         // check that the loaded ontology hasn't changed
         if (MainMenu.setupOntologyID === Cookies.get("annotator-ontology-id")) {
-            document.getElementById("annotated-resources").innerHTML = "";
+
+
+            // hide the form and show the spinner
+            MainMenu.showLoadingResourcesSpinner();
+
+            document.getElementById("annotated-resources-container").innerHTML = "";
             const ontologyID = Cookies.get("annotator-ontology-id");
             APIRequest.fetch(
                 "/api/getOntologyResources?ontologyID=" + ontologyID,
                 function(data) {
-                    const html = MainMenu.createResourceTable(data);
-                    document.getElementById("annotated-resources").innerHTML = html;
+                    var html = '';
+                    if (data.length === 0) {
+                        // if there are no annotated resources
+                        html += '<p class="text-center">No Annotated resources</p>';
+                        html += '<button type="button" class="btn btn-primary btn-lg btn-block flex-fill" onclick="MainMenu.annotateNew()">Annotate New Resource</button>';
+                    } else {
+                        // there are annotated resources
+                        html += MainMenu.createResourceTable(data);
+                    }
+                    document.getElementById("annotated-resources-container").innerHTML = html;
+                    MainMenu.showResourcesList();
                 }
             );
         } else {
@@ -142,7 +178,7 @@ class MainMenu {
 
             // create the container to hold the options buttons
             html += '<div class="container d-flex flex-row justify-content-center gap-3 p-0 w-100">';
-            html += '<button type="button" class="btn btn-primary flex-fill" onclick="MainMenu.annotateExisting(\'' + resource.id + '\')">Annotate</button>';
+            html += '<button type="button" class="btn btn-primary flex-fill" onclick="MainMenu.annotateExisting(\'' + resource.id + '\')">Edit</button>';
             html += '<button type="button" class="btn btn-danger flex-fill" onclick="MainMenu.deleteResource(\'' + resource.id + '\', \'' + resource.name + '\')">Delete</button>';
             html += '</div>';
 

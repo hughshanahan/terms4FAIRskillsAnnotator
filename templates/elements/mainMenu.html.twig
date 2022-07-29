@@ -1,16 +1,15 @@
 {% block content %}
 
     <!-- Main menu container -->
-    <div class="container w-100 d-flex flex-column justify-content-center gap-5 p-0" id="main-menu-container">
+    <div class="container w-100 d-flex flex-column justify-content-center gap-3 p-0" id="main-menu-container">
 
         <!-- Navigation Bar -->
         <div class="container d-flex flex-row justify-content-between p-0">
             <button type="button" class="btn btn-primary btn-lg btn-block" onclick="MainMenu.hide()">Back</button>
         </div>
 
-
-        <div class="container d-flex flex-column justify-content-center p-0" id="ontology-details-container">
-        </div>
+        <!-- Ontology Details Container -->
+        <div class="container d-flex flex-column justify-content-center p-0" id="ontology-details-container"></div>
 
         <!-- Menu options -->
         <div class="container d-flex flex-row justify-content-center gap-3 p-0">
@@ -20,7 +19,14 @@
         </div>
 
         <!-- Annotated Resources -->
-        <div class="container d-flex flex-column justify-content-center gap-3 p-0" id="annotated-resources">
+        <div class="container d-flex flex-column justify-content-center gap-1 p-0">
+            <h3>Annotated Resources</h3>
+            <!-- Annotated Resources List Container -->
+            <div class="container d-flex flex-column justify-content-center gap-0 p-0" id="annotated-resources-container"></div>
+            <!-- Loading Resourcs Spinner Container -->
+            <div class="container w-100 d-flex flex-row justify-content-center gap-5 p-0" id="loading-resources-spinner-container">
+                <div class="spinner-border text-secondary" style="width: 5rem; height: 5rem;" role="status"></div>
+            </div>
 
         </div>
 
