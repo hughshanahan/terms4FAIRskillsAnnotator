@@ -9,12 +9,12 @@
         </div>
 
 
-        <div class="container d-flex flex-column justify-content-center p-0">
-            <h2>Ontology <span id="ontology-name-span"></span></h2>
+        <div class="container d-flex flex-column justify-content-center p-0" id="ontology-details-container">
         </div>
 
         <!-- Menu options -->
         <div class="container d-flex flex-row justify-content-center gap-3 p-0">
+            <button type="button" class="btn btn-primary btn-lg btn-block flex-fill" onclick="MainMenu.showOntologyDetails()">View Ontology Details</button>
             <button type="button" class="btn btn-primary btn-lg btn-block flex-fill" onclick="MainMenu.annotateNew()">Annotate New Resource</button>
             <button type="button" class="btn btn-primary btn-lg btn-block flex-fill" onclick="MainMenu.export()">Export Annotations</button>
         </div>

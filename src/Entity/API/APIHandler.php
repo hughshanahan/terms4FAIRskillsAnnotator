@@ -88,6 +88,23 @@
 
 
         /**
+         * Returns the ontology details.
+         *
+         * @param String $ontologyID the id of the ontology
+         * @return String a JSON String containing the ontology metadata
+         */
+        public static function getOntologyDetails(String $ontologyID) : String {
+            try {
+                $ontology = self::getOntology($ontologyID);
+                $data = $ontology->getJSONArray();
+                return JSONFormatter::arrayToString($data);
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
+
+
+        /**
          * Returns a JSON String of the search results.
          *
          * @param String $ontologyID the key of the ontology

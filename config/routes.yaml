@@ -41,6 +41,9 @@ apiExportAnnotations:
     controller: App\Controller\APIController::exportAnnotations
 
 
+apiGetOntologyDetails:
+    path: /api/getOntologyDetails
+    controller: App\Controller\APIController::getOntologyDetails
 
 apiGetOntologyResources:
     path: /api/getOntologyResources

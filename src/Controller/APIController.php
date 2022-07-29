@@ -75,6 +75,23 @@
             
         }
 
+
+        /**
+         * Returns the ontology details.
+         *
+         * @param Request $request the request containing the ontology id
+         * @return Response the response containing the JSON string of ontology details
+         */
+        public function getOntologyDetails(Request $request) : Response {
+            try {
+                $ontologyID = $request->query->get("ontologyID");
+                $json = APIHandler::getOntologyDetails($ontologyID);
+                return $this->successResponse($json);
+            } catch(\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
+        }
+
         /**
          * Returns the JSON for the terms matching the search term from the ontology.
          *

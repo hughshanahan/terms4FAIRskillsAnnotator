@@ -13,9 +13,20 @@ class MainMenu {
     static show() {
         // store the ontology ID when the main menu was shown
         MainMenu.setupOntologyID = Cookies.get("annotator-ontology-id");
-        // set the ontology name
-        document.getElementById("ontology-name-span").innerHTML = MainMenu.setupOntologyID;
-        MainMenu.getResourcesList();
+        const ontologyID = MainMenu.setupOntologyID;
+        // get the ontology details
+        APIRequest.fetch(
+            "/api/getOntologyDetails?ontologyID=" + ontologyID,
+            function(data) {
+                const html = "<h3>" + T4FSAnnotator.breakURL(data.about) + " Ontology</h3><p><i>(" + T4FSAnnotator.breakURL(data.url) + ")</i></p>";
+                document.getElementById("ontology-details-container").innerHTML = html;
+                MainMenu.getResourcesList();
+                console.log("Showing main menu");
+                ViewManager.showMainMenu();
+            }
+        )
+
+        
     }
 
 
@@ -29,22 +40,59 @@ class MainMenu {
 
 
     /**
+     * Shows the modal view with the details of the ontology.
+     */
+    static showOntologyDetails() {
+        // show the modal view with the title and the loading spinner
+        ModalController.showLoadingSpinner();
+        ModalController.show("Ontology", '');
+
+        // fetch the term details and set the modal content
+        APIRequest.fetch(
+            "/api/getOntologyDetails?ontologyID=" + Cookies.get("annotator-ontology-id"),
+            function(data) {
+                const html = MainMenu.createOntologyDetails(data);
+                // show the content in the modal
+                ModalController.showContent(html);
+            }
+        );
+    }
+
+
+    /**
+     * Creates the contents of the ontology details container.
+     * 
+     * @param {JSON} ontology the ontology details JSON from the API
+     * @returns {String} the HTML for the ontology details
+     */
+    static createOntologyDetails(ontology) {
+        var html = '';
+        html += '<div class="container d-flex flex-column justify-content-center p-0" id="ontology-details-container">';
+        html += HTMLGenerator.createSingleValueDisplay("URI", ontology.about);
+        html += HTMLGenerator.createSingleValueDisplay("Loaded from", ontology.url);
+        html += HTMLGenerator.createSingleValueDisplay("Description", ontology.description);
+        html += HTMLGenerator.createValueListDisplay("Creators", ontology.creators);
+        html += HTMLGenerator.createValueListDisplay("Contributors", ontology.contributors);
+        html += HTMLGenerator.createValueListDisplay("Comments", ontology.comments);
+        html += HTMLGenerator.createSingleValueDisplay("License", ontology.license);
+        html += '</div>';
+        return html;
+    }
+    
+
+    /**
      * Gets the list of resources that have been annotated using the ontology and the shows the menu.
      */
     static getResourcesList() {
         // check that the loaded ontology hasn't changed
         if (MainMenu.setupOntologyID === Cookies.get("annotator-ontology-id")) {
-
             document.getElementById("annotated-resources").innerHTML = "";
-
             const ontologyID = Cookies.get("annotator-ontology-id");
             APIRequest.fetch(
                 "/api/getOntologyResources?ontologyID=" + ontologyID,
                 function(data) {
                     const html = MainMenu.createResourceTable(data);
                     document.getElementById("annotated-resources").innerHTML = html;
-                    console.log("Showing main menu");
-                    ViewManager.showMainMenu();
                 }
             );
         } else {

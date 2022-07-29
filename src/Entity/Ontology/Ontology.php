@@ -11,6 +11,8 @@
      */
     class Ontology {
 
+        private $url; // stores the URL that the ontology was loaded from
+
         private $about; // String storing what the ontology is about
         private $description; // string storing the description of the ontology
         private $license; // string storing the license of the ontology
@@ -37,6 +39,8 @@
             if ($ontologyContents === False) {
                 throw new \Exception("Could not read ontology from '" . $url . "'");
             }
+
+            $this->url = $url;
 
             $xml = simplexml_load_string($ontologyContents);
 
@@ -116,6 +120,17 @@
 
             }
         }
+
+
+        /**
+         * Returns a string containing the URL where the ontology was loaded from.
+         *
+         * @return String the URL where the ontology was loaded from
+         */
+        public function getURL() : String {
+            return $this->url;
+        }
+
 
 
         /**
@@ -219,6 +234,24 @@
         }
 
 
+        /**
+         * Returns an array of the ontology metadata that can be converted to JSON.
+         *
+         * @return array the ontology metadata
+         */
+        public function getJSONArray() : array {
+            $data = array();
+
+            $data["url"] = $this->getURL();
+            $data["about"] = $this->getAbout();
+            $data["description"] = $this->getDescription();
+            $data["license"] = $this->getLicense();
+            $data["contributors"] = $this->getContributors();
+            $data["creators"] = $this->getCreators();
+            $data["comments"] = $this->getComments();
+
+            return $data;
+        }
 
 
 
