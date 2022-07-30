@@ -7,5 +7,5 @@ The JavaScript conole output can be turned on by adding the `debug` parameter to
 
 
 ## Acknowlegements
-### Addtional Composer Packages
-Parsedown: https://parsedown.org
+ - Addtional Composer Packages
+    - Parsedown: https://parsedown.org

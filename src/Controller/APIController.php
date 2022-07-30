@@ -54,6 +54,27 @@
 
 
 
+        // === Query Parameter Checker ===
+
+        /**
+         * Returns the value from the query string.
+         *
+         * @param InputBag $query the query from the query
+         * @param String $parameter the parameter name
+         * @return String the parameter value
+         * @throws \Exception if the parameter is not present
+         */
+        private function getRequiredParameter(InputBag $query, String $parameter) : String {
+            $value = $query->get($parameter, "");
+            if ($value === "") {
+                throw new \Exception("Parameter '" . $parameter . "' missing");
+            }
+            return $value;
+        }
+
+
+
+
         // === Ontology Methods ===
 
 
@@ -66,7 +87,7 @@
         public function loadOntology(Request $request) : Response {
             try {
                 // get the data as an associative array and pass it to the handler
-                $ontologyURL = $request->query->get("url");
+                $ontologyURL = $this->getRequiredParameter($request->query, "url");
                 $json = APIHandler::loadOntology($ontologyURL);
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
@@ -84,7 +105,7 @@
          */
         public function getOntologyDetails(Request $request) : Response {
             try {
-                $ontologyID = $request->query->get("ontologyID");
+                $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
                 $json = APIHandler::getOntologyDetails($ontologyID);
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
@@ -101,8 +122,8 @@
         public function searchTerms(Request $request) : Response {
             try {
                 // get the search string from the request and get the results JSON String
-                $ontologyID = $request->query->get("ontologyID");
-                $searchQuery = $request->query->get("search");
+                $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
+                $searchQuery = $this->getRequiredParameter($request->query, "search");
                 $json = APIHandler::searchTerms(
                     $ontologyID,
                     $searchQuery
@@ -123,8 +144,8 @@
         public function getTerm(Request $request) : Response {
             try {
                 // get the term URI from the request and get the term's JSON String
-                $ontologyID = $request->query->get("ontologyID");
-                $termURI = $request->query->get("term");
+                $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
+                $termURI = $this->getRequiredParameter($request->query, "term");
                 $json = APIHandler::getTerm(
                     $ontologyID,
                     $termURI
@@ -144,7 +165,7 @@
         public function getOntologyResources(Request $request) : Response {
             try {
                 // get the ontology id from the request
-                $ontologyID = $request->query->get("ontologyID");
+                $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
                 // get the JSON String of the ontology resources
                 $json = APIHandler::getOntologyResources($ontologyID);
                 return $this->successResponse($json);
@@ -162,7 +183,7 @@
         public function exportAnnotations(Request $request) : Response {
             try {
                 // get the ontology id from the request
-                $ontologyID = $request->query->get("ontologyID");
+                $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
                 // get the JSON String of all the annotations
                 $json = APIHandler::exportAnnotations($ontologyID);
                 return $this->successResponse($json);
@@ -178,28 +199,6 @@
 
         // === Resource Methods ===
 
-
-        /**
-         * Creates an array of the resource details from the query string.
-         *
-         * @param InputBag $query the query from the request
-         * @return array an array of the resource details provided in the query string
-         */
-        private function getResourceFromQuery(InputBag $query) : array {
-            $resourceData = array();
-            // the possible parameters
-            $parameters = array("identifier", "name", "author", "date");
-            // for each of the possible parameters
-            foreach ($parameters as $parameter) {
-                $value = $query->get($parameter, "");
-                if (!($value === "")) {
-                    // if the value is not the default - save to the data array
-                    $resourceData[$parameter] = $value;
-                }
-            }
-            return $resourceData;
-        }
-
         /**
          * Creates a new resource in the database and returns the ID in a JSON string.
          *
@@ -209,9 +208,15 @@
         public function createResource(Request $request) : Response {
             try {
                 // get the ontology id from the request
-                $ontologyID = $request->query->get("ontologyID");
+                $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
                 // get the resource data from the query
-                $resourceData = $this->getResourceFromQuery($request->query);
+                $resourceData = array(
+                    "identifier" => $this->getRequiredParameter($request->query, "identifier"), 
+                    "name" => $this->getRequiredParameter($request->query, "name"), 
+                    "author" => $this->getRequiredParameter($request->query, "author"), 
+                    "date" => $this->getRequiredParameter($request->query, "date")
+                );
+                // create the resource
                 $json = APIHandler::createResource(
                     $ontologyID, 
                     $resourceData
@@ -233,9 +238,20 @@
         public function saveResource(Request $request) : Response {
             try {
                 // get the resource ID from the query
-                $resourceID = $request->query->get("resourceID");
+                $resourceID = $this->getRequiredParameter($request->query, "resourceID");
                 // get the resource data from the query
-                $resourceData = $this->getResourceFromQuery($request->query);
+                $resourceData = array();
+                // the possible parameters
+                $parameters = array("identifier", "name", "author", "date");
+                // for each of the possible parameters
+                foreach ($parameters as $parameter) {
+                    $value = $request->query->get($parameter, "");
+                    if (!($value === "")) {
+                        // if the value is not the default - save to the data array
+                        $resourceData[$parameter] = $value;
+                    }
+                }
+                // save the resource
                 $json = APIHandler::saveResource(
                     $resourceID,
                     $resourceData
@@ -256,7 +272,7 @@
         public function getResource(Request $request) : Response {
             try {
                 // get the resource ID from request
-                $resourceID = $request->query->get("resourceID");
+                $resourceID = $this->getRequiredParameter($request->query, "resourceID");
                 // get the data about the resource
                 $json = APIHandler::getResource($resourceID);
                 return $this->successResponse($json);
@@ -274,7 +290,7 @@
         public function deleteResource(Request $request) : Response {
             try {
                 // get the resource id from the request
-                $resourceID = $request->query->get("resourceID");
+                $resourceID = $this->getRequiredParameter($request->query, "resourceID");
                 // get the JSON String of the deletion status
                 $json = APIHandler::deleteResource($resourceID);
                 return $this->successResponse($json);
@@ -293,8 +309,8 @@
         public function addResourceTerm(Request $request) : Response {
             try {
                 // get the resource id and term URI from the request
-                $resourceID = $request->query->get("resourceID");
-                $termURI = $request->query->get("term");
+                $resourceID = $this->getRequiredParameter($request->query, "resourceID");
+                $termURI = $this->getRequiredParameter($request->query, "term");
                 // get the JSON String of the deletion status
                 $json = APIHandler::addResourceTerm($resourceID, $termURI);
                 return $this->successResponse($json);
@@ -312,8 +328,8 @@
         public function removeResourceTerm(Request $request) : Response {
             try {
                 // get the resource id and term URI from the request
-                $resourceID = $request->query->get("resourceID");
-                $termURI = $request->query->get("term");
+                $resourceID = $this->getRequiredParameter($request->query, "resourceID");
+                $termURI = $this->getRequiredParameter($request->query, "term");
                 // get the JSON String of the deletion status
                 $json = APIHandler::removeResourceTerm($resourceID, $termURI);
                 return $this->successResponse($json);
