@@ -2,7 +2,18 @@
 
 
     <!-- Form container for selecting an ontology -->
-    <div class="container d-flex flex-column justify-content-center gap-5 p-0" id="ontology-selector-container">
+    <div class="container d-flex flex-column justify-content-center gap-3 p-0" id="ontology-selector-container">
+
+        <!-- User Ontologies -->
+        <div class="container d-flex flex-column justify-content-center gap-1">
+            <h3>Your Ontologies</h3>
+            <!-- Annotated Resources List Container -->
+            <div class="container d-flex flex-column justify-content-center gap-0 p-0" id="user-ontologies-container"></div>
+            <!-- Loading Resourcs Spinner Container -->
+            <div class="container w-100 d-flex flex-row justify-content-center gap-5 p-0" id="user-ontologies-spinner-container">
+                <div class="spinner-border text-secondary" style="width: 5rem; height: 5rem;" role="status"></div>
+            </div>
+        </div>
 
         <!-- Grid to contain the inputs/buttons for selecting  -->
         <div class="container">

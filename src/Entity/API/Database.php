@@ -194,6 +194,66 @@
 
 
         /*
+            === User Methods ===
+            Methods that change the user table.
+        */
+
+        /**
+         * Creates a user in the database and returns the ID.
+         *
+         * @return String the userID of the new user
+         * @throws \Exception if the user could not be created
+         */
+        public function createUser() : String {
+            // create the id and the timestamp
+            $id = rand();
+            $timestamp = time();
+            $values = array(
+                "id"=>$id,
+                "lastUsed"=>$timestamp
+            );
+            // insert into the database and return the ID
+            try {
+                $this->insert("user", $values);
+                return strval($id);
+            } catch (\Exception $e) {
+                throw $e;
+            }  
+        }
+
+
+        /**
+         * Returns the user ontology ids from the database.
+         *
+         * @param String $userID the userID of the user
+         * @return array an array of the the user's ontology ids
+         * @throws \Exception if the requested user doesn't exist
+         */
+        public function getUserOntologies(String $userID) : array {
+            $userOntologies = array();
+            // get the IDs of the user ontologies
+            $where = "userID='" . $userID . "'";
+            $data = $this->select("ontology", $where);
+            foreach ($data["rows"] as $ontology) {
+                array_push($userOntologies, $ontology["id"]);
+            }
+            // return the user ontologies
+            return $userOntologies;
+        }
+
+
+        /**
+         * Deletes a user from the database.
+         *
+         * @param String $userID the user to delete
+         * @return void
+         */
+        public function deleteUser(String $userID) : void {
+            $this->delete("user", "id='" . $userID . "'");
+        }
+
+
+        /*
             === Ontology Methods ===
             Methods that change the ontology table.
             This includes the method that updates the last time that the ontology was accessed.
@@ -207,7 +267,7 @@
          * @return int the key of the ontology in the database
          * @throws Exception if the ontology could not be inserted into the database
          */
-        public function insertOntology(Ontology $ontology) : int {
+        public function insertOntology(String $userID, Ontology $ontology) : int {
             // serialise the ontology object
             $ontologySerialised = Ontology::serialise($ontology);
             // create the id
@@ -218,10 +278,10 @@
             // the accessed value is the current time stamp
             $values = array(
                 "id"=>$id,
+                "userID"=>$userID,
                 "content"=>$ontologySerialised,
-                "accessed"=>time()
+                "lastAccessed"=>time()
             );
-
             try {
                 $this->insert("ontology", $values);
                 return $id;
@@ -268,6 +328,16 @@
         }
 
 
+
+        /**
+         * Deletes an ontology from the database.
+         *
+         * @param String $ontologyID the ID of the ontology to delete
+         * @return void
+         */
+        public function deleteOntology(String $ontologyID) : void {
+            $this->delete("ontology", "id='" . $ontologyID . "'");
+        }
 
 
 
@@ -323,7 +393,8 @@
                 "identifier"=>$resourceData["identifier"],
                 "name"=>$resourceData["name"],
                 "author"=>$resourceData["author"],
-                "date"=>$resourceData["date"]
+                "date"=>$resourceData["date"],
+                "savedAt"=>time()
             );
             // insert into database
             $this->insert("resource", $values);
@@ -350,8 +421,6 @@
          * @return void
          */
         public function deleteResource(String $resourceID) : void {
-            // delete the terms, then delete the resource
-            $this->delete("term", "resourceID='" . $resourceID . "'");
             $this->delete("resource", "id='" . $resourceID . "'");
         }
 

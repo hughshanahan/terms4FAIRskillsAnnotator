@@ -18,6 +18,37 @@ class T4FSAnnotator {
             Debugger.enable();
         }
 
+        // create the user if not already set
+        if (Cookies.get("annotator-user-id") === "") {
+            // create the user
+            APIRequest.fetch(
+                "/api/createUser",
+                function(data) {
+                    const userID = data.userID;
+                    Cookies.set("annotator-user-id", userID);
+                    Debugger.log("User ID set - " + userID);
+                    T4FSAnnotator.showPage();
+                },
+                function() {
+                    // there was an issue creating the user - refresh the page
+                    location.reload();
+                }
+            )
+        } else {
+            // user id cookie already set - show the correct page
+            Debugger.log("UserID already set, showing correct page");
+            T4FSAnnotator.showPage();
+        }
+        
+
+        
+    }
+
+
+    /**
+     * Shows the correct page after the annotator has been intialised.
+     */
+    static showPage() {
         // load the correct part of the annotator depending on the cookies set
         if (Cookies.get("annotator-ontology-id") === "") {
             // there is not an ontology loaded - show the ontology selector
@@ -32,8 +63,6 @@ class T4FSAnnotator {
             Debugger.log("Loading annotator");
             Annotator.show();
         }
-
-        Debugger.log("Annotator ready!");
     }
 
     /**

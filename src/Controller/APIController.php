@@ -74,6 +74,60 @@
 
 
 
+        // === User Methods ===
+
+
+        /**
+         * Creates a user in the database and returns the userID.
+         *
+         * @param Request $request the HTTP request
+         * @return Response the response containing the JSON data with the userID  
+         */
+        public function createUser(Request $request) : Response {
+            try {
+                $json = APIHandler::createUser();
+                return $this->successResponse($json);
+            } catch(\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
+        }
+
+
+        /**
+         * Returns the user ontologys.
+         *
+         * @param Request $request the request containing the userID
+         * @return Response the response containing JSON data with the user's ontologies
+         */
+        public function getUserOntologies(Request $request) : Response {
+            try {
+                $userID = $this->getRequiredParameter($request->query, "userID");
+                $json = APIHandler::getUserOntologies($userID);
+                return $this->successResponse($json);
+            } catch(\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
+        }
+
+
+        /**
+         * Deletes a user.
+         *
+         * @param Request $request the request containing the id of the user to delete
+         * @return Response the response containing the status of the deletion
+         */
+        public function deleteUser(Request $request) : Response {
+            try {
+                $userID = $this->getRequiredParameter($request->query, "userID");
+                $json = APIHandler::deleteUser($userID);
+                return $this->successResponse($json);
+            } catch(\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
+        }
+
+
+
 
         // === Ontology Methods ===
 
@@ -88,7 +142,16 @@
             try {
                 // get the data as an associative array and pass it to the handler
                 $ontologyURL = $this->getRequiredParameter($request->query, "url");
-                $json = APIHandler::loadOntology($ontologyURL);
+                $userID = $request->query->get("userID", "");
+                if ($userID === "") {
+                    // a user ID wasn't provided - create a user
+                    $userJSON = JSONFormatter::stringToArray(
+                        APIHandler::createUser()
+                    );
+                    $userID = $userJSON["userID"];
+                }
+                // load the ontology
+                $json = APIHandler::loadOntology($userID, $ontologyURL);        
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -193,6 +256,23 @@
             
         }
 
+
+
+        /**
+         * Deletes an ontology.
+         *
+         * @param Request $request the request containing the id of the ontology to delete
+         * @return Response the response containing the status of the deletion
+         */
+        public function deleteOntology(Request $request) : Response {
+            try {
+                $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
+                $json = APIHandler::deleteOntology($ontologyID);
+                return $this->successResponse($json);
+            } catch(\Exception $exception) {
+                return $this->errorResponse($exception);
+            }
+        }
 
 
 

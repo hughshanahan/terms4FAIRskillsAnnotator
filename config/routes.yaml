@@ -7,6 +7,21 @@ controllers:
 # === BACK END ROUTES ===
 # These are any routes that use the /api path
 
+
+apiCreateUser:
+    path: /api/createUser
+    controller: App\Controller\APIController::createUser
+
+apiGetUserOntologies:
+    path: /api/getUserOntologies
+    controller: App\Controller\APIController::getUserOntologies
+
+apiDeleteUser:
+    path: /api/deleteUser
+    controller: App\Controller\APIController::deleteUser
+
+
+
 apiGetTerm:
     path: /api/getTerm
     controller: App\Controller\APIController::getTerm
@@ -39,6 +54,11 @@ apiGetResource:
 apiExportAnnotations:
     path: /api/exportAnnotations
     controller: App\Controller\APIController::exportAnnotations
+
+
+apiDeleteOntology:
+    path: /api/deleteOntology
+    controller: App\Controller\APIController::deleteOntology
 
 
 apiGetOntologyDetails:

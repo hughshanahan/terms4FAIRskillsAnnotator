@@ -60,6 +60,69 @@
 
 
 
+
+        // === User Methods ===
+
+        /**
+         * Returns a JSON string containing the userID.
+         *
+         * @return String a JSON String containing the userID
+         */
+        public static function createUser() : String {
+            try {
+                $database = new Database();
+                $userID = $database->createUser();
+                return JSONFormatter::arrayToString(
+                    array("userID"=>$userID)
+                );
+            } catch (\Exception $e) {
+                throw $e;
+            } 
+        }
+
+
+        /**
+         * Returns the user ontologies from the database.
+         *
+         * @param String $userID the user to get details for
+         * @return String The JSON String containing user data
+         */
+        public static function getUserOntologies(String $userID) : String {
+            try {
+                $database = new Database();
+                $ontologyIDs = $database->getUserOntologies($userID);
+                $data = array();
+                foreach ($ontologyIDs as $ontologyID) {
+                    array_push(
+                        $data, 
+                        JSONFormatter::StringToArray(
+                            self::getOntologyDetails($ontologyID)
+                        )
+                    );
+                }
+                return JSONFormatter::arrayToString($data);
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
+
+
+        /**
+         * Deletes a user.
+         *
+         * @param String $userID the ID of the user to delete
+         * @return String A JSON String containing a status ok message
+         * @throws \Exception if the user couldn't be deleted
+         */
+        public static function deleteUser(String $userID) : String {
+            try {
+                $database = new Database();
+                $database->deleteUser($userID);
+                return JSONFormatter::arrayToString(array("status"=>"ok"));
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
         
         
 
@@ -69,18 +132,23 @@
         /**
          * Loads the ontology into the database.
          *
+         * @param String $userID the current userID
          * @param String $ontologyURL the URL of the ontology to use
          * @return String the JSON String of the ontology details
          * @throws Exception if there was an error connecting to the database
          * @throws Exception if the ontology could not be loaded
          * @throws Exception if the ontology could not be stored in the database
          */
-        public static function loadOntology(String $ontologyURL) : String {
+        public static function loadOntology(String $userID, String $ontologyURL) : String {
             try {
                 $database = new Database();
                 $ontology = new Ontology($ontologyURL);
-                $ontologyID = $database->insertOntology($ontology);
-                return "{\"ontologyID\":\"" . $ontologyID . "\"}";
+                $ontologyID = $database->insertOntology($userID, $ontology);
+                $data = array(
+                    "userID"=>$userID,
+                    "ontologyID"=>$ontologyID,
+                );
+                return JSONFormatter::arrayToString($data);
             } catch (\Exception $e) {
                 throw $e;
             }
@@ -97,6 +165,7 @@
             try {
                 $ontology = self::getOntology($ontologyID);
                 $data = $ontology->getJSONArray();
+                $data["id"] = $ontologyID;
                 return JSONFormatter::arrayToString($data);
             } catch (\Exception $e) {
                 throw $e;
@@ -208,6 +277,22 @@
         }
 
 
+        /**
+         * Deletes an ontology.
+         *
+         * @param String $ontologyID the ID of the ontology to delete
+         * @return String A JSON String containing a status ok message
+         * @throws \Exception if the ontology couldn't be deleted
+         */
+        public static function deleteOntology(String $ontologyID) : String {
+            try {
+                $database = new Database();
+                $database->deleteOntology($ontologyID);
+                return JSONFormatter::arrayToString(array("status"=>"ok"));
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
 
 
 
