@@ -21,12 +21,10 @@ class MainMenu {
                 const html = "<h3>" + T4FSAnnotator.breakURL(data.about) + " Ontology</h3><p><i>(" + T4FSAnnotator.breakURL(data.url) + ")</i></p>";
                 document.getElementById("ontology-details-container").innerHTML = html;
                 MainMenu.getResourcesList();
-                console.log("Showing main menu");
+                Debugger.log("Showing main menu");
                 ViewManager.showMainMenu();
             }
         )
-
-        
     }
 
 
@@ -86,7 +84,7 @@ class MainMenu {
      */
      static showLoadingResourcesSpinner() {
         // hide the list and show the spinner
-        console.log("Showing loading resources spinner");
+        Debugger.log("Showing loading resources spinner");
         ViewManager.hideElement("annotated-resources-container");
         ViewManager.showElement("loading-resources-spinner-container");
     }
@@ -96,7 +94,7 @@ class MainMenu {
      */
     static showResourcesList() {
         // hide the spinner and show the list
-        console.log("Showing resources list form");
+        Debugger.log("Showing resources list form");
         ViewManager.hideElement("loading-resources-spinner-container");
         ViewManager.showElement("annotated-resources-container");
     }
@@ -201,18 +199,12 @@ class MainMenu {
         // check that the loaded ontology hasn't changed
         if (MainMenu.setupOntologyID === Cookies.get("annotator-ontology-id")) {
 
-            fetch("/api/exportAnnotations?ontologyID=" + Cookies.get("annotator-ontology-id"))
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
+            APIRequest.fetch(
+                "/api/exportAnnotations?ontologyID=" + Cookies.get("annotator-ontology-id"),
+                function(data) {
                     T4FSAnnotator.downloadObjectAsJson(data, "materials");
-                })
-                .catch(err => {
-                    ModalController.showError(
-                        "An error occured getting export file: " + err
-                    );
-                });
-
+                }
+            );
         } else {
             ModalController.showError( 
                 "<p>The loaded ontology has changed<br /><small>Annotator.export()</small></p>"
@@ -256,18 +248,12 @@ class MainMenu {
             if (confirmed) {
                 // the user has confirmed that they want to delete the resource
 
-                fetch("/api/deleteResource?resourceID=" + resourceID)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
+                APIRequest.fetch(
+                    "/api/deleteResource?resourceID=" + resourceID,
+                    function(data) {
                         MainMenu.getResourcesList();
-                    })
-                    .catch(err => {
-                        ModalController.showError(
-                            "An error occured while deleting the resource: " + err 
-                        )
-                    });
-
+                    }
+                );
             }
         } else {
             ModalController.showError(

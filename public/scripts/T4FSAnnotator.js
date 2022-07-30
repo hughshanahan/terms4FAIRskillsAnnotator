@@ -8,27 +8,32 @@ class T4FSAnnotator {
      * Initalises the annotator.
      */
     static initialise() {
-        console.log("Initialising annotator");
+        Debugger.log("Initialising annotator");
 
         // show the loading spinner while initialising the annotator
         ViewManager.showLoadingSpinner();
 
+        // enable debugging if the debug paramter is present
+        if (T4FSAnnotator.urlHasParameter("debug")) {
+            Debugger.enable();
+        }
+
         // load the correct part of the annotator depending on the cookies set
         if (Cookies.get("annotator-ontology-id") === "") {
             // there is not an ontology loaded - show the ontology selector
-            console.log("No ontology loaded - loading ontology selector");
+            Debugger.log("No ontology loaded - loading ontology selector");
             OntologySelector.show();
         } else if (Cookies.get("annotator-resource-id") === "") {
             // there is an ontology loaded but no resource selected
-            console.log("No resource selected - loading main menu");
+            Debugger.log("No resource selected - loading main menu");
             MainMenu.show();
         } else {
             // there is an ontology loaded and a resource selected
-            console.log("Loading annotator");
+            Debugger.log("Loading annotator");
             Annotator.show();
         }
 
-        console.log("Annotator ready!");
+        Debugger.log("Annotator ready!");
     }
 
     /**
@@ -56,6 +61,17 @@ class T4FSAnnotator {
     }
 
 
+    /**
+     * Checks if a given paramter is present in the URL query string.
+     * 
+     * @param {String} parameter the parameter name to check for
+     * @returns {boolean} returns true if the paramter is present, false otherwise
+     */
+    static urlHasParameter(parameter) {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return urlParams.has(parameter)
+    }
 
 
 

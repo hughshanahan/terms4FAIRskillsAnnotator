@@ -54,7 +54,7 @@ class Annotator {
      */
     static showSavingSpinner() {
         // hide the form and show the spinner
-        console.log("Showing saving spinner");
+        Debugger.log("Showing saving spinner");
         ViewManager.hideElement("annotator-form-container");
         ViewManager.showElement("form-saving-spinner-container");
     }
@@ -64,7 +64,7 @@ class Annotator {
      */
     static showAnnotatorForm() {
         // hide the spinner and show the form
-        console.log("Showing annotator form");
+        Debugger.log("Showing annotator form");
         ViewManager.hideElement("form-saving-spinner-container");
         ViewManager.showElement("annotator-form-container");
     }
@@ -224,7 +224,7 @@ class Annotator {
 
                     APIRequest.fetchAll(
                         resourceTermsURLs,
-                        (data) => {console.log(data);},
+                        (data) => {Debugger.log(data);},
                         function() {},
                         function () {
                             // update the text for when the resource was last saved

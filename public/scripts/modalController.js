@@ -77,7 +77,7 @@ class ModalController {
         errorHTML += '</div>';
 
         // log the error to the console
-        console.error(error);
+        Debugger.error(error);
 
         ModalController.show(
             "Error",

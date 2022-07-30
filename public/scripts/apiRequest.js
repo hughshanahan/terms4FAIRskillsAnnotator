@@ -21,12 +21,12 @@ class APIRequest {
             .then(APIRequest.checkStatus)
             .then(response => response.json())
             .then(data => {
-                console.log("Call to " + encodedURL + " returned:\n" + JSON.stringify(data, null, 4));
+                Debugger.log("Call to " + encodedURL + " returned:\n" + JSON.stringify(data, null, 4));
                 successCallback(data);
             })
             .catch(err => {
                 // log the error to the console
-                console.log("Call to " + encodedURL + " retured an error:\n" + err);
+                Debugger.log("Call to " + encodedURL + " retured an error:\n" + err);
                 // run the failure callback
                 failureCallback();
                 // show the error in the modal view

@@ -21,6 +21,7 @@ class OntologySelector {
      */
     static loadFromGitHub() {
         // set the url input to the raw github url
+        Debugger.log("Loading the terms4FAIRskills ontology");
         document.getElementById("ontology-url-input").value = 
             "https://raw.githubusercontent.com/terms4fairskills/FAIRterminology/master/development/t4fs.owl";
         OntologySelector.loadFromURL();
@@ -35,6 +36,8 @@ class OntologySelector {
 
         // get the ontology URL from the input
         const ontologyURL = document.getElementById("ontology-url-input").value;
+
+        Debugger.log("Loading from " + ontologyURL);
 
         // load the ontology
         APIRequest.fetch(
