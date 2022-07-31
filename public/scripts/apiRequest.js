@@ -42,14 +42,25 @@ class APIRequest {
      */
      static checkStatus(response) {
         if (!response.ok) {
-            throw new Error();
+            response.clone().json() // clone the response to convert to JSON again
+                                    // if this is not done then JS produces an error
+                .then(error => {
+                    throw new Error(error.message);
+                });
         }
         return response;
     }
 
 
 
-
+    /**
+     * Makes multiple requests to the API.
+     * 
+     * @param {array} urls An array of URLs to fetch from
+     * @param {function} successCallback The callback function to run on each of the JSON data returned, takes one JSON parameter
+     * @param {function} failureCallback The callback function to run if a request fails, takes no parameters
+     * @param {function} afterCallBack The callback function to run when all of the requests have succeeded 
+     */
     static fetchAll(
         urls,
         successCallback = (data) => {},
@@ -85,7 +96,12 @@ class APIRequest {
 
 
 
-
+    /**
+     * Gets the JSON response from the API.
+     * 
+     * @param {String} url the URL to get the JSON data from
+     * @returns {Promise} the JSON data from the request
+     */
     static getJSON(url) {
         return fetch(url)
             .then(APIRequest.checkStatus)
