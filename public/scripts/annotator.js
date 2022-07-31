@@ -88,6 +88,8 @@ class Annotator {
         });
         document.getElementById("search-box").value = "";
 
+        document.getElementById("last-saved-at").innerHTML = "Never";
+
         Annotator.selectedTerms = [];
         Annotator.removedTerms = [];
 
@@ -131,6 +133,9 @@ class Annotator {
         document.getElementById("date-day-input").value = date[2];
         document.getElementById("date-month-input").value = date[1];
         document.getElementById("date-year-input").value = date[0];
+
+        // update the saved at time
+        Annotator.updateSavedAt(data.savedAt);
 
         // Process the terms
         Annotator.selectedTerms = data.terms;
@@ -228,7 +233,7 @@ class Annotator {
                         function() {},
                         function () {
                             // update the text for when the resource was last saved
-                            document.getElementById("last-saved-at").innerHTML = T4FSAnnotator.timestampToString(data.savedAt) + " on " +  T4FSAnnotator.timestampToYear(data.savedAt);
+                            Annotator.updateSavedAt(data.savedAt)
                             // data saved, show the form again
                             Annotator.showAnnotatorForm();
                         }
@@ -331,6 +336,17 @@ class Annotator {
         document.getElementById("terms-count").innerHTML = Annotator.selectedTerms.length;
     }
 
+
+
+    /**
+     * Updates the last saved at text.
+     * 
+     * @param {int} timestamp the Unix timestamp of the saved at time
+     */
+    static updateSavedAt(timestamp) {
+        document.getElementById("last-saved-at").innerHTML = 
+            T4FSAnnotator.timestampToString(timestamp) + " on " +  T4FSAnnotator.timestampToYear(timestamp);
+    }
 
 
 
