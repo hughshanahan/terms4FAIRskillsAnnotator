@@ -17,11 +17,8 @@ class APIRequest {
         failureCallback = () => {}
     ) {
         const encodedURL = encodeURI(url);
-        fetch(encodedURL)
-            .then(APIRequest.checkStatus)
-            .then(response => response.json())
+        APIRequest.getJSON(encodedURL)
             .then(data => {
-                Debugger.log("Call to " + encodedURL + " returned:\n" + JSON.stringify(data, null, 4));
                 successCallback(data);
             })
             .catch(err => {
@@ -64,19 +61,17 @@ class APIRequest {
         // create the array of fetch requests
         let promiseArray = [];
         urls.forEach(url => {
+            const encodedURL = encodeURI(url);
             promiseArray.push(
-                fetch(url)
+                APIRequest.getJSON(encodedURL)
             );
         })
         // process the promises
         Promise.all(promiseArray)
             .then(responses => {
-                responses.map(response => { // for each response
-                    response.json() // convert the response to JSON object and process it
-                        .then(data => {
-                            successCallback(data); // call the success callback
-                        });
-                });
+                responses.map(data => {
+                    successCallback(data); // call the success callback
+                });          
             })
             .then(function() {
                 afterCallBack(); // callback for after all responses have been processed
@@ -84,6 +79,20 @@ class APIRequest {
             .catch(err => {
                 ModalController.showError(err);
                 failureCallback();
+            });
+    }
+
+
+
+
+
+    static getJSON(url) {
+        return fetch(url)
+            .then(APIRequest.checkStatus)
+            .then(response => response.json())
+            .then(data => {
+                Debugger.log("Call to " + url + " returned:\n" + JSON.stringify(data, null, 4));
+                return data;
             });
     }
 

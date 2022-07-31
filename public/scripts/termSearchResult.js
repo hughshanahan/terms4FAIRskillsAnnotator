@@ -87,15 +87,13 @@ class TermSearchResult {
 
         // show the modal view with the title and the loading spinner
         ModalController.showLoadingSpinner();
-        ModalController.show(term, '');
+        ModalController.show(term);
 
         // fetch the term details and set the modal content
         APIRequest.fetch(
             "/api/getTerm?ontologyID=" + Cookies.get("annotator-ontology-id") + "&term=" + termURI,
             function(data) {
-                const html = TermSearchResult.createModalContent(data);
-                // show the content in the modal
-                ModalController.showContent(html);
+                TermSearchResult.createModalContent(data);
             }
         );
     }
@@ -108,72 +106,55 @@ class TermSearchResult {
      * @returns {String} the HTML for the modal content
      */
     static createModalContent(data) {
-        var html = "";
-        // create the container that justifies the content to the left edge
-        html += '<div class="d-flex flex-column justify-content-start w-100">';
-        // add the content
-        html += this.createModalBodyPair("URI", data.about);
-        html += this.createModalBodyPair("Description", data.description);
-        html += this.createModalBodyList("Relations", data.parents, TermSearchResult.processTermRelations);
-        html += this.createModalBodyList("Comments", data.comments);
-        // close the justification container
-        html += '</div>';
-        return html;
-    }
+        // get the data in a way that it can be processed asynchronously
+        const ontologyID = Cookies.get("annotator-ontology-id");
+        const relatedTerms = TermSearchResult.getRelations(data.parents);
+        var relationStrings = [];
 
-    /**
-     * Creates an entry in the list of attributes. 
-     * The title is in bold and followed by a hyphen.
-     * The value followes this.
-     * 
-     * @param {String} title the title to give the pair
-     * @param {String} value the value of the pair
-     * @returns {String} the HTML string for the pair
-     */
-    static createModalBodyPair(title, value) {
-        return '<p><strong>' + title + ' - </strong>' + value + '</p>';
-    }
-
-
-    /**
-     * Creates a list of the values from an array.
-     * 
-     * @param {String} title the title to give the list
-     * @param {array} list the list of values
-     * @param {function} elementProcessor the function to use to process the list element - defaults to a method returning the list element
-     * @return {String} the HTML string for the list
-     */
-    static createModalBodyList(title, list, elementProcessor = (value) => {return value}) {
-        var html = "";
-        // process the comments element
-        if (list.length > 0) {
-            // there are elements in the list
-            html += this.createModalBodyPair(title, "");
-            html += '<ul>';
-            list.forEach(element => {
-                html += "<li>" + elementProcessor(element) + '</li>';
-            });
-            html += '</ul>';
-        } else {
-            // there are no elements in the list
-            html += this.createModalBodyPair(title, "<i>(none)</i>");
-        }
-        return html;
-    }
-
-    /**
-     * Creates the HTML for a relation list item.
-     * 
-     * @param {JSON} relation the JSON object for the relation
-     * @returns {String} the HTML for the relation list item
-     */
-    static processTermRelations(relation) {
-        var str = ""
+        APIRequest.fetchAll(
+            relatedTerms.map(relation => {return "/api/getTerm?ontologyID=" + ontologyID + "&term=" + relation}),
+            function(data) {
+                // when the individual fetch returns
+                relationStrings.push(data.label + " (" + T4FSAnnotator.breakURL(data.about) + ")");
+            },
+            function() {
+                // on individual fetch error
+            },
+            function() {
+                // when all the fetches have been done
+                var html = '';
+                html += '<div class="d-flex flex-column justify-content-start w-100">';
+                // fill in the values
+                html += HTMLGenerator.createSingleValueDisplay("URI", data.about);
+                html += HTMLGenerator.createSingleValueDisplay("Description", data.description);
+                html += HTMLGenerator.createValueListDisplay("Relations", relationStrings);
+                html += HTMLGenerator.createValueListDisplay("Comments", data.comments);
+                // close the justification container
+                html += '</div>';
+                // show the content
+                ModalController.showContent(html);
+            }
+        );
         
-        str += relation.parent;
-
-        return str;
     }
+
+
+    /**
+     * Creates a list of related URIs from the relations structure.
+     * 
+     * @param {array} relations the structure containing details of the relations
+     * @returns {array} the list of related URIs
+     */
+    static getRelations(relations) {
+        var relatedTerms = [];
+        relations.forEach(relation => {
+            relatedTerms.push(
+                relation.parent
+            )
+        });
+        return relatedTerms;
+    }
+
 
 
 }

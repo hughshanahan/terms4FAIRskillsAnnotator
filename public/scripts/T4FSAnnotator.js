@@ -136,6 +136,19 @@ class T4FSAnnotator {
 
 
 
+    /**
+     * Generates a hexidecimal string of given length.
+     * 
+     * @param {int} size the length of the hex string, defaults to 10
+     * @returns {String} the hex string
+     */
+    static generateHexString(size = 10) {
+        return [...Array(size)].map(
+            () => Math.floor(Math.random() * 16).toString(16)
+        ).join('');
+    }
+
+
 
     /**
      * Convert a HTML form to a JSON object.
