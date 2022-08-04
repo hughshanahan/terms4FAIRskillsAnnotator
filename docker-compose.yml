@@ -32,7 +32,7 @@ services:
     container_name: terms4FAIRskills_annotator_web
     restart: unless-stopped
     volumes:
-      - ./:/var/www/
+      - web:/var/www
     ports:
       - 8000:80
     links:
@@ -51,6 +51,8 @@ networks:
   annotatornet: {}
 
 volumes:
+  web:
+    external: false
   mysql_data:
     external: false
   mysql_database:
