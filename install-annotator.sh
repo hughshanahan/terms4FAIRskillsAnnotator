@@ -1,4 +1,4 @@
-
+# Installs the terms4FAIRskills Annotator
 
 echotitle() {
     echo "";
@@ -7,16 +7,16 @@ echotitle() {
 }
 
 # Set variable defaults
-NOCACHE=0;
+USECACHE=0;
 FOREGROUND=0;
 CLEARDATABASE=0;
 
 # get the flags that were passed
-while getopts 'cfd:' OPTION; do
+while getopts 'cdf' OPTION; do
     case "$OPTION" in
         c)
-            # Building the Docker Image without using the cache
-            NOCACHE=1;
+            # Building the Docker Image using the cache
+            USECACHE=1;
             ;;
         d)
             # Clearing the database volumes
@@ -63,14 +63,14 @@ fi
 
 
 # Build the docker image
-if [ $NOCACHE -eq 1 ]; then
-    # if the install command has the --no-cache flag
-    echotitle "Building Docker Image (without using the cache)";
-    docker build --no-cache .;
-else 
+if [ $USECACHE -eq 1 ]; then
     # if the install command does not have the no cache flag
-    echotitle "Building Docker Image";
+    echotitle "Building Docker Image (using cache)";
     docker build .;
+else 
+    # if the install command has the --no-cache flag
+    echotitle "Building Docker Image";
+    docker build --no-cache .;
 fi
 
 # Start the docker containers
