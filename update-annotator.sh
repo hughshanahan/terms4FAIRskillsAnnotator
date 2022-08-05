@@ -19,3 +19,7 @@ echo "The container ID is $CONTAINERID"
 echotitle "Copying the project to the container"
 docker cp ./ $CONTAINERID:/var/www/
 echo "Updated Container Contents"
+
+# Update the documentation
+echotitle "Updating documentation"
+docker exec terms4FAIRskills_annotator_web sh generate-documentation.sh
