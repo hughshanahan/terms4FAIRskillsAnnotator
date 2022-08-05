@@ -101,3 +101,33 @@ readme:
 serverinfo:
     path: /server-info
     controller: App\Controller\MiscController::serverInfo
+
+
+# Routes for Documentation
+
+documentation:
+    path: /docs
+    controller: App\Controller\MiscController::documentation
+
+# Route to give /docs/backend an endpoint
+backenddocumentation:
+    path: /docs/backend
+    controller: App\Controller\MiscController::documentation
+
+backendsrc:
+    path: /docs/backend/src/{path}
+    controller: App\Controller\DocumentationController::backendsrc
+    requirements:
+        path: .*
+
+backendtest:
+    path: /docs/backend/tests/{path}
+    controller: App\Controller\DocumentationController::backendtests
+    requirements:
+        path: .*
+
+frontend:
+    path: /docs/frontend/{path}
+    controller: App\Controller\DocumentationController::frontend
+    requirements:
+        path: .*

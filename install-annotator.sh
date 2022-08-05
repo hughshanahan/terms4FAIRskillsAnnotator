@@ -84,6 +84,8 @@ else
     docker compose up -d;
 fi
 
+# Update the annotator contents
+sh update-annotator.sh
 
 # Report that the installation was completed
 echotitle "Installation complete";

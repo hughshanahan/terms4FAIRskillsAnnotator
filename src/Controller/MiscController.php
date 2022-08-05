@@ -10,9 +10,20 @@
      */
     class MiscController extends AbstractController {
 
+        /**
+         * Returns the response containing the annotator.
+         *
+         * @return Response the response containing the annotator
+         */
         public function home() : Response {
             return $this->render('home.html.twig');
         }
+
+
+        public function documentation() : Response {
+            return $this->render('documentation.html.twig');
+        }
+
 
         /**
          * Returns the basic outline of the README.
