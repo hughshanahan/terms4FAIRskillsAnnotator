@@ -13,6 +13,14 @@ echo "+--------------------------------------+"
 echotitle "Clearing previous containers"
 docker compose down
 
+# Clearing the web_data volume
+echotitle "Clearing terms4fairskills_web_data Volume"
+if docker volume ls --filter "name=terms4fairskillsannotator_web_data" --quiet | grep -q 'terms4fairskillsannotator_web_data'; then
+    docker volume rm terms4fairskillsannotator_web_data --force
+else
+    echo "terms4fairskills_web_data Volume doesn't exist - nothing to clear"
+fi
+
 # Build the docker image
 echotitle "Building Docker Image"
 docker build --no-cache .
