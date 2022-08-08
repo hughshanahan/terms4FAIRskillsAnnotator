@@ -13,11 +13,14 @@ echo "+----------------------------------------------------+";
 # Generate PHP Documentation for the source
 echotitle "Generating docs for the backend source"
 phpDocumentor -d /var/www/src -t /var/www/docs/backend/src
+echo "Generated docs for the backend source"
 
 # Generate PHP Documentation for the tests
 echotitle "Generating docs for the backend tests"
 phpDocumentor -d /var/www/tests -t /var/www/docs/backend/tests
+echo "Generated docs for the backend tests"
 
 # Generate JS Documentation for the frontend
 echotitle "Generating docs for the frontend JavaScript"
-jsdoc /var/www/public/scripts -d /var/www/docs/frontend -r
+jsdoc /var/www/public/scripts -d=/var/www/docs/frontend -r
+echo "Generated docs for the frontend JavaScript"

@@ -28,17 +28,8 @@ RUN \
     && wget https://phpdoc.org/phpDocumentor.phar \
     && chmod +x phpDocumentor.phar \
     && mv phpDocumentor.phar /usr/local/bin/phpDocumentor \
-# Install NVM
-    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash \
-# Setup NVM
-    && export NVM_DIR="/root/.nvm" \
-    && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" \
-    && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" \
-# Install node.js long term support version
-    && nvm install --lts \
-# Install JSDoc to generate Javascript Documentation
-    && npm install --location=global jsdoc \
-# Install Composer Dependencies
-    && composer install \
-# Generate Documentation
-    && sh generate-documentation.sh
+# Install JSDoc
+    && apt-get install jsdoc-toolkit -y
+
+ENTRYPOINT ["sh", "start.sh"]
+CMD ["run"]
