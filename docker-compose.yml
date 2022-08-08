@@ -21,16 +21,19 @@ services:
 
   web:
     build:
-      context: .
-      args:
-        - API_ADDRESS=${API_ADDRESS}
-        - MYSQL_USER=${MYSQL_USER}
-        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        - MYSQL_DATABASE=${MYSQL_DATABASE}
-        - SYMFONY_APP_ENV=${SYMFONY_APP_ENV}
-        - SYMFONY_APP_DEBUG=${SYMFONY_APP_DEBUG}
+      context: ./web
     container_name: terms4FAIRskills_annotator_web
     restart: unless-stopped
+    environment:
+      API_ADDRESS: ${API_ADDRESS}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      SYMFONY_APP_ENV: ${SYMFONY_APP_ENV}
+      SYMFONY_APP_DEBUG: ${SYMFONY_APP_DEBUG}
+      HTTPD_SERVER_ALIAS: ${HTTPD_SERVER_ALIAS}
+      HTTPD_SERVER_NAME: ${HTTPD_SERVER_NAME}
+      HTTPD_SERVER_ADMIN: ${HTTPD_SERVER_ADMIN}
     volumes:
       - web_data:/var/www
     ports:
@@ -41,10 +44,6 @@ services:
       - "annotatornet"
     depends_on:
       - "db"
-    environment:
-      HTTPD_SERVER_ALIAS: ${HTTPD_SERVER_ALIAS}
-      HTTPD_SERVER_NAME: ${HTTPD_SERVER_NAME}
-      HTTPD_SERVER_ADMIN: ${HTTPD_SERVER_ADMIN}
 
 
 networks:

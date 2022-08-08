@@ -8,8 +8,5 @@ chown -R www-data:www-data var
 # Install Composer Dependencies
 composer Install
 
-# Generate Documentation
-sh generate-documentation.sh
-
 # Start Web Server
 /usr/sbin/apache2ctl -D FOREGROUND

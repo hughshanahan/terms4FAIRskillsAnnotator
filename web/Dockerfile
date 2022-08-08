@@ -1,10 +1,10 @@
 FROM php:8.1-apache
 
 # copy the apache config file to the apache directory
-COPY ./docker/apache.conf /etc/apache2/sites-enabled/000-default.conf
+COPY ./apache.conf /etc/apache2/sites-enabled/000-default.conf
 
 # copy the source to the container
-COPY ./ /var/www/
+COPY /. /var/www/
 
 # Set working directory
 WORKDIR /var/www/
@@ -23,13 +23,8 @@ RUN \
 # Configure Apache to allow rewriting
     && a2enmod rewrite \
 # Install Composer
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-# Install PHPDoc
-    && wget https://phpdoc.org/phpDocumentor.phar \
-    && chmod +x phpDocumentor.phar \
-    && mv phpDocumentor.phar /usr/local/bin/phpDocumentor \
-# Install JSDoc
-    && apt-get install jsdoc-toolkit -y
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 
 ENTRYPOINT ["sh", "start.sh"]
 CMD ["run"]
