@@ -10,9 +10,18 @@ fi
 # A first argument was provided - swtich depending on value
 if [ $1 = "install" ]; then
     sh scripts/install.sh
+
+elif [ $1 = "update" ]; then
+    sh scripts/update.sh
+
+elif [ $1 = "docs" ]; then
+    sh scripts/docs.sh
+
 elif [ $1 = "help" ]; then
     sh scripts/help.sh
+
 else
     # An argument was prrovided but it wasn't valid
     echo "No valid argument provided..."
+    sh scripts/help.sh
 fi

@@ -23,7 +23,13 @@ RUN \
 # Configure Apache to allow rewriting
     && a2enmod rewrite \
 # Install Composer
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+# Install PHPDoc
+    && wget https://phpdoc.org/phpDocumentor.phar \
+    && chmod +x phpDocumentor.phar \
+    && mv phpDocumentor.phar /usr/local/bin/phpDocumentor \
+# Install JSDoc
+    && apt-get install npm -y
 
 
 ENTRYPOINT ["sh", "start.sh"]
