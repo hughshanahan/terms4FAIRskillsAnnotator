@@ -20,6 +20,9 @@ elif [ $1 = "uninstall" ]; then
 elif [ $1 = "docs" ]; then
     sh scripts/docs.sh
 
+elif [ $1 = "test" ]; then
+    sh scripts/test.sh
+
 elif [ $1 = "help" ]; then
     sh scripts/help.sh
 

@@ -14,6 +14,14 @@ The `web` directory stores the files that are copied into the terms4fairskillsan
 ## annotator.sh
 annotator.sh is the script to interact with the container's and their volumes.
 
+To install the project run `sh annotator.sh install`.
+To update the project run `sh annotator.sh update`.
+To uninstall the project run `sh annotator.sh uninstall`.
+
+To generate new documentation for the project run `sh annotator.sh docs`.
+To run the PHPUnit tests for the project run `sh annotator.sh test`.
+
+
 ## JavaScript Debug Logging
 By default only the minimum is logged to the console by the frontend JavaScript. To enable more logging for debugging, add `?debug` to the URL. For example `localhost:8000` becomes `localhost:8000/?debug`.
 
