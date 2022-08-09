@@ -14,6 +14,9 @@ if [ $1 = "install" ]; then
 elif [ $1 = "update" ]; then
     sh scripts/update.sh
 
+elif [ $1 = "uninstall" ]; then
+    sh scripts/uninstall.sh
+
 elif [ $1 = "docs" ]; then
     sh scripts/docs.sh
 
