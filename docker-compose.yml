@@ -17,7 +17,7 @@ services:
     networks:
       - "annotatornet"
     ports:
-      - "8001:3306"
+      - "8501:3306"
 
   web:
     build:
@@ -37,7 +37,7 @@ services:
     volumes:
       - web_data:/var/www
     ports:
-      - 8000:80
+      - 8500:80
     links:
       - "db"
     networks:
