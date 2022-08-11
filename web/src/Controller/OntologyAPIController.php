@@ -9,6 +9,8 @@
     use App\Controller\APIController;
 
     use App\Entity\API\OntologyAPIHandler;
+    use App\Entity\API\UserAPIHandler;
+    use App\Entity\API\JSONFormatter;
 
     /**
      * Class to handle requests to the Ontology API endpoints.
