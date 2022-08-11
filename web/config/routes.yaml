@@ -4,84 +4,82 @@ controllers:
 
 
 
-# === BACK END ROUTES ===
+# === API ROUTES ===
 # These are any routes that use the /api path
 
+# User API Routes
 
-apiCreateUser:
-    path: /api/createUser
-    controller: App\Controller\APIController::createUser
+apiUserCreate:
+    path: /api/user/create
+    controller: App\Controller\UserAPIController::create
 
-apiGetUserOntologies:
-    path: /api/getUserOntologies
-    controller: App\Controller\APIController::getUserOntologies
+apiUserGetOntologies:
+    path: /api/user/getOntologies
+    controller: App\Controller\UserAPIController::getOntologies
 
-apiDeleteUser:
-    path: /api/deleteUser
-    controller: App\Controller\APIController::deleteUser
-
-
-
-apiGetTerm:
-    path: /api/getTerm
-    controller: App\Controller\APIController::getTerm
+apiUserDelete:
+    path: /api/user/delete
+    controller: App\Controller\UserAPIController::delete
 
 
-apiSearchClasses:
-    path: /api/searchTerms
-    controller: App\Controller\APIController::searchTerms
+# Ontology API Routes
 
+apiOntologyLoad:
+    path: /api/ontology/load
+    controller: App\Controller\OntologyAPIController::load
 
-apiLoadOntology:
-    path: /api/loadOntology
-    controller: App\Controller\APIController::loadOntology
+apiOntologyGetDetails:
+    path: /api/ontology/getDetails
+    controller: App\Controller\OntologyAPIController::getDetails
 
+apiOntologyGetResources:
+    path: /api/ontology/getResources
+    controller: App\Controller\OntologyAPIController::getResources 
 
-apiCreateResource:
-    path: /api/createResource
-    controller: App\Controller\APIController::createResource
+apiOntologyDelete:
+    path: /api/ontology/delete
+    controller: App\Controller\OntologyAPIController::delete
 
-apiSaveResource:
-    path: /api/saveResource
-    controller: App\Controller\APIController::saveResource
+apiOntologyExportAnnotations:
+    path: /api/ontology/exportAnnotations
+    controller: App\Controller\OntologyAPIController::exportAnnotations
 
+# Terms API Routes
 
-apiGetResource:
-    path: /api/getResource
-    controller: App\Controller\APIController::getResource
+apiTermsSearch:
+    path: /api/terms/search
+    controller: App\Controller\TermsAPIController::search
 
+apiTermsGet:
+    path: /api/terms/get
+    controller: App\Controller\TermsAPIController::get
 
-apiExportAnnotations:
-    path: /api/exportAnnotations
-    controller: App\Controller\APIController::exportAnnotations
+# Resource API Routes
 
+apiResourceCreate:
+    path: /api/resource/create
+    controller: App\Controller\ResourceAPIController::create
 
-apiDeleteOntology:
-    path: /api/deleteOntology
-    controller: App\Controller\APIController::deleteOntology
+apiResourceSave:
+    path: /api/resource/save
+    controller: App\Controller\ResourceAPIController::save
 
+apiResourceGet:
+    path: /api/resource/get
+    controller: App\Controller\ResourceAPIController::get
 
-apiGetOntologyDetails:
-    path: /api/getOntologyDetails
-    controller: App\Controller\APIController::getOntologyDetails
+apiResourceDelete:
+    path: /api/resource/delete
+    controller: App\Controller\ResourceAPIController::delete
 
-apiGetOntologyResources:
-    path: /api/getOntologyResources
-    controller: App\Controller\APIController::getOntologyResources 
+apiResourceAddTerm:
+    path: /api/resource/addTerm
+    controller: App\Controller\ResourceAPIController::addTerm
 
+apiResourceRemoveTerm:
+    path: /api/resource/removeTerm
+    controller: App\Controller\ResourceAPIController::removeTerm
 
-apiDeleteResource:
-    path: /api/deleteResource
-    controller: App\Controller\APIController::deleteResource
-
-
-apiAddResourceTerm:
-    path: /api/addResourceTerm
-    controller: App\Controller\APIController::addResourceTerm
-
-apiRemoveResourceTerm:
-    path: /api/removeResourceTerm
-    controller: App\Controller\APIController::removeResourceTerm
 
 
 # === FRONT END ROUTES ===

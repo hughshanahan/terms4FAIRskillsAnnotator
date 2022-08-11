@@ -64,7 +64,7 @@ class OntologySelector {
 
         // load the ontology
         APIRequest.fetch(
-            "/api/loadOntology?userID=" + userID + "&url=" + ontologyURL,
+            "/api/ontology/load?userID=" + userID + "&url=" + ontologyURL,
             function(data) {
                 OntologySelector.loadOntology(data.ontologyID);
             },
@@ -102,7 +102,7 @@ class OntologySelector {
                 // the user has confirmed that they want to delete the ontology
 
                 APIRequest.fetch(
-                    "/api/deleteOntology?ontologyID=" + id,
+                    "/api/ontology/delete?ontologyID=" + id,
                     function(data) {
                         OntologySelector.getUserOntologiesList();
                     },
@@ -160,7 +160,7 @@ class OntologySelector {
             document.getElementById("user-ontologies-container").innerHTML = "";
             const userID = Cookies.get("annotator-user-id");
             APIRequest.fetch(
-                "/api/getUserOntologies?userID=" + userID,
+                "/api/user/getOntologies?userID=" + userID,
                 function(data) {
                     var html = '';
                     if (data.length > 0) {

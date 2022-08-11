@@ -104,7 +104,7 @@ class Annotator {
      */
     static getResourceDetails(resourceID) {
         APIRequest.fetch(
-            "/api/getResource?resourceID=" + resourceID,
+            "/api/resource/get?resourceID=" + resourceID,
             function(data) {
                 Annotator.setInputs(data);
                 // the details of the form have been updated - ensure that the form is shown
@@ -198,12 +198,12 @@ class Annotator {
             var idParameter = "";
             if (Cookies.get("annotator-resource-id") === "") {
                 // the resource id cookie has not been set, therefore create a new resource
-                url = "/api/createResource";
+                url = "/api/resource/create";
                 // the resource doesn't already exist - give the ontology id
                 idParameter = "ontologyID=" + Cookies.get("annotator-ontology-id");
             } else {
                 // cookie has been set, therefore save the changes
-                url = "/api/saveResource";
+                url = "/api/resource/save";
                 // the resource already exists - give the resource ID
                 idParameter = "resourceID=" + Cookies.get("annotator-resource-id");
             }
@@ -221,10 +221,10 @@ class Annotator {
                     // Remove the unselected ones and add the terms to the resource
                     var resourceTermsURLs = [];
                     Annotator.removedTerms.forEach(term => {
-                        resourceTermsURLs.push("/api/removeResourceTerm?resourceID=" + resourceID + "&term=" + term);
+                        resourceTermsURLs.push("/api/resource/removeTerm?resourceID=" + resourceID + "&term=" + term);
                     });
                     Annotator.selectedTerms.forEach(term => {
-                        resourceTermsURLs.push("/api/addResourceTerm?resourceID=" + resourceID + "&term=" + term);
+                        resourceTermsURLs.push("/api/resource/addTerm?resourceID=" + resourceID + "&term=" + term);
                     });
 
                     APIRequest.fetchAll(
@@ -315,7 +315,7 @@ class Annotator {
             // there are terms - process them
             var urls = [];
             terms.forEach(term => {
-                urls.push("/api/getTerm?ontologyID=" + Cookies.get("annotator-ontology-id") + "&term=" + term);
+                urls.push("/api/terms/get?ontologyID=" + Cookies.get("annotator-ontology-id") + "&term=" + term);
             })
             selectedContainer.innerHTML = "";
             APIRequest.fetchAll(
@@ -366,7 +366,7 @@ class Annotator {
             if (Annotator.setupOntologyID === Cookies.get("annotator-ontology-id")) {
                 // fetch the terms that match the search
                 APIRequest.fetch(
-                    "/api/searchTerms?ontologyID=" + Cookies.get("annotator-ontology-id") + "&search=" + searchTerm,
+                    "/api/terms/search?ontologyID=" + Cookies.get("annotator-ontology-id") + "&search=" + searchTerm,
                     function(data) {
                         document.getElementById("results-container").innerHTML = SearchResults.create(data, Annotator.selectedTerms);
                     }

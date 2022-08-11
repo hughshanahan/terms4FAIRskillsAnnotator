@@ -16,7 +16,7 @@ class MainMenu {
         const ontologyID = MainMenu.setupOntologyID;
         // get the ontology details
         APIRequest.fetch(
-            "/api/getOntologyDetails?ontologyID=" + ontologyID,
+            "/api/ontology/getDetails?ontologyID=" + ontologyID,
             function(data) {
                 const html = "<h3>" + T4FSAnnotator.breakURL(data.about) + " Ontology</h3><p><i>(" + T4FSAnnotator.breakURL(data.url) + ")</i></p>";
                 document.getElementById("ontology-details-container").innerHTML = html;
@@ -47,7 +47,7 @@ class MainMenu {
 
         // fetch the term details and set the modal content
         APIRequest.fetch(
-            "/api/getOntologyDetails?ontologyID=" + Cookies.get("annotator-ontology-id"),
+            "/api/ontology/getDetails?ontologyID=" + Cookies.get("annotator-ontology-id"),
             function(data) {
                 const html = MainMenu.createOntologyDetails(data);
                 // show the content in the modal
@@ -114,7 +114,7 @@ class MainMenu {
             document.getElementById("annotated-resources-container").innerHTML = "";
             const ontologyID = Cookies.get("annotator-ontology-id");
             APIRequest.fetch(
-                "/api/getOntologyResources?ontologyID=" + ontologyID,
+                "/api/ontology/getResources?ontologyID=" + ontologyID,
                 function(data) {
                     var html = '';
                     if (data.length === 0) {
@@ -200,7 +200,7 @@ class MainMenu {
         if (MainMenu.setupOntologyID === Cookies.get("annotator-ontology-id")) {
 
             APIRequest.fetch(
-                "/api/exportAnnotations?ontologyID=" + Cookies.get("annotator-ontology-id"),
+                "/api/ontology/exportAnnotations?ontologyID=" + Cookies.get("annotator-ontology-id"),
                 function(data) {
                     T4FSAnnotator.downloadObjectAsJson(data, "materials");
                 }
@@ -249,7 +249,7 @@ class MainMenu {
                 // the user has confirmed that they want to delete the resource
 
                 APIRequest.fetch(
-                    "/api/deleteResource?resourceID=" + resourceID,
+                    "/api/resource/delete?resourceID=" + resourceID,
                     function(data) {
                         MainMenu.getResourcesList();
                     }

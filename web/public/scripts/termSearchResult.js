@@ -91,7 +91,7 @@ class TermSearchResult {
 
         // fetch the term details and set the modal content
         APIRequest.fetch(
-            "/api/getTerm?ontologyID=" + Cookies.get("annotator-ontology-id") + "&term=" + termURI,
+            "/api/terms/get?ontologyID=" + Cookies.get("annotator-ontology-id") + "&term=" + termURI,
             function(data) {
                 TermSearchResult.createModalContent(data);
             }
@@ -112,7 +112,7 @@ class TermSearchResult {
         var relationStrings = [];
 
         APIRequest.fetchAll(
-            relatedTerms.map(relation => {return "/api/getTerm?ontologyID=" + ontologyID + "&term=" + relation}),
+            relatedTerms.map(relation => {return "/api/terms/get?ontologyID=" + ontologyID + "&term=" + relation}),
             function(data) {
                 // when the individual fetch returns
                 relationStrings.push(data.label + " (" + T4FSAnnotator.breakURL(data.about) + ")");

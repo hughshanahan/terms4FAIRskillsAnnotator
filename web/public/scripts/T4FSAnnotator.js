@@ -22,7 +22,7 @@ class T4FSAnnotator {
         if (Cookies.get("annotator-user-id") === "") {
             // create the user
             APIRequest.fetch(
-                "/api/createUser",
+                "/api/user/create",
                 function(data) {
                     const userID = data.userID;
                     Cookies.set("annotator-user-id", userID);
