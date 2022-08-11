@@ -8,7 +8,7 @@
 
     use App\Controller\APIController;
 
-    use App\Entity\API\APIHandler;
+    use App\Entity\API\UserAPIHandler;
 
     /**
      * Class to handle requests to the User API endpoints.
@@ -24,7 +24,7 @@
          */
         public function create(Request $request) : Response {
             try {
-                $json = APIHandler::createUser();
+                $json = UserAPIHandler::create();
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -41,7 +41,7 @@
         public function getOntologies(Request $request) : Response {
             try {
                 $userID = $this->getRequiredParameter($request->query, "userID");
-                $json = APIHandler::getUserOntologies($userID);
+                $json = UserAPIHandler::getOntologies($userID);
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -58,7 +58,7 @@
         public function delete(Request $request) : Response {
             try {
                 $userID = $this->getRequiredParameter($request->query, "userID");
-                $json = APIHandler::deleteUser($userID);
+                $json = UserAPIHandler::delete($userID);
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
                 return $this->errorResponse($exception);

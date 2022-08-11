@@ -8,7 +8,7 @@
 
     use App\Controller\APIController;
 
-    use App\Entity\API\APIHandler;
+    use App\Entity\API\ResourceAPIHandler;
 
     /**
      * Class to handle requests to the Resource API endpoints.
@@ -33,7 +33,7 @@
                     "date" => $this->getRequiredParameter($request->query, "date")
                 );
                 // create the resource
-                $json = APIHandler::createResource(
+                $json = ResourceAPIHandler::create(
                     $ontologyID, 
                     $resourceData
                 );
@@ -68,7 +68,7 @@
                     }
                 }
                 // save the resource
-                $json = APIHandler::saveResource(
+                $json = ResourceAPIHandler::save(
                     $resourceID,
                     $resourceData
                 );
@@ -90,7 +90,7 @@
                 // get the resource ID from request
                 $resourceID = $this->getRequiredParameter($request->query, "resourceID");
                 // get the data about the resource
-                $json = APIHandler::getResource($resourceID);
+                $json = ResourceAPIHandler::get($resourceID);
                 return $this->successResponse($json);
             } catch (\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -108,7 +108,7 @@
                 // get the resource id from the request
                 $resourceID = $this->getRequiredParameter($request->query, "resourceID");
                 // get the JSON String of the deletion status
-                $json = APIHandler::deleteResource($resourceID);
+                $json = ResourceAPIHandler::delete($resourceID);
                 return $this->successResponse($json);
             } catch (\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -128,7 +128,7 @@
                 $resourceID = $this->getRequiredParameter($request->query, "resourceID");
                 $termURI = $this->getRequiredParameter($request->query, "term");
                 // get the JSON String of the deletion status
-                $json = APIHandler::addResourceTerm($resourceID, $termURI);
+                $json = ResourceAPIHandler::addTerm($resourceID, $termURI);
                 return $this->successResponse($json);
             } catch (\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -147,7 +147,7 @@
                 $resourceID = $this->getRequiredParameter($request->query, "resourceID");
                 $termURI = $this->getRequiredParameter($request->query, "term");
                 // get the JSON String of the deletion status
-                $json = APIHandler::removeResourceTerm($resourceID, $termURI);
+                $json = ResourceAPIHandler::removeTerm($resourceID, $termURI);
                 return $this->successResponse($json);
             } catch (\Exception $exception) {
                 return $this->errorResponse($exception);

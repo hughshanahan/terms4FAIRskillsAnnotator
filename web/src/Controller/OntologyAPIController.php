@@ -8,7 +8,7 @@
 
     use App\Controller\APIController;
 
-    use App\Entity\API\APIHandler;
+    use App\Entity\API\OntologyAPIHandler;
 
     /**
      * Class to handle requests to the Ontology API endpoints.
@@ -30,12 +30,12 @@
                 if ($userID === "") {
                     // a user ID wasn't provided - create a user
                     $userJSON = JSONFormatter::stringToArray(
-                        APIHandler::createUser()
+                        UserAPIHandler::create()
                     );
                     $userID = $userJSON["userID"];
                 }
                 // load the ontology
-                $json = APIHandler::loadOntology($userID, $ontologyURL);        
+                $json = OntologyAPIHandler::load($userID, $ontologyURL);        
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -53,7 +53,7 @@
         public function getDetails(Request $request) : Response {
             try {
                 $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
-                $json = APIHandler::getOntologyDetails($ontologyID);
+                $json = OntologyAPIHandler::getDetails($ontologyID);
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -72,7 +72,7 @@
                 // get the ontology id from the request
                 $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
                 // get the JSON String of the ontology resources
-                $json = APIHandler::getOntologyResources($ontologyID);
+                $json = OntologyAPIHandler::getResources($ontologyID);
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -90,7 +90,7 @@
                 // get the ontology id from the request
                 $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
                 // get the JSON String of all the annotations
-                $json = APIHandler::exportAnnotations($ontologyID);
+                $json = OntologyAPIHandler::exportAnnotations($ontologyID);
                 return $this->successResponse($json);
             } catch (\Exception $exception) {
                 return $this->errorResponse($exception);
@@ -108,7 +108,7 @@
         public function delete(Request $request) : Response {
             try {
                 $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
-                $json = APIHandler::deleteOntology($ontologyID);
+                $json = OntologyAPIHandler::delete($ontologyID);
                 return $this->successResponse($json);
             } catch(\Exception $exception) {
                 return $this->errorResponse($exception);

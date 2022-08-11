@@ -8,7 +8,7 @@
 
     use App\Controller\APIController;
 
-    use App\Entity\API\APIHandler;
+    use App\Entity\API\TermsAPIHandler;
 
     /**
      * Class to handle requests to the Terms API endpoints.
@@ -26,7 +26,7 @@
                 // get the search string from the request and get the results JSON String
                 $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
                 $searchQuery = $this->getRequiredParameter($request->query, "search");
-                $json = APIHandler::searchTerms(
+                $json = TermsAPIHandler::search(
                     $ontologyID,
                     $searchQuery
                 );
@@ -47,7 +47,7 @@
                 // get the term URI from the request and get the term's JSON String
                 $ontologyID = $this->getRequiredParameter($request->query, "ontologyID");
                 $termURI = $this->getRequiredParameter($request->query, "term");
-                $json = APIHandler::getTerm(
+                $json = TermsAPIHandler::get(
                     $ontologyID,
                     $termURI
                 );
